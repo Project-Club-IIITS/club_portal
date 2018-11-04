@@ -103,6 +103,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# Secret Settings
+secret_settings.py
 #Editors
 .idea/
 .vscode/
