@@ -1,0 +1,27 @@
+language: python
+
+python:
+  - 3.6
+
+env:
+  - DJANGO=2.1.2
+
+install:
+  - pip3 install -r requirements.txt
+
+before_script:
+  - python manage.py makemigrations
+  - python manage.py migrate
+
+script:
+  - python manage.py check
+  - python manage.py test
+
+notifications:
+  email:
+    recipients:
+      - coderdude1999@gmail.com
+      - brijeshlaxmikant.b17@iiits.in
+
+    on_success: change
+    on_failure: always
