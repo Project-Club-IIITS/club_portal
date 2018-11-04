@@ -21,7 +21,7 @@ notifications:
   email:
     recipients:
       - coderdude1999@gmail.com
-      - brijeshlaxmikant.b17@iiits.in
+      - brijeshbumrela@gmail.com
 
     on_success: change
     on_failure: always
