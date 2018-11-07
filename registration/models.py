@@ -14,7 +14,7 @@ def phone_number_validator(phone_number):
     if phone_number.isdigit() is False:
         raise validators.ValidationError('Phone numbers can only contain numbers')
 
-    if not(10 <= len(phone_number) <= 11):
+    if not (10 <= len(phone_number) <= 11):
         raise validators.ValidationError('Length of phone number must be either 10 or 11')
 
 
@@ -33,8 +33,9 @@ class UserProfile(models.Model):
 
 
 class GoogleAuth(models.Model):
-    google_id = models.URLField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    google_id = models.CharField(max_length=100)
+    google_salt = models.CharField(max_length=100)
+    time_stamp = models.DateTimeField(auto_now_add=True)
 
 
 class EmailConfirmation(models.Model):
