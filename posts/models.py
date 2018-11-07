@@ -6,10 +6,10 @@ from base.models import Club
 # Create your models here.
 
 class Post(models.Model):
-    # post_creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    # club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    # is_approved = models.BooleanField(default=False)
-    # description = models.TextField(max_length=150)
+    post_creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    is_approved = models.BooleanField(default=False)
+    description = models.TextField(max_length=150)
     video = models.URLField()
     is_public = models.BooleanField(default=False)
 
