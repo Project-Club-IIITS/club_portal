@@ -8,6 +8,7 @@ env:
 
 install:
   - pip3 install -r requirements.txt
+  - pip3 install coveralls
 
 before_script:
   - python manage.py makemigrations
@@ -15,7 +16,11 @@ before_script:
 
 script:
   - python manage.py check
-  - python manage.py test
+  - coverage run --source="base, registration, accounts, posts" manage.py test
+
+after_success:
+  coveralls  
+
 
 notifications:
   email:
