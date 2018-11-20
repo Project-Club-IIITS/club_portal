@@ -1,10 +1,6 @@
 {% load static %}
 <!DOCTYPE HTML>
-<!--
-	Future Imperfect by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
+
 <html>
 	<head>
 		<title>IOTA-Posts</title>
@@ -81,7 +77,7 @@
 							<article class="post">
 								<header>
 									<div class="title">
-										<h2><a href="{% url 'post_detail.html' %}">Euismod et accumsan</a></h2>
+										<h2><a href="{% url 'posts:post_detail' %}">Euismod et accumsan</a></h2>
 										<p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>
 									</div>
 									<div class="meta">
@@ -90,13 +86,13 @@
                                         <img src="{% static "posts/images/avatar.jpg" %}" alt="" /></a>
 									</div>
 								</header>
-								<a href="{% url 'post_detail.html' %}" class="image featured">
+								<a href="{% url 'posts:post_detail' %}" class="image featured">
                                     <img src="{% static "posts/images/pic03.jpg" %}" alt="" />
                                 </a>
 								<p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla. Cras vehicula tellus eu ligula viverra, ac fringilla turpis suscipit. Quisque vestibulum rhoncus ligula.</p>
 								<footer>
 									<ul class="actions">
-										<li><a href="{% url 'post_detail.html' %}" class="button large">Continue Reading</a></li>
+										<li><a href="{% url 'posts:post_detail' %}" class="button large">Continue Reading</a></li>
 									</ul>
 									<ul class="stats">
 										<li><a href="#">General</a></li>
@@ -134,24 +130,24 @@
 									<!-- Mini Post -->
 										<article class="mini-post">
 											<header>
-												<h3><a href="{% url 'post_detail.html' %}single.html">Odio congue mattis</a></h3>
+												<h3><a href="{% url 'posts:post_detail' %}single.html">Odio congue mattis</a></h3>
 												<time class="published" datetime="2015-10-18">October 18, 2015</time>
 												<a href="#" class="author">
                                                 <img src="{% static "posts/images/avatar.jpg" %}" alt="" /></a>
 											</header>
-											<a href="{% url 'post_detail.html' %}" class="image">
+											<a href="{% url 'posts:post_detail' %}" class="image">
                                             <img src="{% static "posts/images/pic06.jpg" %}" alt="" /></a>
 										</article>
 
 									<!-- Mini Post -->
 										<article class="mini-post">
 											<header>
-												<h3><a href="{% url 'post_detail.html' %}single.html">Enim nisl veroeros</a></h3>
+												<h3><a href="{% url 'posts:post_detail' %}single.html">Enim nisl veroeros</a></h3>
 												<time class="published" datetime="2015-10-17">October 17, 2015</time>
 												<a href="#" class="author">
                                                 <img src="{% static "posts/images/avatar.jpg" %}" alt="" /></a>
 											</header>
-											<a href="{% url 'post_detail.html' %}" class="image">
+											<a href="{% url 'posts:post_detail' %}" class="image">
                                                 <img src="{% static "posts/images/pic07.jpg" %}" alt="" />
                                             </a>
 										</article>
@@ -166,30 +162,30 @@
 									<li>
 										<article>
 											<header>
-												<h3><a href="{% url 'post_detail.html' %}single.html">Euismod amet placerat vivamus porttitor</a></h3>
+												<h3><a href="{% url 'posts:post_detail' %}single.html">Euismod amet placerat vivamus porttitor</a></h3>
 												<time class="published" datetime="2015-10-10">October 10, 2015</time>
 											</header>
-											<a href="{% url 'post_detail.html' %}single.html" class="image">
+											<a href="{% url 'posts:post_detail' %}single.html" class="image">
                                             <img src="{% static "posts/images/pic10.jpg" %}" alt="" /></a>
 										</article>
 									</li>
 									<li>
 										<article>
 											<header>
-												<h3><a href="{% url 'post_detail.html' %}">Magna enim accumsan tortor cursus ultricies</a></h3>
+												<h3><a href="{% url 'posts:post_detail' %}">Magna enim accumsan tortor cursus ultricies</a></h3>
 												<time class="published" datetime="2015-10-08">October 8, 2015</time>
 											</header>
-											<a href="{% url 'post_detail.html' %}single.html" class="image">
+											<a href="{% url 'posts:post_detail' %}single.html" class="image">
                                             <img src="{% static "posts/images/pic11.jpg" %}" alt="" /></a>
 										</article>
 									</li>
 									<li>
 										<article>
 											<header>
-												<h3><a href="{% url 'post_detail.html' %}single.html">Congue ullam corper lorem ipsum dolor</a></h3>
+												<h3><a href="{% url 'posts:post_detail' %}single.html">Congue ullam corper lorem ipsum dolor</a></h3>
 												<time class="published" datetime="2015-10-06">October 7, 2015</time>
 											</header>
-											<a href="{% url 'post_detail.html' %}" class="image">
+											<a href="{% url 'posts:post_detail' %}" class="image">
                                                 <img src="{% static "posts/images/pic12.jpg" %}" alt="" />
                                             </a>
 										</article>
