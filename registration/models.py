@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.validators import validators
+from django.db.models import signals
+from django.dispatch import receiver
+
 from base.models import Club
 import os
 
@@ -47,3 +50,26 @@ class GoogleAuth(models.Model):
 class EmailConfirmation(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_confirmed = models.BooleanField(default=False)
+
+
+@receiver(signals.post_save, sender=User)
+def set_email_confirmed_false(sender, instance, created, **kwargs):
+    if created:
+        EmailConfirmation.objects.create(user=instance)
+
+        # Users passsing via oauth don't need to confirm email
+        if instance.has_usable_password() is False:
+            instance.emailconfirmation.email_confirmed = True
+
+        # Superusers don't need to confirm emails
+        elif instance.is_superuser:
+            instance.emailconfirmation.email_confirmed = True
+
+        instance.emailconfirmation.save()
+
+
+@receiver(signals.post_save, sender=User)
+def create_profile_and_oauth(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+        GoogleAuth.objects.create(user=instance)
