@@ -32,6 +32,9 @@ def signup(request):
         form = SignupForm()
     return render(request, 'registration/signup.html', {'form': form,})
 
+
+# Create your views here.
+
 def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -45,3 +48,4 @@ def activate(request, uidb64, token):
         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
     else:
         return HttpResponse('Activation link is invalid!')
+
