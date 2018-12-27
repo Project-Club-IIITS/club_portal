@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    {% block head %}
+    {% endblock %}
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="{% static "posts/css/main.css" %}"/>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Header -->
+    <!-- Header -->
+    <header id="header">
+        <a href="#" class="logo">
+            <img src="{% static "posts/images/logo-iota.jpg" %}" alt="" style="width:75px; height:44px;margin:5px;margin-left: 15px;border-radius:10px; "/>
+        </a>
+        <nav class="main">
+            <ul>
+                <li class="search">
+                    <a class="fa-search" href="#search">Search</a>
+                    <form id="search" method="get" action="#">
+                        <input type="text" name="query" placeholder="Search"/>
+                    </form>
+                </li>
+                <li class="menu">
+                    <a class="fa-bars" href="#menu">Menu</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <!-- Menu -->
+    <section id="menu">
+
+        <!-- Search -->
+        <section>
+            <form class="search" method="get" action="#">
+                <input type="text" name="query" placeholder="Search"/>
+            </form>
+        </section>
+
+        <!-- Links -->
+        <section>
+            <ul class="links">
+                <li>
+                    <a href="#">
+                        <h3>Lorem ipsum</h3>
+                        <p>Feugiat tempus veroeros dolor</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <h3>Dolor sit amet</h3>
+                        <p>Sed vitae justo condimentum</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <h3>Feugiat veroeros</h3>
+                        <p>Phasellus sed ultricies mi congue</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <h3>Etiam sed consequat</h3>
+                        <p>Porta lectus amet ultricies</p>
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Actions -->
+        <section>
+            <ul class="actions stacked">
+                <li><a href="#" class="button large fit">Log In</a></li>
+            </ul>
+        </section>
+
+    </section>
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+<!-- Scripts -->
+<script src="{% static "posts/js/jquery.min.js" %}"></script>
+<script src="{% static "posts/js/browser.min.js" %}"></script>
+<script src="{% static "posts/js/breakpoints.min.js" %}"></script>
+<script src="{% static "posts/js/util.js" %}"></script>
+<script src="{% static "posts/js/main.js" %}"></script>
+
+
+{% block script %}
+{% endblock %}
+
+</body>
+</html>
