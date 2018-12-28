@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'base',
     'registration',
     'accounts',
-    'posts'
+    'posts',
+    'clubs',
 ]
 
 MIDDLEWARE = [
