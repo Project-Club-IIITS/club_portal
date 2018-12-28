@@ -16,10 +16,8 @@ except ImportError:
 
 import os
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = secret_settings.BASE_DIR
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -32,8 +30,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
 
-if DEBUG is False and secret_settings.IS_PUBLIC is True :
-    raise ImportError("Public settings contain fake values for sensitive data like secret key, database credentials etc. DO NOT USE PUBLIC SETTINGS IN PRODUCTION! Get the secret settings from leads or maintainers of website team")
+if DEBUG is False and secret_settings.IS_PUBLIC is True:
+    raise ImportError(
+        "Public settings contain fake values for sensitive data like secret key, database credentials etc. DO NOT USE PUBLIC SETTINGS IN PRODUCTION! Get the secret settings from leads or maintainers of website team")
 # Application definition
 
 INSTALLED_APPS = [
@@ -64,7 +63,7 @@ ROOT_URLCONF = 'club_portal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,12 +78,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'club_portal.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = secret_settings.DATABASES
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -104,7 +101,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -117,7 +113,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -132,4 +127,6 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Post
 
+POST_ID_SECRET_LENGTH = secret_settings.POST_ID_SECRET_LENGTH
