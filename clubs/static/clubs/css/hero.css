@@ -2642,11 +2642,11 @@ input, select, textarea {
 				border-left: dotted 1px;
 			}
 
-				#footer .copyright li:first-child {
-					margin: 0;
-					padding: 0;
-					border: 0;
-				}
+			#footer .copyright li:first-child {
+				margin: 0;
+				padding: 0;
+				border: 0;
+			}
 
 /* Wide */
 
