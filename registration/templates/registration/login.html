@@ -11,8 +11,8 @@
 <body class="align">
   <h1 style="text-align: center;color: white">IOTA</h1>
   <div class="grid">
-    <form action="https://httpbin.org/post" method="POST" class="form login">
-
+    <form action="{% url 'registration:login' %}" method="POST" class="form login">
+      {% csrf_token %}
       <div class="form__field">
         <label for="login__username"><svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">Username</span></label>
         <input id="login__username" type="text" name="username" class="form__input" placeholder="Username" required>

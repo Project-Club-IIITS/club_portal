@@ -42,6 +42,7 @@ class UserProfile(models.Model):
 
 
 class GoogleAuth(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     google_id = models.CharField(max_length=100, null=True, blank=True)
     google_salt = models.CharField(max_length=100, null=True, blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True)
@@ -50,6 +51,9 @@ class GoogleAuth(models.Model):
 class EmailConfirmation(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_confirmed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username
 
 
 @receiver(signals.post_save, sender=User)

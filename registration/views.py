@@ -10,15 +10,17 @@ from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf.global_settings import EMAIL_HOST_USER as sender
+from .models import EmailConfirmation
 
 
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
+            user = form.save()
+            user_email = EmailConfirmation.objects.get(user=user)
+            user_email.is_confirmed = True
+            user_email.save()
             current_site = get_current_site(request)
             mail_subject = 'Activate your Account.'
             message = render_to_string('registration/acc_active_email.html', {
@@ -44,7 +46,7 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
+        user.emailconfirmation.is_confirmed = True
         user.save()
         login(request, user)
         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
