@@ -24,7 +24,7 @@ urlpatterns = [
     path('registration/', include("registration.urls")),
     path('accounts/', include("accounts.urls")),
     path('posts/', include("posts.urls")),
-    path('', base_views.IndexView.as_view(), name="index")
+    path('', include("base.urls"))
 ]
 
 if settings.DEBUG:
