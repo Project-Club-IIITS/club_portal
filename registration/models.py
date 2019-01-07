@@ -43,9 +43,11 @@ class UserProfile(models.Model):
 
 class GoogleAuth(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    google_id = models.CharField(max_length=100, null=True, blank=True)
-    google_salt = models.CharField(max_length=100, null=True, blank=True)
-    time_stamp = models.DateTimeField(auto_now_add=True)
+    firebase_uid = models.CharField(max_length=150, null=True)
+    auth_token = models.TextField(null=True, blank=True)
+    refresh_token = models.TextField(null=True, blank=True)
+    profile_pic_link = models.URLField(null=True, blank=True)
+
 
 
 class EmailConfirmation(models.Model):
