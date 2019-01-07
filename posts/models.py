@@ -59,9 +59,13 @@ class Option(models.Model):
 
 
 class Vote(models.Model):
+    poll = models.ForeignKey(to=Poll, on_delete=models.CASCADE)
     option = models.ForeignKey(Option, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     time_stamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'poll']  # One user can thus vote for only 1 option
 
 
 class Comment(models.Model):
