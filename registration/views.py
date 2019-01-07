@@ -1,7 +1,10 @@
+from time import sleep
+
+from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from .forms import SignupForm
+from .forms import SignupForm, FirebaseGoogleLoginForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -12,10 +15,14 @@ from django.core.mail import send_mail
 from django.conf.global_settings import EMAIL_HOST_USER as sender
 from .models import EmailConfirmation
 
+from firebase_admin import auth
+
 
 def signup(request):
+    fireform = FirebaseGoogleLoginForm()
     if request.method == 'POST':
         form = SignupForm(request.POST)
+
         if form.is_valid():
             user = form.save()
             user_email = EmailConfirmation.objects.get(user=user)
@@ -26,16 +33,15 @@ def signup(request):
             message = render_to_string('registration/acc_active_email.html', {
                 'user': user,
                 'domain': current_site.domain,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-                'token':account_activation_token.make_token(user),
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                'token': account_activation_token.make_token(user),
             })
             to_email = form.cleaned_data.get('email')
             send_mail(mail_subject, message, sender, [to_email])
             return HttpResponse('Please confirm your email address to complete the registration')
     else:
         form = SignupForm()
-    return render(request, 'registration/signup.html', {'form': form,})
-
+    return render(request, 'registration/signup.html', {'form': form, 'fireform': fireform})
 
 
 # Create your views here.
@@ -54,5 +60,65 @@ def activate(request, uidb64, token):
     else:
         return HttpResponse('Activation link is invalid!')
 
+
 def choose_club(request):
     return render(request, 'registration/choose-club.html')
+
+
+def google_signin(request):
+    if request.method == "POST":
+        google_form = FirebaseGoogleLoginForm(request.POST)
+        if google_form.is_valid():
+            # print(google_form.cleaned_data)
+            try:
+                firebase_user = auth.get_user(google_form.cleaned_data['firebase_uid'])
+                if firebase_user.email != google_form.cleaned_data['email']:
+                    raise ValidationError(" Email id does not match!")
+            except:
+                return HttpResponse("The Data we received could not be verified by Google. Please try to login using \
+                email id and pasword."
+                                    )
+
+            users = User.objects.filter(email=firebase_user.email)
+
+            if len(users) == 0:
+                #Signup
+                new_user = User.objects.create(email=google_form.cleaned_data['email'],
+                                               username=google_form.cleaned_data['email'].split('@')[0],
+                                               password=google_form.cleaned_data['firebase_uid']
+                                               )
+
+                names = google_form.cleaned_data['full_name']
+                names = names.split(' ')
+                new_user.first_name = names[0]
+                if len(names)>1:
+                    new_user.last_name = " ".join(names[1:])
+
+                new_user.save()
+
+            else:
+                #Login
+                new_user = users[0]
+
+            #Attach form fields to model
+            guser = new_user.googleauth
+            guser.firebase_uid = google_form.cleaned_data['firebase_uid']
+            guser.auth_token = google_form.cleaned_data['auth_token']
+            guser.refresh_token = google_form.cleaned_data['refresh_token']
+            guser.profile_pic_link = google_form.cleaned_data['profile_pic_link']
+            guser.save()
+            
+            login(request, new_user)
+            return redirect('base:index')
+
+        else:
+            print("oops unclean data")
+            return HttpResponse("Invalid data")
+
+    else:
+        return HttpResponse("Method GET not allowed")
+
+
+
+
+
