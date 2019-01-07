@@ -17,6 +17,7 @@ except ImportError:
     from . import public_settings as secret_settings
 
 import os
+import firebase_admin
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = secret_settings.BASE_DIR
@@ -181,3 +182,8 @@ EMAIL_HOST_USER = secret_settings.EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = secret_settings.EMAIL_HOST_PASSWORD
 
 POST_ID_SECRET_LENGTH = secret_settings.POST_ID_SECRET_LENGTH
+
+# Firebase credentials
+
+FIREBASE_CREDENTIALS = firebase_admin.credentials.Certificate(secret_settings.CREDENTIAL_CERTIFICATE_PATH)
+default_app = firebase_admin.initialize_app(FIREBASE_CREDENTIALS)
