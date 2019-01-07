@@ -20,6 +20,7 @@ from django.urls import path, include
 from base import views as base_views
 
 urlpatterns = [
+    path('api/', include("api.urls")),
     path('admin/', admin.site.urls),
     path('registration/', include("registration.urls")),
     path('accounts/', include("accounts.urls")),
