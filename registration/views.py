@@ -37,6 +37,7 @@ def signup(request):
     return render(request, 'registration/signup.html', {'form': form,})
 
 
+
 # Create your views here.
 
 def activate(request, uidb64, token):
@@ -53,3 +54,5 @@ def activate(request, uidb64, token):
     else:
         return HttpResponse('Activation link is invalid!')
 
+def choose_club(request):
+    return render(request, 'registration/choose-club.html')

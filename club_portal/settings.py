@@ -18,10 +18,8 @@ except ImportError:
 
 import os
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = secret_settings.BASE_DIR
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -34,8 +32,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
 
-if DEBUG is False and secret_settings.IS_PUBLIC is True :
-    raise ImportError("Public settings contain fake values for sensitive data like secret key, database credentials etc. DO NOT USE PUBLIC SETTINGS IN PRODUCTION! Get the secret settings from leads or maintainers of website team")
+if DEBUG is False and secret_settings.IS_PUBLIC is True:
+    raise ImportError(
+        "Public settings contain fake values for sensitive data like secret key, database credentials etc. DO NOT USE PUBLIC SETTINGS IN PRODUCTION! Get the secret settings from leads or maintainers of website team")
 # Application definition
 
 INSTALLED_APPS = [
@@ -86,12 +85,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'club_portal.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = secret_settings.DATABASES
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -111,7 +108,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -125,8 +121,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = 'registration:login'
+LOGIN_REDIRECT_URL = 'base:index'
+
+LOGOUT_REDIRECT_URL = 'base:index'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -176,9 +174,10 @@ SIMPLE_JWT = {
 # Emails
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
+EMAIL_HOST = secret_settings.EMAIL_HOST
+EMAIL_PORT = secret_settings.EMAIL_PORT
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "adwaitthatteytemp@gmail.com"
-EMAIL_HOST_PASSWORD = "Hello World"
+EMAIL_HOST_USER = secret_settings.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = secret_settings.EMAIL_HOST_PASSWORD
 
+POST_ID_SECRET_LENGTH = secret_settings.POST_ID_SECRET_LENGTH

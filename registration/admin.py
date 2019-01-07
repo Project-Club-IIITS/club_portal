@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import EmailConfirmation, LastPasswordChange
+from .models import EmailConfirmation
 
 
 admin.site.register(EmailConfirmation)
-admin.site.register(LastPasswordChange)

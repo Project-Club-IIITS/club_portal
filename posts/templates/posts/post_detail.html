@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block head %}
+    <title>Post_Detail</title>
+{% endblock %}
+
+{% block content %}
+    <div id="main">
+
+        <article class="post">
+            <header>
+                <div class="title">
+                    <h2><a href="#">{{ post.title }}</a></h2>
+                    <p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>
+                    <div></div>
+                </div>
+                <div class="meta">
+                    <time class="published" datetime="2015-11-01">{{ post.created }}</time>
+                    <a href="#" class="author"><span class="name">{{ post.author.get_full_name }}</span><img
+                            src="{% static "posts/images/avatar.jpg" %}" alt=""/></a>
+                </div>
+            </header>
+            {% if post.cover_image %}
+            <span class="image featured"><img src="{{ post.cover_image.url }}" alt=""/></span>
+            {% endif %}
+            <p>
+                {{ post.body|safe }}
+            </p>
+            <footer>
+                <ul class="stats">
+                    <li><a href="#" class="icon fa-heart fa-3x">28</a></li>
+                    <li><a href="#" class="icon fa-comment fa-3x">128</a></li>
+                    <li><a href="#" class="icon fa-thumbtack fa-3x"></a></li>
+
+
+                </ul>
+            </footer>
+        </article>
+
+        <section id="footer">
+            <ul class="icons">
+                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
+                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
+                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
+                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
+            </ul>
+            <p class="copyright">&copy; CYBERTEAM
+        </section>
+    </div>
+{% endblock %}
+
+
+
+{% block script %}
+{% endblock %}
