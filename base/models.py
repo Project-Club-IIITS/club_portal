@@ -46,6 +46,10 @@ class ClubModerator(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.user.username + ' moderator')
 
     class Meta:
         unique_together = ('user', 'club')

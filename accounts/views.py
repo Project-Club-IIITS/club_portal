@@ -1,38 +1,45 @@
 from django.shortcuts import render
 
-from base.models import ClubPresident, ClubModerator
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import user_passes_test
-
-def ifAdmin(user):
-    try:
-        user.clubpresident
-        return True
-    except:
-        return False
-
-
+from base.models import ClubPresident, ClubModerator, Club
 
 # @user_passes_test(ifAdmin)
-def listForPresident(request):
+def listForPresident(request, club_name):
+
+    club = Club.objects.get(name = club_name)
 
     try:
-        print(request.user.clubpresident_set.all())
+        if (club.clubpresident.user == request.user):
+            moderators = club.clubmoderator_set.filter(is_approved=False)
+        else:
+            moderators = []
     except:
-        print('Not Done')
-
-
-
-
-    users = User.objects.exclude(moderators)
-
+        moderators = []
 
     print(moderators)
-    print(users)
 
     context = {
         'mods': moderators,
-        'users': users
     }
 
     return render(request, 'accounts/listForPresident.html', context)
+
+
+
+def listForModerator(request, club_name):
+
+    club = Club.objects.get(name = club_name)
+
+    try:
+        club.clubmoderator_set.get(user=request.user)
+        users = club.clubmember_set.filter(is_approved=False)
+    except:
+        print('except mein aya')
+        users = []
+
+    print(users)
+
+    context = {
+        'users': users,
+    }
+
+    return render(request, 'accounts/listForModerator.html', context)
