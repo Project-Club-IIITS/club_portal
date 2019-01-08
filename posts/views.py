@@ -2,11 +2,11 @@ from time import sleep
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
 from base.models import Club
-from posts.forms import PostFilterForm
+from posts.forms import PostFilterForm, PostCreationForm
 from posts.models import PinnedPost, Post
 
 
@@ -60,3 +60,34 @@ def post_detail(request, club_name_slug, encrypted_id):
 
     return render(request, "posts/post_detail.html", {"post": post})
 
+def add_post(request, club_name_slug):
+    if request.method == "POST":
+        form = PostCreationForm(request.POST,request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            club_name = club_name_slug.replace('-', ' ')
+            club = get_object_or_404(Club, name=club_name)
+            post.author = request.user
+            post.club = club
+            post.save()
+            return redirect("posts:posts",club_name_slug)
+    else:
+        form = PostCreationForm()
+    context = {
+        "form" : form,
+    }
+    return render(request,"posts/post_add.html",context)
+
+def edit_post(request, club_name_slug, id):
+    post = get_object_or_404(Post, id=id)
+    if request.method == "POST":
+        form = PostCreationForm(request.POST,request.FILES,instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect("posts:posts",club_name_slug)
+    else:
+        form = PostCreationForm(instance=post)
+    context = {
+        "form" : form,
+    }
+    return render(request,"posts/post_edit.html",context)
