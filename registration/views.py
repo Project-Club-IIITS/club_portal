@@ -19,7 +19,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             user_email = EmailConfirmation.objects.get(user=user)
-            user_email.is_confirmed = True
+            user_email.is_confirmed = False
             user_email.save()
             current_site = get_current_site(request)
             mail_subject = 'Activate your Account.'

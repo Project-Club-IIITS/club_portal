@@ -23,11 +23,19 @@ class Club(models.Model):
         return self.name
 
 
+    def slug(self):
+        return self.name.replace(' ','-')
+
+
 class ClubPresident(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.OneToOneField(Club, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+    def __str__(self):
+        return self.user.username
 
     class Meta:
         unique_together = ('user', 'club')

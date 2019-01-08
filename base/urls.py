@@ -1,9 +1,10 @@
 from django.urls import path
 from . import views
+from django.contrib.auth.views import TemplateView
 
 app_name = "base"
 
 urlpatterns = [
-    path('', views.IndexView.as_view(), name='index'),
+    path('', TemplateView.as_view(template_name = "base/index.html"), name='index'),
     path('user-list', views.usersList, name='user_list'),
 ]

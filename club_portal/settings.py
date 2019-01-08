@@ -122,7 +122,7 @@ USE_L10N = True
 USE_TZ = True
 
 LOGIN_URL = 'registration:login'
-LOGIN_REDIRECT_URL = 'base:index'
+LOGIN_REDIRECT_URL = 'posts:posts'
 
 LOGOUT_REDIRECT_URL = 'base:index'
 
