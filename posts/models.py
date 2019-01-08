@@ -42,6 +42,9 @@ class Post(models.Model):
 class PinnedPost(models.Model):
     post = models.OneToOneField(to=Post, on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ['-post__last_updated']
+
 
 class Image(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
