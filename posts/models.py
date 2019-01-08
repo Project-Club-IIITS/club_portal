@@ -6,7 +6,7 @@ from django.db.models import signals
 from django.dispatch import receiver
 
 from base.models import Club
-
+from ckeditor_uploader.fields import RichTextUploadingField
 # Create your models here.
 from posts.utils import encrypt_id
 
@@ -20,7 +20,7 @@ class Post(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     is_approved = models.BooleanField(default=False)
     title = models.CharField(max_length=150)
-    body = models.TextField()
+    body = RichTextUploadingField()  # from ckeditor
     is_public = models.BooleanField(default=False)
     cover_image = models.ImageField(null=True, blank=True)
 
