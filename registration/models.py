@@ -43,7 +43,7 @@ class UserProfile(models.Model):
 
 class GoogleAuth(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    firebase_uid = models.CharField(max_length=150, null=True)
+    firebase_uid = models.CharField(max_length=150, default=' ')
     auth_token = models.TextField(null=True, blank=True)
     refresh_token = models.TextField(null=True, blank=True)
     profile_pic_link = models.URLField(null=True, blank=True)

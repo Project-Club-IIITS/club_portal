@@ -107,7 +107,7 @@ def google_signin(request):
             guser.refresh_token = google_form.cleaned_data['refresh_token']
             guser.profile_pic_link = google_form.cleaned_data['profile_pic_link']
             guser.save()
-            
+
             login(request, new_user)
             return redirect('base:index')
 

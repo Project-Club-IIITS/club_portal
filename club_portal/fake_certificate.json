@@ -1,12 +1,12 @@
 {
   "type": "service_account",
   "project_id": "iiits-club-portal",
-  "private_key_id": "6k21hoeg213783jieyafbhiggh72134b6230a5",
-  "private_key": "-----BEGIN PRIVATE KEY-----\n\n-----END PRIVATE KEY-----\n",
+  "private_key_id": "6e33f1dc748a0fce44b8770088409b450b6230a5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQClkA0VEVcY9/fP\nRT+AHMZABAGNF3Yu8j9oQSkkLMdIOI8wcU4bCg9+jwawRdOBLRiZIiZkGq/escOQ\nivCwWXTLdihgYW8jYzFErqv93a8ayY1c2LQocFMs+XApU+ndoP+ZcRRSv/Zs+4Xz\n0YkUQ05i9KLp3uVaA6CLifP8BTCdZZrGKAV0sJVCcJqQDRAZMsI01sJbSB7sC2oq\nBhLK5dY8zfpmG2HmEAM7KPfvPct5rRfUhy/rTDTodW+3mJ5dY6U90PnW59yq9IA4\nDuELfn2CXE9TQ7f6j5H7McN1CINSCDXCxOnThw0uE0KJEweQ6Hv118uXIJVneJdn\nApVj7d9ZAgMBAAECggEAH3rFUgUrB19Wqf1jtotCErfwR5B3czOyZLNHDE7LUWsX\npsFUdYWzLoApaGjOb1hQvgUlQZFlcTVhluEkJJPNxkXgJXtBM3xPyNxhbXKyMaiz\nDT1S/AFnfzyqW+FNrUtIbjd3AsjnJQ+qB5MGumiVxfD37Pnpp/TamM2RK5EdDkAO\nGc4hgeHzBp1+7qJkqBX75TuYZr+SRy8SiUC8qN8P9kPK0ItLc+0PVBYfqiSmBrjG\na5Wh2dXUBdU1gbQgtWl8flhAcQkFj53hlY7aRFrwXcbahFLyBRvj3tJTGc3/1J14\nGxMYLZUmeIdRNjGd6IhrkARRlIbytvKcniAz1X3YpQKBgQDUue4ZVqgos+z8gQMe\ngEShOADoXWiXrWVJ+q9CyJ30As5WKkpGVVKnqWKE/dmaxhaRhJ0W1SxUqvN/KJvC\nQ/VxWLvuJwVoyAPwzp2N/esLZQJGYEDk5U7hId3o0t6USkLKfzRkb0ImITwXQcbD\nYAA/qYT9sdujYmiWjvvD1YO+RwKBgQDHPf/2BPBuMEnGSArCcFeqDavjMDowWSTD\n6ilZqZO8Ze1LRVOVU2JsnjczOu7MO7eeR50RuNch2DMqqLdpiMvIc+Oz/7rfXC6O\n46aJiB4Fe7oNUk48H7YkUAxCa2lm5H2kxrbE2+lGVxydCo1zYLTfktqRZXljtoQG\nVaMOqSYlXwKBgBeFDyxCBompixRH915R9ESW+pK2cTAD/eT2EJajs8Mc5E9mkZvB\nJ0heVAQ8ROj16dzg+rVhkGs0E4QFq2MJPIPxuaWVLuXs53KihY0DfA9gdaXuUn58\nVAJUSkLJvc5Lf6L/+Xz5SCkLF6fCoAVOAfkH9ypNlek0ojezS2bVnqFVAoGAfuSK\nvxn4MoVIhyLcz2cTPffFEEVn2eD8XFYnDbbFo4ha78RwbjsUBU9iopsW+TXTRNgh\nPec2BJUYSUP4xBrehoTgcYQedSDVeiWcrBzn2eAp51ATCZG8xDXDCQ41q9U7/BSe\n1JOmZykVzSKqYeAmcfmqgE1bWVkljo898RljdQsCgYEAzQsq8aTVqSopjhfHV07U\n6yA59ZeLwM9OoRf7tGxx3vdflcMZ1Ui6cVUnqO4Uqtr6AACfCSW/eQ4D6++ugfD4\nrtQFXNZ8ZjF5VGeEg30XU2SymVg2fwTF3NXOX9TvizQKzgKP1yCtrUdW3TlsXH05\n6eJBJ7G/qRAsO9h9WS+colk=\n-----END PRIVATE KEY-----\n",
   "client_email": "firebase-adminsdk-10gke@iiits-club-portal.iam.gserviceaccount.com",
-  "client_id": "12345678901234567890",
+  "client_id": "108886047301572235434",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token",
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-10gke%40iiits-club-portal.iam.gserviceaccount.com"
+  "client_x509_cert_url": "fakeurl.com"
 }
