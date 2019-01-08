@@ -70,19 +70,24 @@ def google_signin(request):
         google_form = FirebaseGoogleLoginForm(request.POST)
         if google_form.is_valid():
             # print(google_form.cleaned_data)
+            users = User.objects.filter(email=google_form.cleaned_data['email'])
+            if len(users) > 0 and google_form.cleaned_data['firebase_uid'] == users[0].googleauth.firebase_uid:
+                # User already validated. Directly login
+                login(request, users[0])
+                return redirect('base:index')
+
+            # User not validated or uid has changed
             try:
                 firebase_user = auth.get_user(google_form.cleaned_data['firebase_uid'])
                 if firebase_user.email != google_form.cleaned_data['email']:
                     raise ValidationError(" Email id does not match!")
             except:
                 return HttpResponse("The Data we received could not be verified by Google. Please try to login using \
-                email id and pasword."
+                email id and password."
                                     )
 
-            users = User.objects.filter(email=firebase_user.email)
-
             if len(users) == 0:
-                #Signup
+                # Signup
                 new_user = User.objects.create(email=google_form.cleaned_data['email'],
                                                username=google_form.cleaned_data['email'].split('@')[0],
                                                password=google_form.cleaned_data['firebase_uid']
@@ -91,16 +96,16 @@ def google_signin(request):
                 names = google_form.cleaned_data['full_name']
                 names = names.split(' ')
                 new_user.first_name = names[0]
-                if len(names)>1:
+                if len(names) > 1:
                     new_user.last_name = " ".join(names[1:])
 
                 new_user.save()
 
             else:
-                #Login
+                # Login
                 new_user = users[0]
 
-            #Attach form fields to model
+            # Attach form fields to model
             guser = new_user.googleauth
             guser.firebase_uid = google_form.cleaned_data['firebase_uid']
             guser.auth_token = google_form.cleaned_data['auth_token']
@@ -117,8 +122,3 @@ def google_signin(request):
 
     else:
         return HttpResponse("Method GET not allowed")
-
-
-
-
-
