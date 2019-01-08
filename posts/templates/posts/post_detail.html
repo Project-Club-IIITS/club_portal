@@ -17,12 +17,20 @@
                 </div>
                 <div class="meta">
                     <time class="published" datetime="2015-11-01">{{ post.created }}</time>
-                    <a href="#" class="author"><span class="name">{{ post.author.get_full_name }}</span><img
-                            src="{% static "posts/images/avatar.jpg" %}" alt=""/></a>
+                    <a href="#" class="author"><span class="name">{{ post.author.get_full_name }}</span>
+                        {% if post.author.userprofile.profile_pic %}
+                            <img src="{{ post.author.userprofile.profile_pic.url }}" alt=""/>
+                        {% elif post.author.googleauth.profile_pic_link %}
+                            <img src="{{ post.author.googleauth.profile_pic_link }}" alt=""/>
+                        {% else %}
+                            <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
+                            {#                                TODO Put author name and profile pic here#}
+                        {% endif %}
+                    </a>
                 </div>
             </header>
             {% if post.cover_image %}
-            <span class="image featured"><img src="{{ post.cover_image.url }}" alt=""/></span>
+                <span class="image featured"><img src="{{ post.cover_image.url }}" alt=""/></span>
             {% endif %}
             <p>
                 {{ post.body|safe }}
@@ -32,6 +40,7 @@
                     <li><a href="#" class="icon fa-heart fa-3x">28</a></li>
                     <li><a href="#" class="icon fa-comment fa-3x">128</a></li>
                     <li><a href="#" class="icon fa-thumbtack fa-3x"></a></li>
+                    <li><a href="{% url 'posts:post-edit' post.club post.id %}" class="icon fa-thumbtack fa-3x">Edit</a></li>
 
 
                 </ul>
@@ -45,7 +54,7 @@
                 <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
                 <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
             </ul>
-            <p class="copyright">&copy; CYBERTEAM
+
         </section>
     </div>
 {% endblock %}

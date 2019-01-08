@@ -6,7 +6,7 @@ from django.db.models import signals
 from django.dispatch import receiver
 
 from base.models import Club
-
+from ckeditor_uploader.fields import RichTextUploadingField
 # Create your models here.
 from posts.utils import encrypt_id
 
@@ -20,7 +20,7 @@ class Post(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     is_approved = models.BooleanField(default=False)
     title = models.CharField(max_length=150)
-    body = models.TextField()
+    body = RichTextUploadingField()  # from ckeditor
     is_public = models.BooleanField(default=False)
     cover_image = models.ImageField(null=True, blank=True)
 
@@ -42,6 +42,9 @@ class Post(models.Model):
 class PinnedPost(models.Model):
     post = models.OneToOneField(to=Post, on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ['-post__last_updated']
+
 
 class Image(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -59,9 +62,13 @@ class Option(models.Model):
 
 
 class Vote(models.Model):
+    poll = models.ForeignKey(to=Poll, on_delete=models.CASCADE)
     option = models.ForeignKey(Option, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     time_stamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'poll']  # One user can thus vote for only 1 option
 
 
 class Comment(models.Model):

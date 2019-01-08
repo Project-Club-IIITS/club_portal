@@ -24,3 +24,5 @@ EMAIL_HOST_USER = 'adwaitthatteytemp@gmail.com'
 EMAIL_HOST_PASSWORD = "Ask Adwait Yourself"
 
 POST_ID_SECRET_LENGTH = 6
+
+CREDENTIAL_CERTIFICATE_PATH = os.path.join(BASE_DIR, 'club_portal', 'fake_certificate.json')
