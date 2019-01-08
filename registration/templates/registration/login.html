@@ -38,6 +38,8 @@
             <input type="submit" value="Sign In">
         </div>
         <a href="javascript:void(0)" onclick="initiate_google_signin()">Google Sign in</a>
+
+
     </form>
 
     <p class="text--center">Not a member of IOTA?<a href="{% url 'registration:signup' %}">Sign up now</a>
@@ -91,51 +93,39 @@
     var provider = new firebase.auth.GoogleAuthProvider();
 
 
-    firebase.auth().getRedirectResult().then(function (result) {
-
-        var gog_form = document.forms["google_signin_form"];
-        if (result.credential) {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-
-            var token = result.credential.accessToken;
-            console.log(token);
-            gog_form["auth_token"].value = token;
-            // ...
-
-        }
-        // The signed-in user info.
-        if (result.user) {
-            var user = result.user;
-            console.log("Please Wait... Authentication in progress");
-            console.log(user);
-
-            gog_form['firebase_uid'].value = user.uid;
-            gog_form['refresh_token'].value = user.refreshToken;
-            gog_form['email'].value = user.email;
-            gog_form['profile_pic_link'].value = user.photoURL;
-            gog_form['full_name'].value = user.displayName;
-
-            console.log('done!');
-            gog_form.submit();
-        }
-        else{
-
-        }
-    }).catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
-        console.log("oops error");
-        console.log(error)
-        // ...
-    });
-
     function initiate_google_signin() {
-        firebase.auth().signInWithRedirect(provider);
+        var gog_form = document.forms["google_signin_form"];
+        firebase.auth().signInWithPopup(provider).then(function (result) {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            var token = result.credential.accessToken;
+            gog_form["auth_token"].value = token;
+            // The signed-in user info.
+            var user = result.user;
+            if(user) {
+                {#TODO Add a loader here#}
+                gog_form['firebase_uid'].value = user.uid;
+                gog_form['refresh_token'].value = user.refreshToken;
+                gog_form['email'].value = user.email;
+                gog_form['profile_pic_link'].value = user.photoURL;
+                gog_form['full_name'].value = user.displayName;
+
+                gog_form.submit();
+            }
+            else{
+            {#    TODO Display a messege saying error occured#}
+            }
+            // ...
+        }).catch(function (error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+        {#    TODO Display a messege saying error has occured and try again later#}
+        });
     }
 </script>
 
