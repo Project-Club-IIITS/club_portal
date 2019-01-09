@@ -39,6 +39,17 @@ class Post(models.Model):
         return self.title[:20]
 
 
+class PostUpdate(models.Model):
+    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
+    content = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['post', '-last_updated']
+
+
 class PinnedPost(models.Model):
     post = models.OneToOneField(to=Post, on_delete=models.CASCADE)
 

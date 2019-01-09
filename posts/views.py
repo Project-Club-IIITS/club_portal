@@ -1,15 +1,17 @@
 from time import sleep
 
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
-from base.models import Club
-from posts.forms import PostFilterForm, PostCreationForm
+from base.models import Club, ClubModerator
+from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm
 from posts.models import PinnedPost, Post
 
-
+@login_required
 def posts(request, club_name_slug):
     club_name = club_name_slug.replace('-', ' ')
     club = get_object_or_404(Club, name=club_name)
@@ -54,15 +56,16 @@ def posts(request, club_name_slug):
                    "club_slug": club_name_slug
                    })
 
-
+@login_required
 def post_detail(request, club_name_slug, encrypted_id):
     post = get_object_or_404(Post, encrypted_id=encrypted_id)
 
-    return render(request, "posts/post_detail.html", {"post": post})
+    return render(request, "posts/post_detail.html", {"post": post, "club_name_slug":club_name_slug})
+
 
 def add_post(request, club_name_slug):
     if request.method == "POST":
-        form = PostCreationForm(request.POST,request.FILES)
+        form = PostCreationForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             club_name = club_name_slug.replace('-', ' ')
@@ -70,24 +73,44 @@ def add_post(request, club_name_slug):
             post.author = request.user
             post.club = club
             post.save()
-            return redirect("posts:posts",club_name_slug)
+            return redirect("posts:posts", club_name_slug)
     else:
         form = PostCreationForm()
     context = {
-        "form" : form,
+        "form": form,
     }
-    return render(request,"posts/post_add.html",context)
+    return render(request, "posts/post_add.html", context)
 
+@login_required
 def edit_post(request, club_name_slug, id):
     post = get_object_or_404(Post, id=id)
     if request.method == "POST":
-        form = PostCreationForm(request.POST,request.FILES,instance=post)
+        form = PostCreationForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
-            return redirect("posts:posts",club_name_slug)
+            return redirect("posts:posts", club_name_slug)
     else:
         form = PostCreationForm(instance=post)
     context = {
-        "form" : form,
+        "form": form,
     }
-    return render(request,"posts/post_edit.html",context)
+    return render(request, "posts/post_edit.html", context)
+
+@login_required
+def post_update(request, club_name_slug, encrypted_id):
+    if request.method == "GET":
+        return HttpResponse("Incoming data could not be properly parsed. Try again later")
+
+    post = get_object_or_404(Post, encrypted_id=encrypted_id)
+
+    if post.author != request.user and (not ClubModerator.objects.filter(user=request.user, club=post.club).exists()):
+        raise PermissionDenied("You are not allowed to issue updates for this post")
+
+    puform = PostUpdateForm(request.POST)
+    if puform.is_valid():
+
+        p_update = puform.save(commit=False)
+        p_update.post = post
+        p_update.author = request.user
+        p_update.save()
+        return redirect('posts:post_detail', post.club.name.replace(' ', '-'), post.encrypted_id)
