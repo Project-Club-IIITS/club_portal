@@ -33,10 +33,21 @@ class Post(models.Model):
     encrypted_id = models.BigIntegerField(default=0, editable=False, db_index=True)
 
     class Meta:
-        ordering = ['-created']
+        ordering = ['-last_updated']
 
     def __str__(self):
         return self.title[:20]
+
+
+class PostUpdate(models.Model):
+    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
+    content = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['post', '-last_updated']
 
 
 class PinnedPost(models.Model):

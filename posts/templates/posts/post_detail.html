@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load club_user_filters %}
 
 {% block head %}
     <title>Post_Detail</title>
@@ -12,7 +13,7 @@
             <header>
                 <div class="title">
                     <h2><a href="#">{{ post.title }}</a></h2>
-                    <p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>
+
                     <div></div>
                 </div>
                 <div class="meta">
@@ -40,26 +41,108 @@
                     <li><a href="#" class="icon fa-heart fa-3x">28</a></li>
                     <li><a href="#" class="icon fa-comment fa-3x">128</a></li>
                     <li><a href="#" class="icon fa-thumbtack fa-3x"></a></li>
-                    <li><a href="{% url 'posts:post-edit' post.club post.id %}" class="icon fa-thumbtack fa-3x">Edit</a></li>
+                    <li><a href="{% url 'posts:post-edit' post.club post.id %}" class="icon fa-thumbtack fa-3x">Edit</a>
+                    </li>
 
 
                 </ul>
             </footer>
         </article>
 
-        <section id="footer">
-            <ul class="icons">
-                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
-                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
-                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
-                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
-            </ul>
+        <section>
+            <article class="post">
+                <header>
+                    <div class="title">
+                        <h2><a href="#">Updates</a></h2>
+                        <div></div>
+                    </div>
 
+                </header>
+                {% for update in post.postupdate_set.all %}
+
+                    <header>
+                        <div class="title">
+                            {#                            <h2><a href="#">{{ post.title }}</a></h2>#}
+                            <p>{{ update.content }}</p>
+                            {#                            <div></div>#}
+                        </div>
+                        <div class="meta">
+
+                            <a href="#" class="author"><span class="name">{{ update.author.get_full_name }}</span>
+                                {% if update.author.userprofile.profile_pic %}
+                                    <img src="{{ update.author.userprofile.profile_pic.url }}" alt=""/>
+                                {% elif update.author.googleauth.profile_pic_link %}
+                                    <img src="{{ update.author.googleauth.profile_pic_link }}" alt=""/>
+                                {% else %}
+                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
+                                    {#                                TODO Put author name and profile pic here#}
+                                {% endif %}
+                            </a>
+                            {% if update.author == post.author %}
+                                <p>Author</p>
+                            {% elif  update.author|is_user_moderator:post.club %}
+                                <p>Moderator</p>
+                            {% endif %}
+                            <time class="published" datetime="2015-11-01">{{ post.created }}</time>
+
+                        </div>
+                    </header>
+
+                {% empty %}
+                    {% if request.user == post.author %}
+                        You can put any updates here to notify all those who have followed this post.
+                        For normal typos you can just edit the post.
+                        Followers will not be notified if you edit the post.
+                        Notifications will be sent only if you issue an update by clicking the above button.
+                        It is recommended that any major changes like date/time etc be communicated via updates along
+                        with edits if required.<br>
+                        Only author and moderators can issue updates
+
+
+                    {% else %}
+                        Any updates issued by author or moderators will appear here.
+                    {% endif %}
+                {% endfor %}
+                {% if request.user == post.author or request.user|is_user_moderator:post.club %}
+
+                    <div style="width:100%;height:auto;background-color: transparent;margin:2rem auto;">
+                        <form action="{% url 'posts:post-update' club_name_slug post.encrypted_id %}" method="post"
+                              id="update_form">
+                            {% csrf_token %}
+                            <div>
+
+                                <textarea name="content" id="" cols="30" rows="5"
+                                          placeholder="Write any updates here. (Only author and moderators can see this part)"></textarea>
+                            </div>
+                            <div style="margin:1rem 0;">
+                                <a href="#"
+                                   class="button large" onclick='document.forms["update_form"].submit()'>Submit
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+            </article>
         </section>
+
+    <section>
+        <article class="post">
+{#            Put disqus here#}
+        </article>
+    </section>
+
+
     </div>
+
+
+
 {% endblock %}
 
 
 
 {% block script %}
+    <link rel="stylesheet"
+          href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/default.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 {% endblock %}

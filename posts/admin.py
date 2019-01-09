@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Image, Poll, Option, Vote, Comment, PinnedPost
+from .models import Post, Image, Poll, Option, Vote, Comment, PinnedPost, PostUpdate
 
 # Register your models here.
 
@@ -10,4 +10,5 @@ admin.site.register(Option)
 admin.site.register(Vote)
 admin.site.register(Comment)
 admin.site.register(PinnedPost)
+admin.site.register(PostUpdate)
 
