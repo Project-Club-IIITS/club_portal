@@ -27,15 +27,8 @@
                             <div class="meta">
                                 <time class="published" datetime="2015-10-22">{{ post.created }}</time>
                                 <a href="#" class="author"><span class="name">{{ post.author.get_full_name }}</span>
-                                    {% if post.author.userprofile.profile_pic %}
-                                        <img src="{{ post.author.userprofile.profile_pic.url }}" alt=""/>
-                                    {% elif post.author.googleauth.profile_pic_link %}
-                                        <img src="{{ post.author.googleauth.profile_pic_link }}" alt=""/>
-                                    {% else %}
-                                        <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
-                                        {#                                TODO Put author name and profile pic here#}
-                                    {% endif %}
-                                </a>
+                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
+                                {#                                TODO Put author name and profile pic here#}
                             </div>
                         </header>
                         {% if post.cover_image %}
@@ -44,7 +37,7 @@
                             </a>
                         {% endif %}
                         <p>
-                            {{ post.body|safe|truncatechars_html:100 }}
+                            {{ post.body|safe|truncatechars_html:450 }}
                         </p>
                         <footer>
                             <ul class="actions">
@@ -107,28 +100,17 @@
                     <!-- Mini Post -->
                     <article class="mini-post">
                         <header>
-
-                            <h3>
-                                <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}">{{ p_post.post.title|truncatechars_html:26 }}</a>
-                            </h3>
+                            <h3><a href="{% url 'posts:post_detail' p_post.club.name|clubslug p_post.post.encrypted_id %}">{{ p_post.post.title|truncatechars_html:26 }}</a></h3>
                             <time class="published" datetime="2015-10-18">{{ p_post.post.created }}</time>
 
-                            <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}" class="author">
-                                {% if p_post.post.author.userprofile.profile_pic %}
-                                    <img src="{{ p_post.post.author.userprofile.profile_pic.url }}" alt=""/>
-                                {% elif p_post.post.author.googleauth.profile_pic_link %}
-                                    <img src="{{ p_post.post.author.googleauth.profile_pic_link }}" alt=""/>
-                                {% else %}
-                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
-                                    {#                                TODO Put author name and profile pic here#}
-                                {% endif %}
-                            </a>
+                            <a href="{% url 'posts:post_detail' p_post.club.name|clubslug p_post.post.encrypted_id %}" class="author">
+                                <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
                             <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>
 
                         </header>
-                        {% if p_post.post.cover_image %}
-                            <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}" class="image">
-                                <img src="{{ p_post.post.cover_image.url }}" alt=""></a>
+                        {% if p_post.post.cover_image.url %}
+                            <a href="{% url 'posts:post_detail' post.club.name|clubslug p_post.post.encrypted_id %}" class="image">
+                                <img src="{{ p_post.post.cover_image.url }}" alt=""/></a>
                         {% endif %}
 
                     </article>
@@ -145,27 +127,17 @@
             <h3>Top Posts</h3>
             <ul class="posts">
                 {% for post in top_posts %}
-                    <li>
-                        <article>
-                            <header>
-                                <h3>
-                                    <a href="{% url 'posts:post_detail' club_slug post.encrypted_id %}">{{ post.title }}</a>
-                                </h3>
-                                <time class="published" datetime="2015-10-10">{{ post.created }}</time>
-                            </header>
-                            <a href="#" class="author">
-                                {% if post.author.userprofile.profile_pic %}
-                                    <img src="{{ post.author.userprofile.profile_pic.url }}" alt=""/>
-                                {% elif post.author.googleauth.profile_pic_link %}
-                                    <img src="{{ post.author.googleauth.profile_pic_link }}" alt=""/>
-                                {% else %}
-                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
-                                    {#                                TODO Put author name and profile pic here#}
-                                {% endif %}
-                            </a>
-                            {#                        TODO Put user profile pic here#}
-                        </article>
-                    </li>
+                <li>
+                    <article>
+                        <header>
+                            <h3><a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}">{{ post.title }}</a></h3>
+                            <time class="published" datetime="2015-10-10">{{ post.created }}</time>
+                        </header>
+                        <a href="#" class="author">
+                            <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
+{#                        TODO Put user profile pic here#}
+                    </article>
+                </li>
 
                 {% endfor %}
             </ul>
@@ -174,14 +146,17 @@
 
         <!-- Footer -->
         <section id="footer">
-{#            <ul class="icons">#}
-{#                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>#}
-{#                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>#}
-{#                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>#}
-{#                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>#}
-{#            </ul>#}
-
+            <ul class="icons">
+                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
+                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
+                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
+                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
+            </ul>
+            <p class="copyright">&copy; CYBERTEAM
         </section>
+
+
+        {% include 'posts/_polls.html' %}
 
     </section>
 
@@ -204,9 +179,5 @@
             }
         });
     </script>
-     <link rel="stylesheet"
-          href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/default.min.css">
-    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
 {% endblock %}

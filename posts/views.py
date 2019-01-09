@@ -11,8 +11,54 @@ from base.models import Club, ClubModerator
 from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm
 from posts.models import PinnedPost, Post
 
+
 @login_required
-def posts(request, club_name_slug):
+def posts(request):
+    following_clubs = request.user.userprofile.following_clubs.all()
+    following_clubs_id = [club.id for club in following_clubs]
+
+
+    posts = Post.objects.filter(is_approved=True).filter(club__id__in=following_clubs_id)
+    print(posts)
+    top_3_posts = posts.order_by('-votes')[:3]
+
+    pinned_posts = PinnedPost.objects.all()[:3]
+
+    post_filter_form = PostFilterForm(request.GET)
+
+    post_filter_form.is_valid()
+    # Make sure to call clean()
+
+    page = 1
+    if 'page' in post_filter_form.cleaned_data:
+        if post_filter_form.cleaned_data['page']:
+            page = post_filter_form.cleaned_data['page']
+
+
+    paginator = Paginator(posts, 3)
+    try:
+        posts_page = paginator.page(page)
+
+        if page != 1:
+            sleep(1.2)
+    except PageNotAnInteger:
+        posts_page = paginator.page(1)
+    except EmptyPage:
+        posts_page = paginator.page(paginator.num_pages)
+
+    return render(request, "posts/general_post.html",
+                  {"posts": posts_page,
+                   "top_posts": top_3_posts,
+                   "filter_form": post_filter_form,
+                   "pinned_posts": pinned_posts,
+                   })
+
+
+
+
+
+@login_required
+def club_posts(request, club_name_slug):
     club_name = club_name_slug.replace('-', ' ')
     club = get_object_or_404(Club, name=club_name)
 

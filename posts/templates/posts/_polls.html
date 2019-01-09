@@ -1,0 +1,92 @@
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'posts/css/polls.css' %}">
+{% endblock %}
+
+<div class="poll">
+
+    <form action="" class="poll-submit" >
+        <div class="question poll-question">
+            <h3>Do You Like Subu Kandswamy?</h3>
+            <ul>
+                <li>
+                    <input type="radio" id="contactChoice1"
+                        name="contact" value="Nope">
+                    <label for="contactChoice1">Nope</label>
+                </li>
+                <li>
+                    <input type="radio" id="contactChoice2"
+                        name="contact" value="No">
+                    <label for="contactChoice2">No</label>
+                </li>
+                <li>
+                    <input type="radio" id="contactChoice3"
+                        name="contact" value="Na">
+                    <label for="contactChoice3">Na</label>
+                </li>
+                <li>
+                    <input type="radio" id="contactChoice4"
+                        name="contact" value="Nahi">
+                    <label for="contactChoice4">Nahi</label>
+                </li>
+            </ul>
+
+            <input type="submit" value="submit">
+        </div>
+
+    </form>
+
+    <div class="result poll-question">
+        <h2>Here Are The Results</h2>
+        <ul class="option-list">
+            <li>
+                <h5>Nope</h5>
+                <div class="result-bar">
+                    <h3>22</h3>
+                    <progress class="result-progress-bar" value="22" max="100"></progress>
+                </div>
+            </li>
+            <li>
+                <h5>No</h5>
+                <div class="result-bar">
+                    <h3>15</h3>
+                    <progress class="result-progress-bar" value="22" max="100"></progress>
+                </div>
+            </li>
+            <li>
+                <h5>Na</h5>
+                <div class="result-bar">
+                    <h3>22</h3>
+                    <progress class="result-progress-bar" value="22" max="100"></progress>
+                </div>
+            </li>
+            <li>
+                <h5>Nahi</h5>
+                <div class="result-bar">
+                    <h3>41</h3>
+                    <progress class="result-progress-bar" value="41" max="100"></progress>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+
+<script>
+    document.querySelector('.poll-submit').addEventListener('submit', (e) => {
+        e.preventDefault();
+        document.querySelector('.question').style.display = 'none';
+        document.querySelector('.result').style.display = 'block';
+
+
+
+
+
+    });
+
+
+
+
+
+</script>

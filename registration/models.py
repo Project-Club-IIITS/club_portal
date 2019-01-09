@@ -41,6 +41,10 @@ class UserProfile(models.Model):
     following_clubs = models.ManyToManyField(Club, blank=True)
 
 
+    def __str__(self):
+        return self.user.username
+
+
 class GoogleAuth(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     firebase_uid = models.CharField(max_length=150, default=' ')
