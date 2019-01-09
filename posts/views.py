@@ -33,7 +33,7 @@ def posts(request, club_name_slug):
     # Add more conditions on post_filter_form here
 
     # TODO Add a check here to make sure only public posts are shown to user is not a member of the club
-
+    # adwait rox
     paginator = Paginator(posts, 3)
     try:
         posts_page = paginator.page(page)
