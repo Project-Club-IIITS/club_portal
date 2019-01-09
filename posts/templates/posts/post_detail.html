@@ -14,7 +14,30 @@
                 <div class="title">
                     <h2><a href="#">{{ post.title }}</a></h2>
 
-                    <div></div>
+
+                    {% if request.user in post.subscribed_users.all %}
+                        <a href="#" class="button subscribed" id="subscribe_button" onclick='subscribe_toggle()'
+                           style=" box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important "
+                           title="Receive notifications about updates">
+                            Subscribed
+                        </a>
+
+                        <script>
+                            var cur_subscribe_status = true;
+                        </script>
+
+                    {% else %}
+                        <a href="#" class="button" id="subscribe_button" onclick='subscribe_toggle()'
+                           title="Receive notifications about updates">
+                            Subscribe
+                        </a><br>
+                        <span style="font-style: italic;color: gray; font-size: 90%;">(Stay in touch with all the updates of this post)</span>
+
+                        <script>
+                            var cur_subscribe_status = false;
+                        </script>
+                    {% endif %}
+
                 </div>
                 <div class="meta">
                     <time class="published" datetime="2015-11-01">{{ post.created }}</time>
@@ -125,11 +148,11 @@
             </article>
         </section>
 
-    <section>
-        <article class="post">
-{#            Put disqus here#}
-        </article>
-    </section>
+        <section>
+            <article class="post">
+                {#            Put disqus here#}
+            </article>
+        </section>
 
 
     </div>
@@ -145,4 +168,32 @@
           href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/default.min.css">
     <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+
+
+    <script>
+        let subscribed_box_style = " box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important ";
+        let subscribe_button = document.getElementById('subscribe_button');
+
+        function subscribe_toggle() {
+
+            if (cur_subscribe_status === true) {
+                // Already subscribed. Unsubscribe
+                subscribe_button.style = "";
+                subscribe_button.innerText = "Subscribe";
+
+            {#    TODO Add AJAX here to unsucribe#}
+            }
+            else{
+                // Not subscribed. Subscribe
+                subscribe_button.style = subscribed_box_style;
+                subscribe_button.innerText = "Subscribed";
+
+            {#    TODO Add AJAX here to subscribe#}
+            }
+
+            cur_subscribe_status = !cur_subscribe_status; // Toggle subscribe status
+        }
+
+
+    </script>
 {% endblock %}
