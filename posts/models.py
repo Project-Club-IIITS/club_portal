@@ -33,7 +33,7 @@ class Post(models.Model):
     encrypted_id = models.BigIntegerField(default=0, editable=False, db_index=True)
 
     class Meta:
-        ordering = ['-created']
+        ordering = ['-last_updated']
 
     def __str__(self):
         return self.title[:20]
