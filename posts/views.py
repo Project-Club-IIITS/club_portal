@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from base.models import Club
-from posts.forms import PostFilterForm
+from posts.forms import PostFilterForm, EventForm, PostForm
 from posts.models import PinnedPost, Post
 
 
@@ -60,3 +60,30 @@ def post_detail(request, club_name_slug, encrypted_id):
 
     return render(request, "posts/post_detail.html", {"post": post})
 
+
+def events_create(request, club_name_slug):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    user = request.user
+
+    if request.method == "POST":
+        postform = PostForm(data=request.POST)
+        eventform = EventForm(data=request.POST)
+        if postform.is_valid() and eventform.is_valid():
+            postform.author = user
+            postform.club = club
+            # postform.encrypted_id=
+            post = postform.save()
+            eventform.post = post
+            eventform.save()
+
+            return render(request,'')
+
+    else:
+        postform = PostForm()
+        eventform = EventForm()
+
+        return render(request, '', {'postform': postform, 'eventform': eventform})
+
+def events_update(request,club_name_slug,encrypted_id):
+    
