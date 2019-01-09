@@ -1,0 +1,37 @@
+.user {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #300f7f;
+}
+
+:not(:last-child) {
+    margin-bottom: 2rem;
+}
+
+.user-image {
+    flex: 0 0 5%;
+    margin-left: 2rem;
+}
+
+.user-image img {
+    max-width: 100%;
+    border-radius: 50%;
+}
+
+.user-info {
+    flex: 1;
+    margin-left: 2rem;
+}
+
+
+.user-info {
+    margin: 1rem 2rem;
+}
+
+.user-info h3 {
+    line-height: 1rem;
+}
+
+.accept-btn {
+    flex: 0 0 10%;
+}
