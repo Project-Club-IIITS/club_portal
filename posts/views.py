@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404
 # Create your views here.
 from base.models import Club
 from posts.forms import PostFilterForm, EventForm, PostForm
-from posts.models import PinnedPost, Post
+from posts.models import PinnedPost, Post, Event
 
 
 def posts(request, club_name_slug):
@@ -70,20 +70,56 @@ def events_create(request, club_name_slug):
         postform = PostForm(data=request.POST)
         eventform = EventForm(data=request.POST)
         if postform.is_valid() and eventform.is_valid():
-            postform.author = user
-            postform.club = club
+            post = postform.save(commit=False)
+            post.author = user
+            post.club = club
             # postform.encrypted_id=
-            post = postform.save()
-            eventform.post = post
-            eventform.save()
+            post = post.save()
+            event = eventform.save(commit=False)
+            event.post = post
+            event.save()
 
-            return render(request,'')
+            return redirect(request, '')
+
 
     else:
         postform = PostForm()
         eventform = EventForm()
 
-        return render(request, '', {'postform': postform, 'eventform': eventform})
+    return render(request, '', {'postform': postform, 'eventform': eventform})
 
-def events_update(request,club_name_slug,encrypted_id):
-    
+
+def events_update(request, club_name_slug, encrypted_id):
+    post = get_object_or_404(Post, encrypted_id=encrypted_id)
+    event = get_object_or_404(Event, post=post)
+    club_name = club_name_slug.replace('-', ' ')
+    if event.post.club is club_name:
+        eventform = EventForm(request.POST or None, instance=event)
+        postform = PostForm(request.POST or None, instance=post)
+        if request.method == 'POST':
+            if postform.is_valid() and eventform.is_valid():
+                postform.save()
+                eventform.save()
+
+                return render(request, '')
+
+        else:
+            return render(request, '', {'postform': postform, 'eventform': eventform})
+
+
+def interested_event(request):
+    ret_data = {
+        'add_success': False
+    }
+    if request.user.is_annonymous:
+        return JsonResponse(ret_data)
+    user = request.user
+    encrypted_id = request.POST.get('encrypted_id')
+    post = get_object_or_404(Post, encrypted_id=encrypted_id)
+    event = get_object_or_404(Event, post=post)
+    if not event.interested_users.filter(user=user).exists():
+        event.interested_users.add(user)
+        event.save()
+        ret_data['add_success'] = True
+
+    return JsonResponse(ret_data)
