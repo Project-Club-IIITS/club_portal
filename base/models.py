@@ -10,6 +10,7 @@ def club_name_validator(name):
     if '-' in name:
         raise ValidationError('The name can not contain \'-\'')
 
+
 class Club(models.Model):
     name = models.CharField(max_length=100, validators=[club_name_validator])
     date_formed = models.DateField(auto_now_add=True)

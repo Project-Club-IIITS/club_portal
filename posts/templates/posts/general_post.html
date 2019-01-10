@@ -37,7 +37,7 @@
                             </a>
                         {% endif %}
                         <p>
-                            {{ post.body|safe|truncatechars_html:450 }}
+                            {{ post.body|truncatechars_html:450|removeImg|safe}}
                         </p>
                         <footer>
                             <ul class="actions">
