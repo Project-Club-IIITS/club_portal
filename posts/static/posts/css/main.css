@@ -2985,7 +2985,7 @@ ul.posts article header > :last-child {
 
     .post > footer {
         -moz-align-items: -moz-stretch;
-        -webkit-align-items: -webkit-stretch;
+        -webkit-align-items:    -webkit-stretch;
         -ms-align-items: -ms-stretch;
         align-items: stretch;
         -moz-flex-direction: column-reverse;
