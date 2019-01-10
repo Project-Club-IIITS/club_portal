@@ -16,9 +16,7 @@ class HelloView(APIView):
         content = {'message': 'Hello, World!'}
         # return requests
 
-        domain = get_current_site(request).domain
-        url = reverse('api:token_obtain_pair')
-        return JsonResponse(requests.post(f'http://{domain}{url}', data={'username': 'a', 'password': 'b'}).json())
+        return JsonResponse(content)
 
 
 class FirebaseTokenObtainPairView(TokenViewBase):
