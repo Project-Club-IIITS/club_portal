@@ -86,7 +86,7 @@ def events_create(request, club_name_slug):
         postform = PostForm()
         eventform = EventForm()
 
-    return render(request, '', {'postform': postform, 'eventform': eventform})
+    return render(request, 'posts/event_create.html', {'postform': postform, 'eventform': eventform})
 
 
 def events_update(request, club_name_slug, encrypted_id):
@@ -104,7 +104,7 @@ def events_update(request, club_name_slug, encrypted_id):
                 return render(request, '')
 
         else:
-            return render(request, '', {'postform': postform, 'eventform': eventform})
+            return render(request, 'posts/event_update.html', {'postform': postform, 'eventform': eventform})
 
 
 def interested_event(request):
