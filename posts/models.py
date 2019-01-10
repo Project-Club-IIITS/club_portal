@@ -70,7 +70,7 @@ class Poll(models.Model):
 
 class Option(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-    option = models.CharField(max_length=150)
+    option_text = models.CharField(max_length=150)
     num_votes = models.IntegerField(default=0)
 
 
