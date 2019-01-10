@@ -3,12 +3,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-
 # Create your models here.
 
 def club_name_validator(name):
     if '-' in name:
         raise ValidationError('The name can not contain \'-\'')
+
 
 class Club(models.Model):
     name = models.CharField(max_length=100, validators=[club_name_validator])
@@ -52,4 +52,15 @@ class ClubMember(models.Model):
 
     class Meta:
         unique_together = ('user', 'club')
-    
+
+
+class Notification(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False, null=False)
+
+    title = models.TextField()
+    message = models.TextField()
+
+    sent_at = models.DateTimeField(auto_now_add=True)
+# message
