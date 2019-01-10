@@ -14,7 +14,29 @@
                 <div class="title">
                     <h2><a href="#">{{ post.title }}</a></h2>
 
-                    <div></div>
+                    {% if request.user in post.subscribed_users.all %}
+                        <a href="#" class="button subscribed" id="subscribe_button" onclick='subscribe_toggle()'
+                           style=" box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important "
+                           title="Receive notifications about updates">
+                            Subscribed
+                        </a>
+
+                        <script>
+                            var cur_subscribe_status = true;
+                        </script>
+
+                    {% else %}
+                        <a href="#" class="button" id="subscribe_button" onclick='subscribe_toggle()'
+                           title="Receive notifications about updates">
+                            Subscribe
+                        </a><br>
+                        <span style="font-style: italic;color: gray; font-size: 90%;">(Stay in touch with all the updates of this post)</span>
+
+                        <script>
+                            var cur_subscribe_status = false;
+                        </script>
+                    {% endif %}
+
                 </div>
                 <div class="meta">
                     <time class="published" datetime="2015-11-01">{{ post.created }}</time>
@@ -36,6 +58,7 @@
             <p>
                 {{ post.body|safe }}
             </p>
+        {% include 'posts/_polls.html' %}
             <footer>
                 <ul class="stats">
                     <li><a href="#" class="icon fa-heart fa-3x">28</a></li>
@@ -43,8 +66,6 @@
                     <li><a href="#" class="icon fa-thumbtack fa-3x"></a></li>
                     <li><a href="{% url 'posts:post-edit' post.club post.id %}" class="icon fa-thumbtack fa-3x">Edit</a>
                     </li>
-
-
                 </ul>
             </footer>
         </article>
@@ -125,11 +146,11 @@
             </article>
         </section>
 
-    <section>
-        <article class="post">
-{#            Put disqus here#}
-        </article>
-    </section>
+        <section>
+            <article class="post">
+                <div id="disqus_thread"></div>
+            </article>
+        </section>
 
 
     </div>
@@ -145,4 +166,52 @@
           href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/default.min.css">
     <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+
+
+    <script>
+        let subscribed_box_style = " box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important ";
+        let subscribe_button = document.getElementById('subscribe_button');
+
+        function subscribe_toggle() {
+
+            if (cur_subscribe_status === true) {
+                // Already subscribed. Unsubscribe
+                subscribe_button.style = "";
+                subscribe_button.innerText = "Subscribe";
+
+            {#    TODO Add AJAX here to unsucribe#}
+            }
+            else{
+                // Not subscribed. Subscribe
+                subscribe_button.style = subscribed_box_style;
+                subscribe_button.innerText = "Subscribed";
+
+            {#    TODO Add AJAX here to subscribe#}
+            }
+
+            cur_subscribe_status = !cur_subscribe_status; // Toggle subscribe status
+        }
+
+
+    </script>
+
+    <script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "http://localhost:8000/posts/{{ club_name_slug }}/{{ post.encrypted_id }}";  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "{{ post.encrypted_id }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://clubportal-1.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 {% endblock %}

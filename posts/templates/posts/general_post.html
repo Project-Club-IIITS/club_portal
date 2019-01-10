@@ -53,7 +53,7 @@
                     </article>
                 </div>
             {% empty %}
-                <h2>No posts matching the given query</h2>
+                <h2>No Recent Posts Available!</h2>
 
             {% endfor %}
         </div>
@@ -100,16 +100,16 @@
                     <!-- Mini Post -->
                     <article class="mini-post">
                         <header>
-                            <h3><a href="{% url 'posts:post_detail' p_post.club.name|clubslug p_post.post.encrypted_id %}">{{ p_post.post.title|truncatechars_html:26 }}</a></h3>
+                            <h3><a href="{% url 'posts:post_detail' p_post.post.club.name|clubslug p_post.post.encrypted_id %}">{{ p_post.post.title|truncatechars_html:26 }}</a></h3>
                             <time class="published" datetime="2015-10-18">{{ p_post.post.created }}</time>
 
-                            <a href="{% url 'posts:post_detail' p_post.club.name|clubslug p_post.post.encrypted_id %}" class="author">
+                            <a href="{% url 'posts:post_detail' p_post.post.club.name|clubslug p_post.post.encrypted_id %}" class="author">
                                 <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
                             <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>
 
                         </header>
                         {% if p_post.post.cover_image.url %}
-                            <a href="{% url 'posts:post_detail' post.club.name|clubslug p_post.post.encrypted_id %}" class="image">
+                            <a href="{% url 'posts:post_detail' p_post.post.club.name|clubslug p_post.post.encrypted_id %}" class="image">
                                 <img src="{{ p_post.post.cover_image.url }}" alt=""/></a>
                         {% endif %}
 
@@ -156,7 +156,7 @@
         </section>
 
 
-        {% include 'posts/_polls.html' %}
+
 
     </section>
 

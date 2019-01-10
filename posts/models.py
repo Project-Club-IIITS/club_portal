@@ -32,6 +32,8 @@ class Post(models.Model):
 
     encrypted_id = models.BigIntegerField(default=0, editable=False, db_index=True)
 
+    subscribed_users = models.ManyToManyField(User, blank=True, related_name="subscribers")
+
     class Meta:
         ordering = ['-last_updated']
 
