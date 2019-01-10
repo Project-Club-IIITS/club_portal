@@ -3677,3 +3677,7 @@ body.is-menu-visible #menu {
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
+
+.clubs-dropdown{
+    cursor: pointer;
+}
