@@ -74,7 +74,7 @@ def moderator_add_member(sender, instance, created, **kwargs):
     # If a user is made a moderator, also make him a member of the club
         try:
             with transaction.atomic():  # We need to make atomic as code may throw integrity error
-                ClubMember.objects.create(user=instance.user, club=instance.club)
+                ClubMember.objects.create(user=instance.user, club=instance.club, is_approved=True)
         except IntegrityError:
             # User is already a member. Do Nothing
             pass
