@@ -19,7 +19,7 @@ def cover_image_upload_path(instance, filename):
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    is_approved = models.BooleanField(default=False)
+
     title = models.CharField(max_length=150)
     body = RichTextUploadingField()  # from ckeditor
     is_public = models.BooleanField(default=False)
@@ -34,6 +34,10 @@ class Post(models.Model):
     encrypted_id = models.BigIntegerField(default=0, editable=False, db_index=True)
 
     subscribed_users = models.ManyToManyField(User, blank=True, related_name="subscribers")
+
+    is_approved = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=True,
+                                       help_text="Uncheck this if you just want to save as draft and edit later before publishing")
 
     class Meta:
         ordering = ['-last_updated']
@@ -71,6 +75,20 @@ class Image(models.Model):
 
 class Poll(models.Model):
     post = models.OneToOneField(Post, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True, help_text="Make it False when you wish to stop collecting votes")
+
+    track_votes = models.BooleanField(default=True, help_text="If checked, it will be tracked, which user has voted for\
+                                        which option. If unchecked, voting will be anonymous. (In both cases, each user \
+                                        can vote only once)"
+                                      )
+
+    @property
+    def total_votes(self):
+        count = 0
+        for option in self.option_set.all():
+            count += option.num_votes
+
+        return count
 
 
 class Option(models.Model):
@@ -81,7 +99,7 @@ class Option(models.Model):
 
 class Vote(models.Model):
     poll = models.ForeignKey(to=Poll, on_delete=models.CASCADE)
-    option = models.ForeignKey(Option, on_delete=models.CASCADE)
+    option = models.ForeignKey(Option, null=True, blank=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     time_stamp = models.DateTimeField(auto_now_add=True)
 
