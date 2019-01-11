@@ -2,6 +2,7 @@ from django import template
 from django.contrib.auth.models import User
 
 from base.models import Club
+from posts.models import Poll, Vote
 
 register = template.Library()
 
@@ -37,4 +38,14 @@ def is_user_president(user, club):
         raise ValueError("User must be an instance of User model and club must be an instance of Club model")
 
     return club.clubpresident.user == user
+
+@register.filter
+def has_user_casted_vote(poll, user):
+    """
+    Checks whether this user has already voted for this poll
+    """
+    if not (isinstance(poll, Poll) and isinstance(user, User)):
+        raise ValueError("User must be an instance of User model and poll must be an instance of Poll model")
+
+    return Vote.objects.filter(poll=poll, user=user).exists()
 

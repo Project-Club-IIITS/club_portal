@@ -3,6 +3,12 @@
 {% load club_user_filters %}
 
 {% block head %}
+    <style>
+    img{
+        max-width: 100%;
+        height: auto;
+    }
+    </style>
     <title>Post_Detail</title>
 {% endblock %}
 
@@ -55,13 +61,15 @@
             {% if post.cover_image %}
                 <span class="image featured"><img src="{{ post.cover_image.url }}" alt=""/></span>
             {% endif %}
-            <p>
+            <p style="max-width: 100%;">
                 {{ post.body|safe }}
             </p>
             {% if post.poll %}
-                <article class="post">
+{#                <article class="post">#}
+
                 {% include 'posts/_polls.html' %}
-                </article>
+
+{#                </article>#}
             {% endif %}
             <footer>
                 <ul class="stats">

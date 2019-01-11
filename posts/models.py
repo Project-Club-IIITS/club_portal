@@ -96,6 +96,8 @@ class Option(models.Model):
     option_text = models.CharField(max_length=150)
     num_votes = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.poll.post.title[:10] + "... : " + self.option_text + ":" + str(self.num_votes)
 
 class Vote(models.Model):
     poll = models.ForeignKey(to=Poll, on_delete=models.CASCADE)
@@ -106,6 +108,8 @@ class Vote(models.Model):
     class Meta:
         unique_together = ['user', 'poll']  # One user can thus vote for only 1 option
 
+    def __str__(self):
+        return self.user.username + "-" + self.poll.post.title[:10] + "..."
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

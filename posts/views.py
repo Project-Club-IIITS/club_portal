@@ -3,13 +3,26 @@ from time import sleep
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import JsonResponse, HttpResponse
+from django.db.models import F
+from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
 from base.models import Club, ClubModerator, ClubMember
 from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm
-from posts.models import PinnedPost, Post
+from posts.models import PinnedPost, Post, Vote, Option
+
+
+def redirect_with_args(url, GET_args=None, *args, **kwargs):
+    response = redirect(url, *args, **kwargs)
+
+    response['Location'] += '?'
+
+    if GET_args:
+        for key in GET_args:
+            response['Location'] += str(key) + '=' + str(GET_args[key])
+
+    return response
 
 
 @login_required
@@ -136,6 +149,26 @@ def club_posts(request, club_name_slug):
 
 
 @login_required
+def events(request):
+    return redirect_with_args(url='posts:posts', GET_args={'events_only': True})
+
+
+@login_required
+def club_events(request, club_name_slug):
+    return redirect_with_args(club_name_slug, url='posts:posts', GET_args={'events_only': True})
+
+
+@login_required
+def polls(request):
+    return redirect_with_args(url='posts:posts', GET_args={'polls_only': True})
+
+
+@login_required
+def club_polls(request, club_name_slug):
+    return redirect_with_args('posts:club_posts', {'polls_only': True}, club_name_slug)
+
+
+@login_required
 def post_detail(request, club_name_slug, encrypted_id):
     club_name = club_name_slug.replace('-', ' ')
     club = get_object_or_404(Club, name=club_name)
@@ -200,3 +233,50 @@ def post_update(request, club_name_slug, encrypted_id):
         p_update.author = request.user
         p_update.save()
         return redirect('posts:post_detail', post.club.name.replace(' ', '-'), post.encrypted_id)
+
+
+@login_required
+def cast_vote(request, club_name_slug, encrypted_id):
+    if request.method != "POST":
+        raise Http404("Only method POST is allowed")
+
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id)
+    if not hasattr(post, 'poll'):
+        raise Http404('This post is not a poll')
+
+    poll = post.poll
+
+    if not poll.is_active:
+        raise HttpResponse("The poll has ended")
+
+    if Vote.objects.filter(poll=poll, user=request.user).exists():
+        raise PermissionDenied("You can vote only once")
+
+    if not poll.post.is_public:
+        # Make sure user is a member of the club
+        if not club.clubmember_set.filter(user=request.user, is_approved=True).exists():
+            raise PermissionDenied("You are not a part of this club. You can not vote")
+
+    submitted_option = int(request.POST['option'])
+
+    option = get_object_or_404(Option, id=submitted_option)
+
+    v = Vote(poll=poll, user=request.user)
+
+    v.save()
+
+    option.num_votes = F('num_votes') + 1
+    # This is done to avoid race condition where 2 users may try to update db at the same time
+    # https://docs.djangoproject.com/en/2.1/ref/models/expressions/#avoiding-race-conditions-using-f
+
+    option.save()
+
+    # if poll.track_votes:
+
+    response = redirect('posts:post_detail', club_name_slug, encrypted_id)
+
+    response['location'] += '#results'
+
+    return response
