@@ -1,5 +1,6 @@
 import os
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import signals
@@ -57,6 +58,10 @@ class PinnedPost(models.Model):
 
     class Meta:
         ordering = ['-post__last_updated']
+
+    def clean(self):
+        if self.post.is_approved is False:
+            raise ValidationError("A post that has not been approved can not be pinned")
 
 
 class Image(models.Model):
