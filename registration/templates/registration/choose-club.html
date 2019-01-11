@@ -1,0 +1,40 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IOTA</title>
+    <link rel="stylesheet" href="{% static "registration/css/choose-club.css" %}"/>
+</head>
+<body>
+<div id="wrapper" style="margin-top: 30px;">
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <section class="tiles">
+                <article class="style1">
+									<span class="image">
+										<img src="{% static "registration/images/pic01.jpg" %}" alt=""/>
+									</span>
+                    <a href="#">
+                        <h2>Magna</h2>
+                        <div class="content">
+
+                            <p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
+                            <div style="margin-top: 10px;">
+                                <input type="checkbox" name="tick" id="tick">
+                                <label for="tick" class="tick_label"></label>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+            </section>
+        </div>
+    </div>
+</div>
+</body>
+<script src="{% static "registration/js/choose-club.js" %}"></script>
+</html>

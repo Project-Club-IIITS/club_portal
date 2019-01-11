@@ -24,6 +24,7 @@ urlpatterns = [
     path('registration/', include("registration.urls")),
     path('accounts/', include("accounts.urls")),
     path('posts/', include("posts.urls")),
+    path('clubs/',include("clubs.urls")),
     path('', base_views.IndexView.as_view(), name="index")
 ]
 
