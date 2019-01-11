@@ -1,0 +1,58 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/listForModerator.css' %}">
+{% endblock %}
+
+<div class="user-list">
+    {% for clubMember in users %}
+        <form method="POST">
+            {% csrf_token %}
+            <div class="user">
+                <div class="user-image">
+                    <img src="https://media4.s-nbcnews.com/i/newscms/2018_12/1326728/elizabeth-olsen-today-tease-180322_95ce418b16f96ceb3d0681c3143c7342.jpg" alt="">
+                </div>
+                <div class="user-info">
+                    <h3>{{ clubMember.user }}</h3>
+                    <h4>Second Year</h4>
+                </div>
+                <div class="accept-btn">
+                    <button value="{{ clubMember.user }}" class='add-member'>Add</button>
+                </div>
+            </div>
+        </form>
+    {% endfor %}
+ </div>
+
+{% endblock %}
+
+
+{% block script %}
+<script>
+$('.add-member').click(function (e) {
+   e.preventDefault();
+
+   const button = $(this);
+   const username = $(this).val();
+   const club_name = '{{ club_name }}';
+
+   $.ajax({
+       type: 'POST',
+       url: '/accounts/makeMember/',
+       data: {
+           'csrfmiddlewaretoken': '{{ csrf_token }}',
+           username: username,
+           club_name: club_name
+       },
+       dataType: 'json',
+       success: function (data) {
+            button.parent().parent().fadeOut('slow');
+       }
+   });
+});
+</script>
+{% endblock %}

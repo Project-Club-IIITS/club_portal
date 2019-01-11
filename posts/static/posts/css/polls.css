@@ -1,0 +1,69 @@
+.poll {
+
+    width: 800px;
+}
+
+.poll-question {
+    padding: 2rem;
+}
+
+.poll-question ul li {
+    list-style: none;
+    margin: 2rem 0;
+}
+
+.question {
+    display:block;
+}
+
+.question li {
+    display: flex;
+    align-items: center;
+}
+
+.option {
+    height: 3rem;
+}
+
+.option:not(:last-child) {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+
+.result {
+    display:block;
+}
+
+.answer {
+    display: flex;
+    align-items: center;
+}
+
+.answer h3 {
+    padding: 0;
+    margin: 0;
+
+    flex: 0 0 20%;
+    align-self: center;
+}
+
+.answer-value {
+    text-align: right;
+    margin-right: 2rem !important;
+}
+
+.answer-bar {
+    flex: 1;
+
+    background: grey;
+    border-radius: 5px;
+    overflow:hidden;
+}
+
+.filled-bar {
+    width: 1%;
+    height: 1rem;
+    background: green;
+
+}

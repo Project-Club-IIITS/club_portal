@@ -1,152 +1,213 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
+{% load blog_tags %}
 {% load static %}
 
 
 {% block head %}
     <title>Posts</title>
+    <link rel="stylesheet" href="{% static "posts/css/loader.css" %}"/>
 {% endblock %}
 
 
 {% block content %}
-    <div id="main">
-        <article class="post">
-            <header>
-                <div class="title">
-                    <h2><a href="{% url 'posts:post_detail' %}">Euismod et accumsan</a></h2>
-                    <p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>
-                </div>
-                <div class="meta">
-                    <time class="published" datetime="2015-10-22">October 22, 2015</time>
-                    <a href="#" class="author"><span class="name">Jane Doe</span>
-                        <img src="{% static "posts/images/avatar.jpg" %}" alt=""/></a>
-                </div>
-            </header>
-            <a href="{% url 'posts:post_detail' %}" class="image featured">
-                <img src="{% static "posts/images/pic03.jpg" %}" alt=""/>
-            </a>
-            <p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod
-                placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non
-                congue ullam corper. Praesent tincidunt sed tellus ut rutrum. Sed vitae justo condimentum, porta lectus
-                vitae, ultricies congue gravida diam non fringilla. Cras vehicula tellus eu ligula viverra, ac fringilla
-                turpis suscipit. Quisque vestibulum rhoncus ligula.</p>
-            <footer>
-                <ul class="actions">
-                    <li><a href="{% url 'posts:post_detail' %}" class="button large">Continue Reading</a></li>
-                </ul>
-                <ul class="stats">
-                    <li><a href="#" class="icon fa-heart fa-2x">28</a></li>
-                    <li><a href="#" class="icon fa-comment fa-2x">128</a></li>
-                </ul>
-            </footer>
-        </article>
 
+
+    <div id="main">
+        <div class="infinite-container" id="all_posts">
+            {% for post in posts %}
+                <div class="infinite-item">
+                    <article class="post">
+                        <header>
+                            <div class="title">
+                                <h2>
+                                    <a href="{% url 'posts:post_detail'  post.club.name|clubslug post.encrypted_id %}">{{ post.title }}</a>
+                                </h2>
+                                <p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>
+                            </div>
+                            <div class="meta">
+                                <time class="published" datetime="2015-10-22">{{ post.created }}</time>
+                                <a href="#" class="author"><span class="name">{{ post.author.get_full_name }}</span>
+                                    {% if post.author.userprofile.profile_pic %}
+                                        <img src="{{ post.author.userprofile.profile_pic.url }}" alt=""/>
+                                    {% elif post.author.googleauth.profile_pic_link %}
+                                        <img src="{{ post.author.googleauth.profile_pic_link }}" alt=""/>
+                                    {% else %}
+                                        <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
+                                        {#                                TODO Put author name and profile pic here#}
+                                    {% endif %}
+                                </a>
+                            </div>
+                        </header>
+                        {% if post.cover_image %}
+                            <a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}" class="image featured">
+                                <img src="{{ post.cover_image.url }}" alt="Cover Image"/>
+                            </a>
+                        {% endif %}
+                        <p>
+                            {{ post.body|safe|truncatechars_html:100 }}
+                        </p>
+                        <footer>
+                            <ul class="actions">
+                                <li><a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}"
+                                       class="button large">Continue Reading</a>
+                                </li>
+                            </ul>
+                            <ul class="stats">
+                                <li><a href="#" class="icon fa-heart fa-2x">{{ post.votes }}</a></li>
+                                <li><a href="#" class="icon fa-comment fa-2x">128</a></li>
+                            </ul>
+                        </footer>
+                    </article>
+                </div>
+            {% empty %}
+                <h2>No posts matching the given query</h2>
+
+            {% endfor %}
+        </div>
+        {% if posts.has_next %}
+            <a style="display:none;" class="infinite-more-link"
+               href="?page={{ posts.next_page_number }}">More</a>
+        {% endif %}
+
+        <div style="width: 100%; text-align: center; display: none" class="loading">
+            <div class="lds-ripple">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
 
         <!-- Pagination -->
-        <ul class="actions pagination">
-            <li><a href="" class="disabled button large previous">Previous Page</a></li>
-            <li><a href="#" class="button large next">Next Page</a></li>
-        </ul>
+        {#        <ul class="actions pagination">#}
+        {#            <li><a href="" class="disabled button large previous">Previous Page</a></li>#}
+        {#            <li><a href="#" class="button large next">Next Page</a></li>#}
+        {#        </ul>#}
 
     </div>
 
     <section id="sidebar">
+
+        <!-- About -->
+        <section class="blurb">
+            <h2>About</h2>
+            <p>
+                {{ club.about|safe|truncatechars_html:150 }}
+            </p>
+            <ul class="actions">
+                <li><a href="#" class="button">Learn More</a></li>
+            </ul>
+        </section>
+
         <!-- Mini Posts -->
         <section>
             <div class="mini-posts">
+                <h3>Pinned Posts</h3>
 
-                <!-- Mini Post -->
-                <article class="mini-post">
-                    <header>
-                        <h3><a href="{% url 'posts:post_detail' %}single.html">Odio congue mattis</a></h3>
-                        <time class="published" datetime="2015-10-18">October 18, 2015</time>
-                        <a href="#" class="author">
-                            <img src="{% static "posts/images/avatar.jpg" %}" alt=""/></a>
-                    </header>
-                    <a href="{% url 'posts:post_detail' %}" class="image">
-                        <img src="{% static "posts/images/pic06.jpg" %}" alt=""/></a>
-                </article>
+                {% for p_post in pinned_posts %}
+                    <!-- Mini Post -->
+                    <article class="mini-post">
+                        <header>
 
-                <!-- Mini Post -->
-                <article class="mini-post">
-                    <header>
-                        <h3><a href="{% url 'posts:post_detail' %}single.html">Enim nisl veroeros</a></h3>
-                        <time class="published" datetime="2015-10-17">October 17, 2015</time>
-                        <a href="#" class="author">
-                            <img src="{% static "posts/images/avatar.jpg" %}" alt=""/></a>
-                    </header>
-                    <a href="{% url 'posts:post_detail' %}" class="image">
-                        <img src="{% static "posts/images/pic07.jpg" %}" alt=""/>
-                    </a>
-                </article>
+                            <h3>
+                                <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}">{{ p_post.post.title|truncatechars_html:26 }}</a>
+                            </h3>
+                            <time class="published" datetime="2015-10-18">{{ p_post.post.created }}</time>
+
+                            <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}" class="author">
+                                {% if p_post.post.author.userprofile.profile_pic %}
+                                    <img src="{{ p_post.post.author.userprofile.profile_pic.url }}" alt=""/>
+                                {% elif p_post.post.author.googleauth.profile_pic_link %}
+                                    <img src="{{ p_post.post.author.googleauth.profile_pic_link }}" alt=""/>
+                                {% else %}
+                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
+                                    {#                                TODO Put author name and profile pic here#}
+                                {% endif %}
+                            </a>
+{#                            <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>#}
+
+                        </header>
+                        {% if p_post.post.cover_image %}
+                            <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}" class="image">
+                                <img src="{{ p_post.post.cover_image.url }}" alt=""></a>
+                        {% endif %}
+
+                    </article>
+
+                {% empty %}
+                    <p>No Pinned Posts</p>
+                {% endfor %}
 
             </div>
         </section>
 
         <!-- Posts List -->
         <section>
+            <h3>Top Posts</h3>
             <ul class="posts">
+                {% for post in top_posts %}
+                    <li>
+                        <article>
+                            <header>
+                                <h3>
+                                    <a href="{% url 'posts:post_detail' club_slug post.encrypted_id %}">{{ post.title }}</a>
+                                </h3>
+                                <time class="published" datetime="2015-10-10">{{ post.created }}</time>
+                            </header>
+                            <a href="#" class="author">
+                                {% if post.author.userprofile.profile_pic %}
+                                    <img src="{{ post.author.userprofile.profile_pic.url }}" alt=""/>
+                                {% elif post.author.googleauth.profile_pic_link %}
+                                    <img src="{{ post.author.googleauth.profile_pic_link }}" alt=""/>
+                                {% else %}
+                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
+                                    {#                                TODO Put author name and profile pic here#}
+                                {% endif %}
+                            </a>
+                            {#                        TODO Put user profile pic here#}
+                        </article>
+                    </li>
 
-                <li>
-                    <article>
-                        <header>
-                            <h3><a href="{% url 'posts:post_detail' %}single.html">Euismod amet placerat vivamus
-                                porttitor</a></h3>
-                            <time class="published" datetime="2015-10-10">October 10, 2015</time>
-                        </header>
-                        <a href="{% url 'posts:post_detail' %}single.html" class="image">
-                            <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
-                    </article>
-                </li>
-                <li>
-                    <article>
-                        <header>
-                            <h3><a href="{% url 'posts:post_detail' %}">Magna enim accumsan tortor cursus ultricies</a>
-                            </h3>
-                            <time class="published" datetime="2015-10-08">October 8, 2015</time>
-                        </header>
-                        <a href="{% url 'posts:post_detail' %}single.html" class="image">
-                            <img src="{% static "posts/images/pic11.jpg" %}" alt=""/></a>
-                    </article>
-                </li>
-                <li>
-                    <article>
-                        <header>
-                            <h3><a href="{% url 'posts:post_detail' %}single.html">Congue ullam corper lorem ipsum
-                                dolor</a></h3>
-                            <time class="published" datetime="2015-10-06">October 7, 2015</time>
-                        </header>
-                        <a href="{% url 'posts:post_detail' %}" class="image">
-                            <img src="{% static "posts/images/pic12.jpg" %}" alt=""/>
-                        </a>
-                    </article>
-                </li>
+                {% endfor %}
             </ul>
         </section>
 
-        <!-- About -->
-        <section class="blurb">
-            <h2>About</h2>
-            <p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod amet
-                placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at phasellus sed ultricies.</p>
-            <ul class="actions">
-                <li><a href="#" class="button">Learn More</a></li>
-            </ul>
-        </section>
 
         <!-- Footer -->
         <section id="footer">
-            <ul class="icons">
-                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
-                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
-                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
-                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
-            </ul>
-            <p class="copyright">&copy; CYBERTEAM
+{#            <ul class="icons">#}
+{#                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>#}
+{#                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>#}
+{#                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>#}
+{#                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>#}
+{#            </ul>#}
+
         </section>
 
     </section>
+
+
 {% endblock %}
 
 
 {% block script %}
+    <script src="{% static 'common_assests/imakewebthings-waypoints-34d9f6d/lib/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'common_assests/imakewebthings-waypoints-34d9f6d/lib/shortcuts/infinite.min.js' %}"></script>
+    <script>
+        var infinite = new Waypoint.Infinite({
+            element: $('.infinite-container')[0],
+            onBeforePageLoad: function () {
+                $('.loading').show();
+            },
+            onAfterPageLoad: function ($items) {
+                $('.loading').hide();
+                {#$('.collapsible').collapsible();#}
+            }
+        });
+    </script>
+     <link rel="stylesheet"
+          href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/default.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
 {% endblock %}
+
