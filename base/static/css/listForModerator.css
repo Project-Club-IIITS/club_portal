@@ -1,3 +1,8 @@
+.user-list {
+    background: #2ebaae;
+    border-radius: 2px;
+}
+
 .user {
     display: flex;
     align-items: center;
