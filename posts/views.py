@@ -115,6 +115,7 @@ def club_posts(request, club_name_slug):
 
     # TODO Add a check here to make sure only public posts are shown to user is not a member of the club
 
+    # print(posts)
     paginator = Paginator(posts, 3)
     try:
         posts_page = paginator.page(page)
@@ -265,8 +266,6 @@ def cast_vote(request, club_name_slug, encrypted_id):
 
     v = Vote(poll=poll, user=request.user)
 
-    
-
     option.num_votes = F('num_votes') + 1
     # This is done to avoid race condition where 2 users may try to update db at the same time
     # https://docs.djangoproject.com/en/2.1/ref/models/expressions/#avoiding-race-conditions-using-f
@@ -274,10 +273,10 @@ def cast_vote(request, club_name_slug, encrypted_id):
     option.save()
 
     if poll.track_votes:
-        #Track the option user has voted for
+        # Track the option user has voted for
         v.option = option
 
-    v.save()    
+    v.save()
 
     response = redirect('posts:post_detail', club_name_slug, encrypted_id)
 

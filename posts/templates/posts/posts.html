@@ -66,7 +66,7 @@
         </div>
         {% if posts.has_next %}
             <a style="display:none;" class="infinite-more-link"
-               href="?page={{ posts.next_page_number }}">More</a>
+               href="?page={{ posts.next_page_number }}&{% for field in filter_form %}{% if field.name != 'page' %}{{ field.name }}={{ field.value }}&{% endif %}{% endfor %}">More</a>
         {% endif %}
 
         <div style="width: 100%; text-align: center; display: none" class="loading">
@@ -185,7 +185,12 @@
 
     </section>
 
-
+<div style="display: none;" id="filter_form">
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ filter_form }}
+    </form>
+</div>
 {% endblock %}
 
 
@@ -203,6 +208,13 @@
                 {#$('.collapsible').collapsible();#}
             }
         });
+
+       {% comment %} {#document.getElementById('search-button').addEventListener('onclick', () => {#}
+        {#    window.location = window.location.href + "?query=" + document.getElementById('search-query').value;#}
+        {#});#}
+        {##}{% endcomment %}
+
+
     </script>
      <link rel="stylesheet"
           href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/default.min.css">
