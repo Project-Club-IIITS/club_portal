@@ -265,7 +265,7 @@ def cast_vote(request, club_name_slug, encrypted_id):
 
     v = Vote(poll=poll, user=request.user)
 
-    v.save()
+    
 
     option.num_votes = F('num_votes') + 1
     # This is done to avoid race condition where 2 users may try to update db at the same time
@@ -273,7 +273,11 @@ def cast_vote(request, club_name_slug, encrypted_id):
 
     option.save()
 
-    # if poll.track_votes:
+    if poll.track_votes:
+        #Track the option user has voted for
+        v.option = option
+
+    v.save()    
 
     response = redirect('posts:post_detail', club_name_slug, encrypted_id)
 
