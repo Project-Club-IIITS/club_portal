@@ -12,6 +12,10 @@
     <title>Post_Detail</title>
 {% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'posts/css/icons.css' %}">
+{% endblock %}
+
 {% block content %}
     <div id="main">
 
@@ -74,13 +78,22 @@
             <footer>
                 <ul class="stats">
                     <li>
-                        <button type="submit" style="background:none;padding:0rem;border:none;">
-                            <i class="icon fa-heart fa-2x"></i>
+                        <button type="submit" class="fabutton like" value="like">
+                            {% if is_liked %}
+                                <i class="fas fa-heart fa-3x liked-icon" id="like"></i>
+                            {% else %}
+                                <i class="far fa-heart fa-3x" id="like"></i>
+                            {% endif %}
                         </button>
-                        
+                        <span style="font-size: 2rem;margin-left: 3px;color:#007bff;">28</span>
                     </li>
-                    <li><a href="#" class="icon fa-heart fa-3x">28</a></li>
-                    <li><a href="#" class="icon fa-comment fa-3x">128</a></li>
+
+                    <li>
+                        <button type="submit" class="fabutton comment" value="comment">
+                            <i class="far fa-comment fa-3x"></i>
+                        </button>
+                        <span style="font-size: 2rem;margin-left: 3px;color:#007bff;">128</span>
+                    </li>
                     <li><a href="#" class="icon fa-thumbtack fa-3x"></a></li>
                     <li><a href="{% url 'posts:post-edit' post.club post.id %}" class="icon fa-thumbtack fa-3x">Edit</a>
                     </li>
@@ -209,6 +222,37 @@
 
             cur_subscribe_status = !cur_subscribe_status; // Toggle subscribe status
         }
+
+        /* Like, Comment Icon AJAX */
+
+
+        document.querySelector('.like').addEventListener('click', function(e) {
+
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'posts:like-post' post.id %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType:'json',
+                success: function(data) {
+                    if (data.is_liked) {
+                        $('#like').removeClass('far').addClass('fas').addClass('liked-icon');
+                    }
+                    else {
+                        $('#like').removeClass('fas').removeClass('liked-icon').addClass('far');
+                    }
+                }
+            });
+        });
+
+        document.querySelector('.comment').addEventListener('click', function() {
+            console.log('clicked!');
+        });
+
+
 
 
     </script>

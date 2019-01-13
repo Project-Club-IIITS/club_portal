@@ -39,6 +39,8 @@ class Post(models.Model):
     is_published = models.BooleanField(default=True,
                                        help_text="Uncheck this if you just want to save as draft and edit later before publishing")
 
+    liked_users = models.ManyToManyField(User, related_name='liked_users', blank=True)
+
     class Meta:
         ordering = ['-last_updated']
 
