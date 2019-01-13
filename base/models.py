@@ -67,3 +67,15 @@ class Notification(models.Model):
 
     sent_at = models.DateTimeField(auto_now_add=True)
 # message
+
+
+class EmailProvider(models.Model):
+    name = models.TextField()
+
+    current = models.IntegerField(default=0)
+    limit = models.IntegerField(null=False)
+
+    # in days, when to reset the current count
+    reset = models.IntegerField()
+
+    last_reset = models.DateTimeField(auto_now_add=True)
