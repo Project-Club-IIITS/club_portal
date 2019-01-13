@@ -65,14 +65,20 @@
                 {{ post.body|safe }}
             </p>
             {% if post.poll %}
-{#                <article class="post">#}
+                <article class="post">
 
                 {% include 'posts/_polls.html' %}
 
-{#                </article>#}
+                </article>
             {% endif %}
             <footer>
                 <ul class="stats">
+                    <li>
+                        <button type="submit" style="background:none;padding:0rem;border:none;">
+                            <i class="icon fa-heart fa-2x"></i>
+                        </button>
+                        
+                    </li>
                     <li><a href="#" class="icon fa-heart fa-3x">28</a></li>
                     <li><a href="#" class="icon fa-comment fa-3x">128</a></li>
                     <li><a href="#" class="icon fa-thumbtack fa-3x"></a></li>
