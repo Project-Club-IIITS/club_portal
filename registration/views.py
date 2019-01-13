@@ -90,7 +90,6 @@ def google_signin(request):
                 # Signup
                 new_user = User.objects.create(email=google_form.cleaned_data['email'],
                                                username=google_form.cleaned_data['email'].split('@')[0],
-                                               password=google_form.cleaned_data['firebase_uid']
                                                )
 
                 names = google_form.cleaned_data['full_name']

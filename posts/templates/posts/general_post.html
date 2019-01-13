@@ -22,7 +22,7 @@
                                 <h2>
                                     <a href="{% url 'posts:post_detail'  post.club.name|clubslug post.encrypted_id %}">{{ post.title }}</a>
                                 </h2>
-                                <p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>
+{#                                <p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>#}
                             </div>
                             <div class="meta">
                                 <time class="published" datetime="2015-10-22">{{ post.created }}</time>
@@ -37,7 +37,7 @@
                             </a>
                         {% endif %}
                         <p>
-                            {{ post.body|safe|truncatechars_html:450 }}
+                            {{ post.body|truncatechars_html:450|removeImg|safe}}
                         </p>
                         <footer>
                             <ul class="actions">
@@ -53,13 +53,13 @@
                     </article>
                 </div>
             {% empty %}
-                <h2>No posts matching the given query</h2>
+                <h2>No Recent Posts Available!</h2>
 
             {% endfor %}
         </div>
         {% if posts.has_next %}
             <a style="display:none;" class="infinite-more-link"
-               href="?page={{ posts.next_page_number }}">More</a>
+               href="?page={{ posts.next_page_number }}&{% for field in filter_form %}{% if field.name != 'page' %}{{ field.name }}={{ field.value }}&{% endif %}{% endfor %}">More</a>
         {% endif %}
 
         <div style="width: 100%; text-align: center; display: none" class="loading">
@@ -91,6 +91,12 @@
             </ul>
         </section>
 
+        <section style="">
+            <h2 style="color: crimson">Note</h2>
+            <p style="color: crimson">
+                This section displays only the public posts of clubs you are following. To see private posts of clubs of which you are a member, you should go to the individual club page
+            </p>
+        </section>
         <!-- Mini Posts -->
         <section>
             <div class="mini-posts">
@@ -100,16 +106,16 @@
                     <!-- Mini Post -->
                     <article class="mini-post">
                         <header>
-                            <h3><a href="{% url 'posts:post_detail' p_post.club.name|clubslug p_post.post.encrypted_id %}">{{ p_post.post.title|truncatechars_html:26 }}</a></h3>
+                            <h3><a href="{% url 'posts:post_detail' p_post.post.club.name|clubslug p_post.post.encrypted_id %}">{{ p_post.post.title|truncatechars_html:26 }}</a></h3>
                             <time class="published" datetime="2015-10-18">{{ p_post.post.created }}</time>
 
-                            <a href="{% url 'posts:post_detail' p_post.club.name|clubslug p_post.post.encrypted_id %}" class="author">
+                            <a href="{% url 'posts:post_detail' p_post.post.club.name|clubslug p_post.post.encrypted_id %}" class="author">
                                 <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
-                            <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>
+{#                            <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>#}
 
                         </header>
                         {% if p_post.post.cover_image.url %}
-                            <a href="{% url 'posts:post_detail' post.club.name|clubslug p_post.post.encrypted_id %}" class="image">
+                            <a href="{% url 'posts:post_detail' p_post.post.club.name|clubslug p_post.post.encrypted_id %}" class="image">
                                 <img src="{{ p_post.post.cover_image.url }}" alt=""/></a>
                         {% endif %}
 
@@ -156,7 +162,7 @@
         </section>
 
 
-        {% include 'posts/_polls.html' %}
+
 
     </section>
 
