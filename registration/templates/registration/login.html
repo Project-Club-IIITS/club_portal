@@ -10,11 +10,9 @@
     <link rel="stylesheet" type="text/css" href='{% static "css/login.css" %}'>
 </head>
 
-<body class="align" onload="myFunction()">
-<h1 style="text-align: center;color: white">IIITS Clubs</h1>
-
-
 <div id="loader"></div>
+<body class="align" >
+<h1 style="text-align: center;color: white" id="heading">IIITS Clubs</h1>
 <div class="grid" id="style-main">
 
     <form action="{% url 'registration:login' %}" method="POST" class="form login">
@@ -42,8 +40,9 @@
         <div class="form__field">
             <input type="submit" value="Sign In">
         </div>
-        <a href="javascript:void(0)" onclick="initiate_google_signin()">Google Sign in</a>
-
+        <div style="text-align: center;">
+        <img alt="Google SignIn" style="cursor:pointer;" src="{% static 'registration/images/google.png' %}" onclick="initiate_google_signin()">
+        </div>
 
     </form>
 
@@ -101,42 +100,39 @@
 
 
     function initiate_google_signin() {
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("style-main").style.display = "none";
+        document.getElementById("heading").style.display = "none";
         var gog_form = document.forms["google_signin_form"];
         firebase.auth().signInWithPopup(provider).then(function (result) {
             // This gives you a Google Access Token. You can use it to access the Google API.
+
             var token = result.credential.accessToken;
             gog_form["auth_token"].value = token;
             // The signed-in user info.
             var user = result.user;
-            if(user) {
+
+            if (user) {
                 var myVar;
-
-                /* loader start */
-        function myFunction() {
-          myVar = setTimeout(showPage, 3000);
-        }
-
-        function showPage() {
-          document.getElementById("loader").style.display = "none";
-          document.getElementById("style-main").style.display = "block";
-        }
-
-                /* loader end*/
-
                 gog_form['firebase_uid'].value = user.uid;
                 gog_form['refresh_token'].value = user.refreshToken;
                 gog_form['email'].value = user.email;
                 gog_form['profile_pic_link'].value = user.photoURL;
                 gog_form['full_name'].value = user.displayName;
-
                 gog_form.submit();
-            }
-            else{
-            {#    TODO Display a messege saying error occured#}
+            } else {
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("style-main").style.display = "block";
+                document.getElementById("heading").style.display = "block";
+                {#    TODO Display a messege saying error occured#}
+                alert('Some Error Has Occured. PLease try again')
             }
             // ...
         }).catch(function (error) {
             // Handle Errors here.
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("style-main").style.display = "block";
+            document.getElementById("heading").style.display = "block";
             var errorCode = error.code;
             var errorMessage = error.message;
             // The email of the user's account used.
@@ -144,7 +140,9 @@
             // The firebase.auth.AuthCredential type that was used.
             var credential = error.credential;
             // ...
-        {#    TODO Display a messege saying error has occured and try again later#}
+
+                alert('Some Error has occured')
+
         });
     }
 </script>
