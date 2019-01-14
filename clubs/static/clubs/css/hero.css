@@ -2004,4 +2004,23 @@ body {
 				-ms-transform: scaleX(-1);
 				transform: scaleX(-1);
 			}
-	
+
+
+	ul.featured-icons li .icon {
+    display: inline-block;
+    font-size: 6.25em;
+    height: 1.25em;
+    line-height: 1.25em;
+    width: 1.2em;
+}
+
+@media screen and (max-width: 840px)
+ul.featured-icons li .icon {
+    font-size: 4em;
+    width: 1.45em;
+}
+
+@media screen and (max-width: 736px)
+ul.featured-icons li .icon {
+    width: 1.3em;
+}
