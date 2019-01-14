@@ -33,19 +33,24 @@ class UserProfile(models.Model):
         ('UG4', 'UG4'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone_no = models.CharField(verbose_name='Phone Number', max_length=11, blank=True,
+    phone_no = models.CharField(verbose_name='Phone Number', max_length=11, null=True, blank=True,
                                 validators=[phone_number_validator])
-    batch = models.CharField(max_length=3, choices=BATCH_CHOICES)
-    roll_no = models.CharField(max_length=100)
+    batch = models.CharField(max_length=3, choices=BATCH_CHOICES, null=True, blank=True)
+    roll_no = models.CharField(max_length=100, null=True, blank=True)
     profile_pic = models.ImageField(upload_to=get_profilepic_upload_url, blank=True, null=True)
-    following_clubs = models.ManyToManyField(Club)
+    following_clubs = models.ManyToManyField(Club, blank=True)
+
+
+    def __str__(self):
+        return self.user.username
 
 
 class GoogleAuth(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    google_id = models.CharField(max_length=100, null=True, blank=True)
-    google_salt = models.CharField(max_length=100, null=True, blank=True)
-    time_stamp = models.DateTimeField(auto_now_add=True)
+    firebase_uid = models.CharField(max_length=150, default=' ')
+    auth_token = models.TextField(null=True, blank=True)
+    refresh_token = models.TextField(null=True, blank=True)
+    profile_pic_link = models.URLField(null=True, blank=True)
 
 
 class EmailConfirmation(models.Model):

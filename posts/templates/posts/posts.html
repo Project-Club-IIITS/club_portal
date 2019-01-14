@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load blog_tags %}
 {% load static %}
 
 
@@ -9,6 +10,8 @@
 
 
 {% block content %}
+
+
     <div id="main">
         <div class="infinite-container" id="all_posts">
             {% for post in posts %}
@@ -17,28 +20,35 @@
                         <header>
                             <div class="title">
                                 <h2>
-                                    <a href="{% url 'posts:post_detail' club_slug post.encrypted_id %}">{{ post.title }}</a>
+                                    <a href="{% url 'posts:post_detail'  post.club.name|clubslug post.encrypted_id %}">{{ post.title }}</a>
                                 </h2>
                                 <p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>
                             </div>
                             <div class="meta">
                                 <time class="published" datetime="2015-10-22">{{ post.created }}</time>
                                 <a href="#" class="author"><span class="name">{{ post.author.get_full_name }}</span>
-                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
-                                {#                                TODO Put author name and profile pic here#}
+                                    {% if post.author.userprofile.profile_pic %}
+                                        <img src="{{ post.author.userprofile.profile_pic.url }}" alt=""/>
+                                    {% elif post.author.googleauth.profile_pic_link %}
+                                        <img src="{{ post.author.googleauth.profile_pic_link }}" alt=""/>
+                                    {% else %}
+                                        <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
+                                        {#                                TODO Put author name and profile pic here#}
+                                    {% endif %}
+                                </a>
                             </div>
                         </header>
                         {% if post.cover_image %}
-                            <a href="{% url 'posts:post_detail' club_slug post.encrypted_id %}" class="image featured">
+                            <a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}" class="image featured">
                                 <img src="{{ post.cover_image.url }}" alt="Cover Image"/>
                             </a>
                         {% endif %}
                         <p>
-                            {{ post.body|safe|truncatechars_html:450 }}
+                            {{ post.body|safe|truncatechars_html:100 }}
                         </p>
                         <footer>
                             <ul class="actions">
-                                <li><a href="{% url 'posts:post_detail' club_slug post.encrypted_id %}"
+                                <li><a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}"
                                        class="button large">Continue Reading</a>
                                 </li>
                             </ul>
@@ -51,11 +61,12 @@
                 </div>
             {% empty %}
                 <h2>No posts matching the given query</h2>
+
             {% endfor %}
         </div>
         {% if posts.has_next %}
             <a style="display:none;" class="infinite-more-link"
-               href="?page={{ posts.next_page_number }}">More</a>
+               href="?page={{ posts.next_page_number }}&{% for field in filter_form %}{% if field.name != 'page' %}{{ field.name }}={{ field.value }}&{% endif %}{% endfor %}">More</a>
         {% endif %}
 
         <div style="width: 100%; text-align: center; display: none" class="loading">
@@ -96,17 +107,28 @@
                     <!-- Mini Post -->
                     <article class="mini-post">
                         <header>
-                            <h3><a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}">{{ p_post.post.title|truncatechars_html:26 }}</a></h3>
+
+                            <h3>
+                                <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}">{{ p_post.post.title|truncatechars_html:26 }}</a>
+                            </h3>
                             <time class="published" datetime="2015-10-18">{{ p_post.post.created }}</time>
 
                             <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}" class="author">
-                                <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
-                            <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>
+                                {% if p_post.post.author.userprofile.profile_pic %}
+                                    <img src="{{ p_post.post.author.userprofile.profile_pic.url }}" alt=""/>
+                                {% elif p_post.post.author.googleauth.profile_pic_link %}
+                                    <img src="{{ p_post.post.author.googleauth.profile_pic_link }}" alt=""/>
+                                {% else %}
+                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
+                                    {#                                TODO Put author name and profile pic here#}
+                                {% endif %}
+                            </a>
+{#                            <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>#}
 
                         </header>
-                        {% if p_post.post.cover_image.url %}
+                        {% if p_post.post.cover_image %}
                             <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}" class="image">
-                                <img src="{{ p_post.post.cover_image.url }}" alt=""/></a>
+                                <img src="{{ p_post.post.cover_image.url }}" alt=""></a>
                         {% endif %}
 
                     </article>
@@ -123,17 +145,27 @@
             <h3>Top Posts</h3>
             <ul class="posts">
                 {% for post in top_posts %}
-                <li>
-                    <article>
-                        <header>
-                            <h3><a href="{% url 'posts:post_detail' club_slug post.encrypted_id %}">{{ post.title }}</a></h3>
-                            <time class="published" datetime="2015-10-10">{{ post.created }}</time>
-                        </header>
-                        <a href="#" class="author">
-                            <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
-{#                        TODO Put user profile pic here#}
-                    </article>
-                </li>
+                    <li>
+                        <article>
+                            <header>
+                                <h3>
+                                    <a href="{% url 'posts:post_detail' club_slug post.encrypted_id %}">{{ post.title }}</a>
+                                </h3>
+                                <time class="published" datetime="2015-10-10">{{ post.created }}</time>
+                            </header>
+                            <a href="#" class="author">
+                                {% if post.author.userprofile.profile_pic %}
+                                    <img src="{{ post.author.userprofile.profile_pic.url }}" alt=""/>
+                                {% elif post.author.googleauth.profile_pic_link %}
+                                    <img src="{{ post.author.googleauth.profile_pic_link }}" alt=""/>
+                                {% else %}
+                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
+                                    {#                                TODO Put author name and profile pic here#}
+                                {% endif %}
+                            </a>
+                            {#                        TODO Put user profile pic here#}
+                        </article>
+                    </li>
 
                 {% endfor %}
             </ul>
@@ -142,16 +174,23 @@
 
         <!-- Footer -->
         <section id="footer">
-            <ul class="icons">
-                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
-                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
-                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
-                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
-            </ul>
-            <p class="copyright">&copy; CYBERTEAM
+{#            <ul class="icons">#}
+{#                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>#}
+{#                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>#}
+{#                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>#}
+{#                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>#}
+{#            </ul>#}
+
         </section>
 
     </section>
+
+<div style="display: none;" id="filter_form">
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ filter_form }}
+    </form>
+</div>
 {% endblock %}
 
 
@@ -169,6 +208,17 @@
                 {#$('.collapsible').collapsible();#}
             }
         });
+
+       {% comment %} {#document.getElementById('search-button').addEventListener('onclick', () => {#}
+        {#    window.location = window.location.href + "?query=" + document.getElementById('search-query').value;#}
+        {#});#}
+        {##}{% endcomment %}
+
+
     </script>
+     <link rel="stylesheet"
+          href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/default.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 
 {% endblock %}

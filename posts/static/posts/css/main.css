@@ -3298,8 +3298,6 @@ body {
     display: -ms-flex;
     display: flex;
     -moz-flex-direction: row-reverse;
-    -webkit-flex-direction: row-reverse;
-    -ms-flex-direction: row-reverse;
     flex-direction: row-reverse;
     -moz-transition: opacity 0.5s ease;
     -webkit-transition: opacity 0.5s ease;
