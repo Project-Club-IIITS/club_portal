@@ -15,3 +15,8 @@ def usersList(request):
     }
 
     return render(request, 'base/moderator/makeMods.html', context)
+
+
+
+def club_home(request):
+    return render(request, 'base/club/index.html')
