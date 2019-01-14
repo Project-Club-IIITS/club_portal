@@ -669,18 +669,6 @@ body {
 			margin-bottom: 0;
 		}
 
-		#main .sidebar section {
-			border-top: solid 1px rgba(124, 128, 129, 0.2);
-			margin: 3em 0 0 0;
-			padding: 3em 0 0 0;
-		}
-
-			#main .sidebar section:first-child {
-				border-top: 0;
-				padding-top: 0;
-				margin-top: 0;
-			}
-
 	body.index #main {
 		padding-top: 5em;
 	}
@@ -702,37 +690,6 @@ body {
 		#cta header {
 			margin-bottom: 2em;
 		}
-
-/* Footer */
-
-	#footer {
-		background: #E8EEF4;
-		color: #7c8081;
-		padding: 5em 5em 10em 5em;
-		text-align: center;
-	}
-
-		#footer .copyright {
-			font-size: 0.8em;
-			line-height: 1em;
-		}
-
-			#footer .copyright a {
-				color: inherit;
-			}
-
-			#footer .copyright li {
-				display: inline-block;
-				margin-left: 1em;
-				padding-left: 1em;
-				border-left: dotted 1px;
-			}
-
-			#footer .copyright li:first-child {
-				margin: 0;
-				padding: 0;
-				border: 0;
-			}
 
 /* Wide */
 
@@ -775,9 +732,6 @@ body {
 				padding-bottom: 1.5em;
 			}
 
-			footer.major {
-				padding-top: 2em;
-			}
 
 		/* Wrapper */
 
@@ -786,21 +740,6 @@ body {
 				padding: 4em 3em;
 			}
 
-				.wrapper.style4 {
-					padding: 3em;
-				}
-
-		/* Header */
-
-			#header nav ul li {
-				margin-left: 1em;
-			}
-
-		/* Banner */
-
-			#banner {
-				background-attachment: scroll;
-			}
 
 		/* CTA */
 
@@ -808,13 +747,6 @@ body {
 				padding: 4em;
 				background-attachment: scroll;
 			}
-
-		/* Footer */
-
-			#footer {
-				padding: 4em;
-			}
-
 	}
 
 /* Narrow */
@@ -844,9 +776,6 @@ body {
 				padding-right: 2.5em;
 			}
 
-			footer.major {
-				padding-top: 1.5em;
-			}
 
 		/* Wrapper */
 
@@ -855,9 +784,6 @@ body {
 				padding: 3em 2.5em;
 			}
 
-				.wrapper.special br {
-					display: none;
-				}
 
 				.wrapper.style1 {
 					padding: 0 2.5em;
@@ -866,16 +792,6 @@ body {
 				.wrapper.style2 {
 					background-size: 15em;
 				}
-
-				.wrapper.style4 {
-					padding: 2.5em;
-				}
-
-		/* Banner */
-
-			#banner {
-				background-size: 15em, 15em, auto, cover;
-			}
 
 		/* Main */
 
@@ -933,18 +849,6 @@ body {
 					margin-top: 0;
 				}
 
-		/* Button */
-
-			input[type="button"].small,
-			input[type="submit"].small,
-			input[type="reset"].small,
-			button.small,
-			.button.small {
-				font-size: 0.8em;
-				min-width: 18em;
-				padding: 0.75em 0;
-			}
-
 		/* Featured Icons */
 
 			ul.featured-icons {
@@ -975,11 +879,6 @@ body {
 				display: none;
 			}
 
-		/* Banner */
-
-			#banner {
-				margin: 0;
-			}
 
 		/* Wrapper */
 
@@ -987,9 +886,6 @@ body {
 				text-align: center;
 			}
 
-			.wrapper.style4 {
-				padding-bottom: 3em;
-			}
 
 		/* Main */
 
@@ -997,15 +893,6 @@ body {
 				padding: 5em 0;
 			}
 
-				#main .sidebar {
-					border-top: solid 1px rgba(124, 128, 129, 0.1);
-					padding-top: 3em;
-				}
-
-					#main .sidebar section {
-						border-top: 0;
-						padding-top: 0;
-					}
 
 			body.index #main {
 				padding-top: 4.5em;
@@ -1015,12 +902,6 @@ body {
 
 			#cta {
 				margin: 0;
-			}
-
-		/* Footer */
-
-			#footer {
-				padding: 4em 1.5em;
 			}
 
 		/* Nav */
@@ -1130,70 +1011,6 @@ body {
 				padding: 0.25em 0.75em 1em 0.75em;
 			}
 
-				#navPanel .link {
-					border: 0;
-					border-top: solid 1px rgba(255, 255, 255, 0.05);
-					color: inherit;
-					display: block;
-					height: 3em;
-					line-height: 3em;
-					opacity: 0.75;
-					text-decoration: none;
-				}
-
-					#navPanel .link.depth-0 {
-						font-weight: 900;
-					}
-
-					#navPanel .link:first-child {
-						border-top: 0;
-					}
-
-				#navPanel .indent-1 {
-					display: inline-block;
-					width: 1em;
-				}
-
-				#navPanel .indent-2 {
-					display: inline-block;
-					width: 2em;
-				}
-
-				#navPanel .indent-3 {
-					display: inline-block;
-					width: 3em;
-				}
-
-				#navPanel .indent-4 {
-					display: inline-block;
-					width: 4em;
-				}
-
-				#navPanel .indent-5 {
-					display: inline-block;
-					width: 5em;
-				}
-
-			body.navPanel-visible #page-wrapper {
-				-moz-transform: translateX(275px);
-				-webkit-transform: translateX(275px);
-				-ms-transform: translateX(275px);
-				transform: translateX(275px);
-			}
-
-			body.navPanel-visible #navButton {
-				-moz-transform: translateX(275px);
-				-webkit-transform: translateX(275px);
-				-ms-transform: translateX(275px);
-				transform: translateX(275px);
-			}
-
-			body.navPanel-visible #navPanel {
-				-moz-transform: translateX(0);
-				-webkit-transform: translateX(0);
-				-ms-transform: translateX(0);
-				transform: translateX(0);
-			}
 
 	}
 
