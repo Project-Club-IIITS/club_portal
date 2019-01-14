@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'base',
     'accounts',
     'posts',
-    'clubs',
     'widget_tweaks',
     'api',
     'rest_framework',
