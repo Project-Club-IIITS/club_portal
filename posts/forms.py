@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, PostUpdate, Event
+from .models import Post, PostUpdate, Event, Poll
 
 
 class PostFilterForm(forms.Form):
@@ -40,3 +40,9 @@ class PostUpdateForm(forms.ModelForm):
     class Meta:
         model = PostUpdate
         fields = ['content']
+
+
+class PollCreateForm(forms.ModelForm):
+    class Meta:
+        model = Poll
+        fields = ['track_votes']

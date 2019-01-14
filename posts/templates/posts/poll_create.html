@@ -9,14 +9,21 @@
 
 <div class="container">
     {{ club_name }}
-    <h2>Create Poll</h2>
+    <h2 style="margin-bottom: 0;">Create Poll</h2>
+    Add some details then select options
+
 
 
     <div class="options">
-        <form action="{% url 'posts:submit_poll' club_name %}" method="POST">
+        <form action="{% url 'posts:create_poll' club_name %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="text" name="title" class="poll-question" placeholder="Enter The Poll Question" required>
-
+            {{ post_create_form.media }}
+            {{ post_create_form }}
+            {{ poll_create_form }}
+{#            <input type="text" name="title" class="poll-question" placeholder="Enter The Poll Question" required>#}
+            <br><br>
+            <div style="font-weight: bolder; font-size: larger">Add options for your poll:</div>
+            <br>
             <ul class="option-list">
                 <li>
                     <input type="text" name="0" placeholder="Write Your Option here!" required>
