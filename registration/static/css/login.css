@@ -139,6 +139,7 @@ input[type='submit'] {
   margin: calc(var(--formFieldMargin) * -1);
 }
 
+.login input[type='email'],
 .form input[type='password'],
 .form input[type='text'],
 .form input[type='submit'] {
@@ -175,6 +176,7 @@ input[type='submit'] {
 }
 
 .login label,
+.login input[type='email'],
 .login input[type='text'],
 .login input[type='password'],
 .login input[type='submit'] {
@@ -190,6 +192,7 @@ input[type='submit'] {
   padding-right: 1.25rem;
 }
 
+.login input[type='email'],
 .login input[type='password'],
 .login input[type='text'] {
   background-color: var(--loginInputBackgroundColor);
@@ -198,6 +201,8 @@ input[type='submit'] {
   height: 52.5px;
 }
 
+.login input[type='email']:focus,
+.login input[type='email']:hover,
 .login input[type='password']:focus,
 .login input[type='password']:hover,
 .login input[type='text']:focus,

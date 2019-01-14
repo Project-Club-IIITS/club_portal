@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href='{% static "css/login.css" %}'>
 </head>
 <body class="align">
-<h1 style="text-align: center;color: white">IOTA</h1>
+<h1 style="text-align: center;color: white">IIITS Clubs</h1>
 <div class="grid">
     <form action="{% url 'registration:login' %}" method="POST" class="form login">
         {% csrf_token %}
@@ -42,7 +42,9 @@
 
     </form>
 
-    <p class="text--center">Not a member of IOTA?<a href="{% url 'registration:signup' %}">Sign up now</a>
+    <p class="text--center">
+        Not a member yet?<a href="{% url 'registration:signup' %}">Sign up now</a><br>
+        Forgot Password?<a href="{% url 'password_reset' %}">Click Here</a>
         <svg class="icon">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/icons.svg#arrow-right"></use>
         </svg>

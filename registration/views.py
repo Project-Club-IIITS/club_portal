@@ -121,3 +121,5 @@ def google_signin(request):
 
     else:
         return HttpResponse("Method GET not allowed")
+
+
