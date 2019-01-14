@@ -2014,13 +2014,30 @@ body {
     width: 1.2em;
 }
 
-@media screen and (max-width: 840px)
-ul.featured-icons li .icon {
-    font-size: 4em;
-    width: 1.45em;
+@media screen and (max-width: 840px) {
+	ul.featured-icons li .icon {
+		font-size: 4em;
+		width: 1.45em;
+	}
 }
 
-@media screen and (max-width: 736px)
-ul.featured-icons li .icon {
-    width: 1.3em;
+@media screen and (max-width: 736px) {
+	ul.featured-icons li .icon {
+		width: 1.3em;
+	}
+}
+
+
+#wrapper > * > .inner {
+    padding: 4em 0 2em 0;
+    margin: 0 auto;
+    max-width: 65em;
+    width: calc(100% - 6em);
+}
+
+@media screen and (max-width: 736px) {
+	#wrapper > * > .inner {
+		padding: 3em 0 1em 0;
+		width: calc(100% - 3em);
+	}
 }
