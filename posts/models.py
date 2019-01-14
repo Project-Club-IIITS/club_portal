@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import signals
 from django.dispatch import receiver
+from django.utils import timezone
 
 from base.models import Club
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -47,6 +48,11 @@ class Post(models.Model):
     def __str__(self):
         return self.title[:20]
 
+
+class PostApprover(models.Model):
+    post = models.OneToOneField(to=Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.PROTECT)
+    approved_on = models.DateTimeField(auto_now=True)
 
 class PostUpdate(models.Model):
     author = models.ForeignKey(to=User, on_delete=models.CASCADE)
@@ -118,6 +124,15 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=264)
     time_stamp = models.DateTimeField(auto_now_add=True)
+
+
+class Event(models.Model):
+    post = models.OneToOneField(Post, on_delete=models.CASCADE)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    venue = models.CharField(max_length=200)
+    interested_users = models.ManyToManyField(User)
+
 
 
 @receiver(signals.post_save, sender=Post)
