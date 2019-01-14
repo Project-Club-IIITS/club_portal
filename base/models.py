@@ -1,3 +1,5 @@
+import os
+
 from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError, transaction
 from django.contrib.auth.models import User
@@ -12,6 +14,10 @@ def club_name_validator(name):
         raise ValidationError('The name can not contain \'-\'')
 
 
+def club_logo_upload(instance, filename):
+    return os.path.join('clubs', instance.name.replace(' ', '_'), filename)
+
+
 class Club(models.Model):
     name = models.CharField(max_length=100, validators=[club_name_validator])
     date_formed = models.DateField(auto_now_add=True)
@@ -20,6 +26,8 @@ class Club(models.Model):
     is_active = models.BooleanField(default=True)
     is_supported = models.BooleanField(default=True)
     num_users = models.IntegerField(default=0)
+
+    logo = models.ImageField(upload_to=club_logo_upload, blank=True)
 
     def __str__(self):
         return self.name
@@ -72,24 +80,24 @@ class ClubMember(models.Model):
 @receiver(signals.post_save, sender=ClubModerator)
 def moderator_add_member(sender, instance, created, **kwargs):
     # If a user is made a moderator, also make him a member of the club
-        try:
-            with transaction.atomic():  # We need to make atomic as code may throw integrity error
-                ClubMember.objects.create(user=instance.user, club=instance.club, is_approved=True)
-        except IntegrityError:
-            # User is already a member. Do Nothing
-            pass
+    try:
+        with transaction.atomic():  # We need to make atomic as code may throw integrity error
+            ClubMember.objects.create(user=instance.user, club=instance.club, is_approved=True)
+    except IntegrityError:
+        # User is already a member. Do Nothing
+        pass
 
 
 @receiver(signals.post_save, sender=ClubPresident)
 def president_add_moderator_member(sender, instance, created, **kwargs):
     # If a user is made a president, also make him a member and moderator of the club
-        try:
-            with transaction.atomic():  # We need to make atomic as code may throw integrity error
-                ClubModerator.objects.create(user=instance.user, club=instance.club)
-            # Just making moderator is enough, as while making moderator, the above signal will be called, which will make him a member
-        except IntegrityError:
-            # User is already a moderator. Do Nothing
-            pass
+    try:
+        with transaction.atomic():  # We need to make atomic as code may throw integrity error
+            ClubModerator.objects.create(user=instance.user, club=instance.club)
+        # Just making moderator is enough, as while making moderator, the above signal will be called, which will make him a member
+    except IntegrityError:
+        # User is already a moderator. Do Nothing
+        pass
 
 
 @receiver(signals.pre_delete, sender=ClubModerator)
