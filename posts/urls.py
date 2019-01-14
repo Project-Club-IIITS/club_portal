@@ -16,5 +16,5 @@ urlpatterns = [
     path('<slug:club_name_slug>/<int:encrypted_id>/issue-update', views.post_update, name="post-update"),
 
     path('<slug:club_name_slug>/<int:encrypted_id>/vote', views.cast_vote, name='cast-vote'),
-
+    path('like_post/<int:id>/', views.likePost, name='like-post')
 ]

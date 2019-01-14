@@ -175,11 +175,16 @@ def post_detail(request, club_name_slug, encrypted_id):
     club = get_object_or_404(Club, name=club_name)
     post = get_object_or_404(Post, encrypted_id=encrypted_id)
 
+    is_liked = request.user.liked_users.filter(id=post.id).exists()
+
     if (not post.is_public) and (not club.clubmember_set.filter(user=request.user).exists()):
         # Post is not public and User is not a club member
         raise PermissionDenied("You are not authorised to view this post")
 
-    return render(request, "posts/post_detail.html", {"post": post, "club_name_slug": club_name_slug})
+    return render(request, "posts/post_detail.html", {"post": post,
+                                                      "club_name_slug": club_name_slug,
+                                                      "is_liked":is_liked
+                                                      })
 
 
 def add_post(request, club_name_slug):
@@ -283,3 +288,32 @@ def cast_vote(request, club_name_slug, encrypted_id):
     response['location'] += '#results'
 
     return response
+
+
+@login_required()
+def likePost(request, id):
+
+    post = get_object_or_404(Post, id=id)
+
+    if request.method == 'POST':
+
+        is_liked = post.liked_users.filter(id=request.user.id).exists()
+        print(is_liked)
+
+        if(is_liked):
+            post.liked_users.remove(request.user)
+            is_liked = False
+        else:
+            post.liked_users.add(request.user)
+            is_liked = True
+
+        post.save()
+
+        data = {
+            'is_liked':is_liked
+        }
+
+        return JsonResponse(data)
+
+
+

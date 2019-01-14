@@ -9,9 +9,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href='{% static "css/login.css" %}'>
 </head>
-<body class="align">
+
+<body class="align" onload="myFunction()">
 <h1 style="text-align: center;color: white">IIITS Clubs</h1>
-<div class="grid">
+
+
+<div id="loader"></div>
+<div class="grid" id="style-main">
+
     <form action="{% url 'registration:login' %}" method="POST" class="form login">
         {% csrf_token %}
         {{ form.non_field_errors }}
@@ -104,7 +109,20 @@
             // The signed-in user info.
             var user = result.user;
             if(user) {
-                {#TODO Add a loader here#}
+                var myVar;
+
+                /* loader start */
+        function myFunction() {
+          myVar = setTimeout(showPage, 3000);
+        }
+
+        function showPage() {
+          document.getElementById("loader").style.display = "none";
+          document.getElementById("style-main").style.display = "block";
+        }
+
+                /* loader end*/
+
                 gog_form['firebase_uid'].value = user.uid;
                 gog_form['refresh_token'].value = user.refreshToken;
                 gog_form['email'].value = user.email;

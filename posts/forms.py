@@ -12,6 +12,8 @@ class PostFilterForm(forms.Form):
 
         if self.is_valid():
             if self.cleaned_data['events_only']:
+                if self.cleaned_data['polls_only']:
+                    posts = posts.exclude(event=None, poll=None)
                 posts = posts.exclude(event=None)
 
             if self.cleaned_data['polls_only']:
@@ -19,7 +21,7 @@ class PostFilterForm(forms.Form):
 
             if self.cleaned_data['query'] != 'None':
                 posts = posts.filter(title__contains=self.cleaned_data['query'])
-            #
+
         return posts
 
 
