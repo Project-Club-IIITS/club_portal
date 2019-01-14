@@ -8,9 +8,11 @@ from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
+
 from base.models import Club, ClubModerator, ClubMember
-from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm
-from posts.models import PinnedPost, Post, Vote, Option
+from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm, EventForm, PostForm
+from posts.models import PinnedPost, Post, Vote, Option, Event
+
 
 
 def redirect_with_args(url, GET_args=None, *args, **kwargs):
@@ -116,6 +118,7 @@ def club_posts(request, club_name_slug):
     # TODO Add a check here to make sure only public posts are shown to user is not a member of the club
 
     # print(posts)
+
     paginator = Paginator(posts, 3)
     try:
         posts_page = paginator.page(page)
@@ -317,3 +320,66 @@ def likePost(request, id):
 
 
 
+
+def events_create(request, club_name_slug):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    user = request.user
+
+    if request.method == "POST":
+        postform = PostForm(data=request.POST)
+        eventform = EventForm(data=request.POST)
+        if postform.is_valid() and eventform.is_valid():
+            post = postform.save(commit=False)
+            post.author = user
+            post.club = club
+            # postform.encrypted_id=
+            post = post.save()
+            event = eventform.save(commit=False)
+            event.post = post
+            event.save()
+
+            return redirect(request, '')
+
+
+    else:
+        postform = PostForm()
+        eventform = EventForm()
+
+    return render(request, 'posts/event_create.html', {'postform': postform, 'eventform': eventform})
+
+
+def events_update(request, club_name_slug, encrypted_id):
+    post = get_object_or_404(Post, encrypted_id=encrypted_id)
+    event = get_object_or_404(Event, post=post)
+    club_name = club_name_slug.replace('-', ' ')
+    if event.post.club is club_name:
+        eventform = EventForm(request.POST or None, instance=event)
+        postform = PostForm(request.POST or None, instance=post)
+        if request.method == 'POST':
+            if postform.is_valid() and eventform.is_valid():
+                postform.save()
+                eventform.save()
+
+                return render(request, '')
+
+        else:
+            return render(request, 'posts/event_update.html', {'postform': postform, 'eventform': eventform})
+
+
+def interested_event(request):
+    ret_data = {
+        'add_success': False
+    }
+    if request.user.is_annonymous:
+        return JsonResponse(ret_data)
+    user = request.user
+    encrypted_id = request.POST.get('encrypted_id')
+    post = get_object_or_404(Post, encrypted_id=encrypted_id)
+    event = get_object_or_404(Event, post=post)
+    if not event.interested_users.filter(user=user).exists():
+        event.interested_users.add(user)
+        event.save()
+        ret_data['add_success'] = True
+
+    return JsonResponse(ret_data)
