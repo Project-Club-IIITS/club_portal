@@ -49,6 +49,11 @@ class Post(models.Model):
         return self.title[:20]
 
 
+class PostApprover(models.Model):
+    post = models.OneToOneField(to=Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.PROTECT)
+    approved_on = models.DateTimeField(auto_now=True)
+
 class PostUpdate(models.Model):
     author = models.ForeignKey(to=User, on_delete=models.CASCADE)
     post = models.ForeignKey(to=Post, on_delete=models.CASCADE)

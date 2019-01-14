@@ -2,7 +2,6 @@ from django import forms
 from .models import Post, PostUpdate, Event
 
 
-
 class PostFilterForm(forms.Form):
     page = forms.IntegerField(required=False)
     events_only = forms.BooleanField(required=False, initial=False)
@@ -10,7 +9,7 @@ class PostFilterForm(forms.Form):
     query = forms.CharField(required=False)
 
     def filter_posts(self, posts):
-      if self.is_valid():
+        if self.is_valid():
             if self.cleaned_data['events_only']:
                 if self.cleaned_data['polls_only']:
                     posts = posts.exclude(event=None, poll=None)
@@ -22,25 +21,22 @@ class PostFilterForm(forms.Form):
             if self.cleaned_data['query'] != 'None':
                 posts = posts.filter(title__contains=self.cleaned_data['query'])
 
-       return posts
+        return posts
 
 
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ('start_date','end_date','venue')
-
-        
+        fields = ('start_date', 'end_date', 'venue')
 
 
 class PostCreationForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "body", "cover_image")
+        fields = ("title", "body", "cover_image", 'is_public', 'is_published')
 
 
 class PostUpdateForm(forms.ModelForm):
     class Meta:
         model = PostUpdate
         fields = ['content']
-

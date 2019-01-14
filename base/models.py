@@ -13,7 +13,7 @@ def club_name_validator(name):
 
 
 class Club(models.Model):
-    name = models.CharField(max_length=100, validators=[club_name_validator])
+    name = models.CharField(max_length=100, validators=[club_name_validator], db_index=True)
     date_formed = models.DateField(auto_now_add=True)
     email = models.EmailField()
     about = models.TextField(help_text="Say a few lines about your club")

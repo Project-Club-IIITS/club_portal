@@ -10,9 +10,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 
 from base.models import Club, ClubModerator, ClubMember
-from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm, EventForm, PostForm
-from posts.models import PinnedPost, Post, Vote, Option, Event
-
+from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm, EventForm, PostCreationForm
+from posts.models import PinnedPost, Post, Vote, Option, Event, PostApprover
 
 
 def redirect_with_args(url, GET_args=None, *args, **kwargs):
@@ -186,43 +185,8 @@ def post_detail(request, club_name_slug, encrypted_id):
 
     return render(request, "posts/post_detail.html", {"post": post,
                                                       "club_name_slug": club_name_slug,
-                                                      "is_liked":is_liked
+                                                      "is_liked": is_liked
                                                       })
-
-
-def add_post(request, club_name_slug):
-    if request.method == "POST":
-        form = PostCreationForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            club_name = club_name_slug.replace('-', ' ')
-            club = get_object_or_404(Club, name=club_name)
-            post.author = request.user
-            post.club = club
-            post.save()
-            return redirect("posts:posts", club_name_slug)
-    else:
-        form = PostCreationForm()
-    context = {
-        "form": form,
-    }
-    return render(request, "posts/post_add.html", context)
-
-
-@login_required
-def edit_post(request, club_name_slug, id):
-    post = get_object_or_404(Post, id=id)
-    if request.method == "POST":
-        form = PostCreationForm(request.POST, request.FILES, instance=post)
-        if form.is_valid():
-            form.save()
-            return redirect("posts:posts", club_name_slug)
-    else:
-        form = PostCreationForm(instance=post)
-    context = {
-        "form": form,
-    }
-    return render(request, "posts/post_edit.html", context)
 
 
 @login_required
@@ -295,7 +259,6 @@ def cast_vote(request, club_name_slug, encrypted_id):
 
 @login_required()
 def likePost(request, id):
-
     post = get_object_or_404(Post, id=id)
 
     if request.method == 'POST':
@@ -303,7 +266,7 @@ def likePost(request, id):
         is_liked = post.liked_users.filter(id=request.user.id).exists()
         print(is_liked)
 
-        if(is_liked):
+        if (is_liked):
             post.liked_users.remove(request.user)
             is_liked = False
         else:
@@ -313,12 +276,10 @@ def likePost(request, id):
         post.save()
 
         data = {
-            'is_liked':is_liked
+            'is_liked': is_liked
         }
 
         return JsonResponse(data)
-
-
 
 
 def events_create(request, club_name_slug):
@@ -327,7 +288,7 @@ def events_create(request, club_name_slug):
     user = request.user
 
     if request.method == "POST":
-        postform = PostForm(data=request.POST)
+        postform = PostCreationForm(data=request.POST)
         eventform = EventForm(data=request.POST)
         if postform.is_valid() and eventform.is_valid():
             post = postform.save(commit=False)
@@ -343,7 +304,7 @@ def events_create(request, club_name_slug):
 
 
     else:
-        postform = PostForm()
+        postform = PostCreationForm()
         eventform = EventForm()
 
     return render(request, 'posts/event_create.html', {'postform': postform, 'eventform': eventform})
@@ -355,7 +316,7 @@ def events_update(request, club_name_slug, encrypted_id):
     club_name = club_name_slug.replace('-', ' ')
     if event.post.club is club_name:
         eventform = EventForm(request.POST or None, instance=event)
-        postform = PostForm(request.POST or None, instance=post)
+        postform = PostCreationForm(request.POST or None, instance=post)
         if request.method == 'POST':
             if postform.is_valid() and eventform.is_valid():
                 postform.save()
@@ -383,3 +344,53 @@ def interested_event(request):
         ret_data['add_success'] = True
 
     return JsonResponse(ret_data)
+
+
+def create_post(request, club_name_slug):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    if not ClubMember.objects.filter(club=club, user=request.user).exists():
+        raise PermissionDenied("Only Club members can create posts")
+
+    if request.method == "POST":
+        form = PostCreationForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.club = club
+
+            if ClubModerator.objects.filter(club=club, user=request.user).exists():
+                PostApprover.objects.create(post=post, user=request.user)
+                post.is_approved = True
+
+            post.save()
+            return redirect("posts:posts", club_name_slug)
+
+    else:
+        form = PostCreationForm()
+
+    context = {
+        "form": form,
+    }
+    return render(request, "posts/post_add.html", context)
+
+
+@login_required
+def edit_post(request, encrypted_id):
+    post = get_object_or_404(Post, encrypted_id=encrypted_id)
+    if post.author != request.user:
+        raise PermissionDenied("You are not authorized to edit this post")
+
+    if request.method == "POST":
+        form = PostCreationForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            club_name_slug = post.club.name.replace(' ', '-')
+            return redirect("posts:post_detail", club_name_slug, post.encrypted_id)
+    else:
+        form = PostCreationForm(instance=post)
+    context = {
+        "form": form,
+    }
+    return render(request, "posts/post_edit.html", context)
