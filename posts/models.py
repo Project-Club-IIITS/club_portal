@@ -21,7 +21,7 @@ class Post(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=150)
-    body = RichTextUploadingField()  # from ckeditor
+    body = RichTextUploadingField(blank=True)  # from ckeditor
     is_public = models.BooleanField(default=False)
     cover_image = models.ImageField(null=True, blank=True)
 

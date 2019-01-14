@@ -1,9 +1,13 @@
 from django.urls import path
+from django.contrib.auth.views import TemplateView
 from . import views
 
 app_name = "posts"
 
 urlpatterns = [
+    path('<slug:club_name_slug>/create-poll/', views.createPoll
+         , name='create_poll'),
+    path('<slug:club_name_slug>/submit-poll/', views.submitPoll, name='submit_poll'),
     path('', views.posts, name='posts'),
     path('events/', views.events, name="events"),
     path('polls/', views.polls, name="polls"),
@@ -16,5 +20,5 @@ urlpatterns = [
     path('<slug:club_name_slug>/<int:encrypted_id>/issue-update', views.post_update, name="post-update"),
 
     path('<slug:club_name_slug>/<int:encrypted_id>/vote', views.cast_vote, name='cast-vote'),
-    path('like_post/<int:id>/', views.likePost, name='like-post')
+    path('like_post/<int:id>/', views.likePost, name='like-post'),
 ]

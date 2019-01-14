@@ -10,7 +10,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from base.models import Club, ClubModerator, ClubMember
 from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm
-from posts.models import PinnedPost, Post, Vote, Option
+from posts.models import PinnedPost, Post, Vote, Option, Poll
 
 
 def redirect_with_args(url, GET_args=None, *args, **kwargs):
@@ -316,4 +316,35 @@ def likePost(request, id):
         return JsonResponse(data)
 
 
+def createPoll(request, club_name_slug):
+    return render(request, 'posts/poll_create.html', {'club_name':club_name_slug})
+
+
+def submitPoll(request, club_name_slug):
+
+    if request.method == 'POST':
+
+
+        # Fields required for Post
+        club = get_object_or_404(Club, name=club_name_slug.upper())
+        title = request.POST['title']
+
+
+        post = Post.objects.create(author=request.user,
+                            club=club,
+                            title=title
+                            )
+
+
+        poll = Poll.objects.create(post=post)
+
+
+
+
+        option_count = int(request.POST['hidden-count'])
+        for option in range(option_count):
+            Option.objects.create(poll=poll,option_text=request.POST[str(option)])
+
+
+        return redirect('posts:club_posts', club_name_slug=club.name.lower().replace(' ','-'))
 

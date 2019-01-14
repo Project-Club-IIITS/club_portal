@@ -8,18 +8,17 @@
     
     {% with post.poll as poll %}
     {% if poll.is_active and not poll|has_user_casted_vote:request.user %}
-    <h2>Select your option</h2>
-    <form action="{% url 'posts:cast-vote' club_name_slug post.encrypted_id %}" class="poll-submit" method="POST">
+    <form action="{% url 'posts:cast-vote' club_name_slug post.encrypted_id %}" method="POST" id="form">
         <div class="question poll-question">
-                        <h3>Do You Like Subu Kandswamy?</h3>
+            <h3>Do You Like Subu Kandswamy?</h3>
             {% csrf_token %}
 
             {% for option in poll.option_set.all %}
-            <div class="poll-option option">
-                <input type="radio" id="option_{{ option.id }}"
-                name="option" value="{{ option.id }}">
-                <label for="option_{{ option.id }}">{{ option.option_text }}</label>
-            </div>
+                <div class="poll-option option">
+                    <input type="radio" id="option_{{ option.id }}"
+                    name="option" value="{{ option.id }}">
+                    <label for="option_{{ option.id }}">{{ option.option_text }}</label>
+                </div>
             {% empty %}
             No options set for poll
             {% endfor %}
@@ -34,7 +33,7 @@
                     The option you have voted for can not be seen by anyone later.
                 {% endif %}
             </p>
-            <input type="submit" value="submit">
+            <input type="submit" value="Submit" class="poll-submit">
         </div>
 
     </form>
@@ -42,23 +41,11 @@
     {% else %}
     
     <div class="result poll-question">
-        <h2 id="results">Here Are The Results</h2>
+        <h4 id="results">Here Are The Results</h4>
         
         {% with poll.total_votes as total_votes %}
         {# To prevent queries and addition operations again and again#}
         {% for option in poll.option_set.all %}
-{#        <div class="answer option row">#}
-{#            <h3 class="option-text">{{ option.option_text }}</h3>#}
-{#            <h3 class="answer-value">{% widthratio option.num_votes total_votes 100 %}%</h3>#}
-{##}
-{#            <div class="answer-bar">#}
-{#                <div class="filled-bar">#}
-{#                    &nbsp;#}
-{#                </div>#}
-{#            </div>#}
-{#            <span style="font-weight: bolder">({{ option.num_votes }})</span>#}
-{#        </div>#}
-
             <div class="row option">
                 <div class="col-lg-6 col-sm-12">
                     <div class="row">
@@ -105,16 +92,13 @@
                 }
             }
         }
-        
-        
+
+
+
     </script>
     {% endif %}
-    
-    
-    
-    
     {% endwith %}
-    
+
 </div>
 
 
