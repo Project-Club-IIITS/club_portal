@@ -21,5 +21,13 @@ def club_home(request):
     return render(request, 'base/club/index.html')
 
 
-def admin_home(request):
-    return render(request, 'base/admin/member.html')
+def member_list(request):
+    return render(request, 'base/member.html')
+
+
+def moderator_list(request):
+    return render(request, 'base/moderator.html')
+
+
+def pending_posts_list(request):
+    return render(request, 'base/pendingPosts.html')
