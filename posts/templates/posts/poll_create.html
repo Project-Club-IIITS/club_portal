@@ -18,8 +18,8 @@
         <form action="{% url 'posts:create_poll' club_name %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ post_create_form.media }}
-            {{ post_create_form }}
-            {{ poll_create_form }}
+            {{ post_create_form.as_p }}
+            {{ poll_create_form.as_p }}
 {#            <input type="text" name="title" class="poll-question" placeholder="Enter The Poll Question" required>#}
             <br><br>
             <div style="font-weight: bolder; font-size: larger">Add options for your poll:</div>
