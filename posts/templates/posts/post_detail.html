@@ -24,28 +24,37 @@
                 <div class="title">
                     <h2><a href="#">{{ post.title }}</a></h2>
 
-                    {% if request.user in post.subscribed_users.all %}
-                        <a href="#" class="button subscribed" id="subscribe_button" onclick='subscribe_toggle()'
-                           style=" box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important "
-                           title="Receive notifications about updates">
-                            Subscribed
-                        </a>
+                    <div class="row">
+                        <div class="col-lg-6" style="display:flex;justify-content: space-around;">
+                            {% if request.user in post.subscribed_users.all %}
+                                <a href="#" class="button subscribed" id="subscribe_button" onclick='subscribe_toggle()'
+                                   style=" box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important "
+                                   title="Receive notifications about updates">
+                                    Subscribed
+                                </a>
 
-                        <script>
-                            var cur_subscribe_status = true;
-                        </script>
+                                <script>
+                                    var cur_subscribe_status = true;
+                                </script>
 
-                    {% else %}
-                        <a href="#" class="button" id="subscribe_button" onclick='subscribe_toggle()'
-                           title="Receive notifications about updates">
-                            Subscribe
-                        </a><br>
-                        <span style="font-style: italic;color: gray; font-size: 90%;">(Stay in touch with all the updates of this post)</span>
+                            {% else %}
+                                <a href="#" class="button" id="subscribe_button" onclick='subscribe_toggle()'
+                                   title="Receive notifications about updates">
+                                    Subscribe
+                                </a><br>
+                                <span style="font-style: italic;color: gray; font-size: 90%;">(Stay in touch with all the updates of this post)</span>
 
-                        <script>
-                            var cur_subscribe_status = false;
-                        </script>
-                    {% endif %}
+                                <script>
+                                    var cur_subscribe_status = false;
+                                </script>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-lg-6" style="display:flex;justify-content: space-around;">
+                            <a href="{% url 'posts:post-edit' post.encrypted_id %}" class="button" style="text-align:right;">Edit</a>
+                        </div>
+
+                    </div>
 
                 </div>
                 <div class="meta">
@@ -95,7 +104,6 @@
                         <span style="font-size: 2rem;margin-left: 3px;color:#007bff;">128</span>
                     </li>
                     <li><a href="#" class="icon fa-thumbtack fa-3x"></a></li>
-                    <li><a href="{% url 'posts:post-edit' post.encrypted_id %}" class="icon fa-thumbtack fa-3x">Edit</a>
                     </li>
                 </ul>
             </footer>
