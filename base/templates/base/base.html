@@ -1,110 +1,70 @@
 {% load static %}
-<!doctype html>
+<!DOCTYPE HTML>
 <html>
 <head>
-    {% block head %}
-    {% endblock %}
+    <title>Future Imperfect by HTML5 UP</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'posts/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    {% block head %}
+    {% endblock %}
+    <style>
+        .navbar .navbar-expand-lg a {
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body class="is-preload">
 
 <!-- Wrapper -->
-<div id="wrapper">
+<nav class="navbar navbar-light bg-light navbar-expand-lg">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <!-- Header -->
-    <!-- Header -->
-    <header id="header">
-
-        <a href="#" class="logo">	
-            <img src="{% static 'posts/images/logo-iota.jpg' %}" alt="" class="logo-club"/>
-        </a>
-        <nav class="main">
-            <ul>
-                <li class="search">
-                    <a class="fa-search" href="#search">Search</a>
-                    <form id="search" method="get" action="#">
-                        <input type="text" name="query" placeholder="Search"/>
-                    </form>
-                </li>
-                <li class="menu">
-                    <a class="fa-bars" href="#menu">Menu</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
-    <!-- Menu -->
-    <section id="menu">
-
-        <!-- Search -->
-        <section>
-            <form class="search" method="get" action="#">
-                <input type="text" name="query" placeholder="Search"/>
-            </form>
-        </section>
-
-        <!-- Links -->
-        <section>
-            <ul class="links">
-                <li>
-                    <div>
-                        <a onclick="myFunction()" class="clubs-dropdown"><h3>Clubs &#9662;</h3></a>
-                        <div id="myDropdown" class="dropdown-content">
-                            <a href="#"><p>IOTA</p></a>
-                            <a href="#"><p>Gradient</p></a>
-                            <a href="#"><p>Photography Club</p></a>
-                            <a href="#"><p>Nature Club</p></a>
-                        </div>
-                    </div>
-                    {#                    <a class="dropbtn" onclick="myFunction()">Clubs &#9662;</a>#}
-                    {#                    <div class="dropdown-content" id="myDropdown">#}
-                    {#                        <a href="#">IOTA</a>#}
-                    {#                        <a href="#">Gradient</a>#}
-                    {#                        <a href="#">Photography Club</a>#}
-                    {#                        <a href="#">Nature Club</a>#}
-                    {#                    </div>#}
-                </li>
-                <li>
-                    <a href="#">
-                        <h3>Dolor sit amet</h3>
-                        <p>Sed vitae justo condimentum</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <h3>Feugiat veroeros</h3>
-                        <p>Phasellus sed ultricies mi congue</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <h3>Etiam sed consequat</h3>
-                        <p>Porta lectus amet ultricies</p>
-                    </a>
-                </li>
-            </ul>
-        </section>
-
-        <!-- Actions -->
-        <section>
-            <ul class="actions stacked">
-                <li><a href="#" class="button large fit">Log In</a></li>
-            </ul>
-        </section>
-
-    </section>
-
-    {% block content %}
-    {% endblock %}
-
-</div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% block content %}
+{% endblock %}
 
 <!-- Scripts -->
-
-<script src="{% static 'posts/js/jquery.min.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
 <script src="{% static 'posts/js/browser.min.js' %}"></script>
 <script src="{% static 'posts/js/breakpoints.min.js' %}"></script>
 <script src="{% static 'posts/js/util.js' %}"></script>
@@ -112,8 +72,8 @@
 
 
 {% block script %}
-
 {% endblock %}
+
 
 </body>
 </html>
