@@ -1,4 +1,4 @@
-{% extends 'base/base.html' %}
+{% extends 'base/base2.html' %}
 {% load blog_tags %}
 {% load static %}
 
@@ -6,12 +6,11 @@
 {% block head %}
     <title>Posts</title>
     <link rel="stylesheet" href="{% static "posts/css/loader.css" %}"/>
+    <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
 {% endblock %}
 
 
 {% block content %}
-
-
     <div id="main">
         <div class="infinite-container" id="all_posts">
             {% for post in posts %}
