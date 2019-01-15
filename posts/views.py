@@ -29,7 +29,8 @@ def posts(request):
     following_clubs = request.user.userprofile.following_clubs.all()
     following_clubs_id = [club.id for club in following_clubs]
 
-    posts = Post.objects.filter(is_approved=True, is_public=True, is_published=True).filter(club__id__in=following_clubs_id)
+    posts = Post.objects.filter(is_approved=True, is_public=True, is_published=True).filter(
+        club__id__in=following_clubs_id)
     post_filter_form = PostFilterForm(request.GET)
 
     posts = post_filter_form.filter_posts(posts)
@@ -280,9 +281,6 @@ def likePost(request, id):
         return JsonResponse(data)
 
 
-
-
-
 def create_post_generic(request, club, post_create_form):
     post = post_create_form.save(commit=False)
     post.author = request.user
@@ -365,8 +363,32 @@ def create_poll(request, club_name_slug):
         poll_create_form = PollCreateForm()
 
     return render(request, 'posts/poll_create.html', {'club_name': club_name_slug,
-                                                      "post_create_form":post_create_form,
-                                                      "poll_create_form":poll_create_form
+                                                      "post_create_form": post_create_form,
+                                                      "poll_create_form": poll_create_form
+                                                      }
+                  )
+
+
+def edit_poll(request, encrypted_id):
+    poll = get_object_or_404(Poll, poll__encrypted_id=encrypted_id)
+    if poll.post.author != request.user:
+        raise PermissionDenied("You are not authorized to edit this post")
+
+    if request.method == "POST":
+        post_form = PostCreationForm(request.POST, request.FILES, instance=poll.post)
+        poll_form = PollCreateForm(request.POST, instance=poll)
+
+        if post_form.is_valid() and poll_form.is_valid():
+            poll_form.save()
+            post_form.save()
+
+    else:
+        post_form = PostCreationForm()
+        poll_form = PollCreateForm()
+
+    return render(request, 'posts/poll_create.html', {'club_name': poll.post.club.name.replace(' ', '-'),
+                                                      "post_create_form": post_form,
+                                                      "poll_create_form": poll_form
                                                       }
                   )
 
@@ -433,4 +455,3 @@ def interested_event(request):
         ret_data['add_success'] = True
 
     return JsonResponse(ret_data)
-
