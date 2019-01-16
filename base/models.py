@@ -28,6 +28,17 @@ class Club(models.Model):
         return self.name.replace(' ', '-')
 
 
+class ClubMentor(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.PROTECT)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.club.name + " - " + self.user.username
+
+
 class ClubPresident(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     # We can't allow user to be deleted unless new president is set
@@ -72,24 +83,34 @@ class ClubMember(models.Model):
 @receiver(signals.post_save, sender=ClubModerator)
 def moderator_add_member(sender, instance, created, **kwargs):
     # If a user is made a moderator, also make him a member of the club
-        try:
-            with transaction.atomic():  # We need to make atomic as code may throw integrity error
-                ClubMember.objects.create(user=instance.user, club=instance.club, is_approved=True)
-        except IntegrityError:
-            # User is already a member. Do Nothing
-            pass
+    try:
+        with transaction.atomic():  # We need to make atomic as code may throw integrity error
+            ClubMember.objects.create(user=instance.user, club=instance.club, is_approved=True)
+    except IntegrityError:
+        # User is already a member. Do Nothing
+        pass
 
 
 @receiver(signals.post_save, sender=ClubPresident)
 def president_add_moderator_member(sender, instance, created, **kwargs):
     # If a user is made a president, also make him a member and moderator of the club
-        try:
-            with transaction.atomic():  # We need to make atomic as code may throw integrity error
-                ClubModerator.objects.create(user=instance.user, club=instance.club)
-            # Just making moderator is enough, as while making moderator, the above signal will be called, which will make him a member
-        except IntegrityError:
-            # User is already a moderator. Do Nothing
-            pass
+    try:
+        with transaction.atomic():  # We need to make atomic as code may throw integrity error
+            ClubModerator.objects.create(user=instance.user, club=instance.club)
+        # Just making moderator is enough, as while making moderator, the above signal will be called, which will make him a member
+    except IntegrityError:
+        # User is already a moderator. Do Nothing
+        pass
+
+
+@receiver(signals.post_save, sender=ClubMentor)
+def mentor_add_moderator(sender, instance, created, **kwargs):
+    try:
+        with transaction.atomic():
+            ClubModerator.objects.create(user=instance.user, club=instance.club)
+    except IntegrityError:
+        # User is already a moderator. Do Nothing
+        pass
 
 
 @receiver(signals.pre_delete, sender=ClubModerator)
