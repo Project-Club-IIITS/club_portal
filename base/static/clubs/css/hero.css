@@ -1636,7 +1636,6 @@ body {
 
 		#header a {
 			border-bottom-color: rgba(255, 255, 255, 0.35);
-			color: rgba(255, 255, 255, 0.8);
 		}
 
 		#header h1, #header h2, #header h3, #header h4, #header h5, #header h6 {
@@ -1709,7 +1708,7 @@ body {
 			}
 		/* Header */
 			#header {
-				padding: 8em 0 16em 0;
+				padding: 0em 0 14em 0;
 			}
 				#header h1 {
 					font-size: 2.25em;
@@ -1753,7 +1752,7 @@ body {
 				background-attachment: scroll,							scroll,							scroll;
 				background-image: url("images/top-1600.svg"), url("images/overlay.png"), url("../../images/header.jpg");
 				background-size: 1600px 230px,					auto,							cover;
-				padding: 6em 0 12em 0;
+				padding: 0em 0 10em 0;
 			}
 				#header:before {
 					height: calc(100% - 25px);
