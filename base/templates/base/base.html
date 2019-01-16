@@ -133,6 +133,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'posts/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static "css/navbar-footer.css" %}">
     <style>
         .chip {
             display: inline-block;
@@ -298,16 +299,31 @@
     {#    </header>#}
 
 
-    <!-- Menu -->
-    <section id="menu">
 
-
-    </section>
 
     {% block content %}
     {% endblock %}
 
 </div>
+
+<div id="wrapper">#}
+        <!-- Footer -->
+        <footer id="footer">
+            <div class="inner">
+                <ul class="icons">
+                    <li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+                    <li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+                    <li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+                    <li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+                    <li><a href="#" class="icon alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+                </ul>
+                <ul class="copyright">
+                    <li>&copy; Copyright 2019</li>
+                    <li>Made By <span>IOTA</span></li>
+                </ul>
+            </div>
+        </footer>
+    </div>
 
 <!-- Scripts -->
 
