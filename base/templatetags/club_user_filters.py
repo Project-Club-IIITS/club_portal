@@ -26,7 +26,7 @@ def is_user_member(user, club):
     if not (isinstance(user, User) and isinstance(club, Club)):
         raise ValueError("User must be an instance of User model and club must be an instance of Club model")
 
-    return club.clubmember_set.filter(user=user).exists()
+    return club.clubmember_set.filter(user=user, is_approved=True).exists()
 
 
 @register.filter
