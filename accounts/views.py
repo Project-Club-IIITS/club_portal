@@ -129,4 +129,13 @@ def change_password(request):
 
 @login_required
 def profile(request):
-    return HttpResponse('This is userprofile')
+
+    print(request.user.clubmember_set.all())
+
+
+    context = {
+        'posts': request.user.post_set.all(),
+        'clubs': request.user.clubmember_set.all()
+    }
+
+    return render(request, 'accounts/profile.html', context)

@@ -49,11 +49,18 @@
                                 </script>
                             {% endif %}
                         </div>
-
-                        <div class="col-lg-6" style="display:flex;justify-content: space-around;">
-                            <a href="{% url 'posts:post-edit' post.encrypted_id %}" class="button" style="text-align:right;">Edit</a>
-                        </div>
-
+                        {% if post.author == request.user %}
+                            <div class="col-lg-6" style="display:flex;justify-content: space-around;">
+                                {% if post.poll %}
+{#                                {% elif post.event %}#}
+{#                                    <a href="{% url 'posts:post-edit' post.encrypted_id %}" class="button" style="text-align:right;">Event Edit</a>#}
+                                {% elif post %}
+                                    Thain Thain phisss
+                                {% else %}
+                                    Thain Thain phiss
+                                {% endif %}
+                            </div>
+                        {% endif %}
                     </div>
 
                 </div>
