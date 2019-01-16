@@ -46,3 +46,9 @@ class PollCreateForm(forms.ModelForm):
     class Meta:
         model = Poll
         fields = ['track_votes']
+
+
+class PollUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Poll
+        fields = ['track_votes']
