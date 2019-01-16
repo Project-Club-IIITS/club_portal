@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Editorial by HTML5 UP</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="{% static 'admin_panel/css/admin_panel.css' %}"/>
+</head>
+<body class="is-preload">
+<!-- Wrapper -->
+<div id="wrapper">
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <!-- Section -->
+            <section>
+                <header class="major">
+                    <div>
+                        <h2>Moderators</h2>
+                    </div>
+                    <div class="search-box">
+                        <input class="search-input" type="text" name="addMember" id="moderatorAdd">
+                        <a href="#" class="button small">Add</a>
+                    </div>
+
+                </header>
+                <div class="posts">
+                    <div class="table-wrapper" style="margin:0 auto;width:100%;">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Lorem Ipsum</td>
+                                <td>Ante turpis integer aliquet porttitor.</td>
+                            </tr>
+                            <tr>
+                                <td>Lorem Ipsum</td>
+                                <td>Vis ac commodo adipiscing arcu aliquet.</td>
+                            </tr>
+                            <tr>
+                                <td>Lorem Ipsum</td>
+                                <td> Morbi faucibus arcu accumsan lorem.</td>
+                            </tr>
+                            <tr>
+                                <td>Lorem Ipsum</td>
+                                <td>Vitae integer tempus condimentum.</td>
+                            </tr>
+                            <tr>
+                                <td>Lorem Ipsum</td>
+                                <td>Ante turpis integer aliquet porttitor.</td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="inner">
+            <nav id="menu">
+                <header class="major">
+                    <h2>IOTA</h2>
+                </header>
+                <ul>
+                    <li><a href="{% url 'base:member_list' %}">Members</a></li>
+                    <li><a href="{% url 'base:moderator_list' %}">Moderators</a></li>
+                    <li><a href="{% url 'base:pending_posts_list' %}">Posts</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'admin_panel/js/jquery.min.js' %}"></script>
+<script src="{% static 'admin_panel/js/browser.min.js' %}"></script>
+<script src="{% static 'admin_panel/js/breakpoints.min.js' %}"></script>
+<script src="{% static 'admin_panel/js/util.js' %}"></script>
+<script src="{% static 'admin_panel/js/admin_panel.js' %}"></script>
+
+
+</body>
+</html>

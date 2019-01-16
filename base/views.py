@@ -2,9 +2,9 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 
+
 class IndexView(TemplateView):
     template_name = "base/index.html"
-
 
 
 def usersList(request):
@@ -15,3 +15,19 @@ def usersList(request):
     }
 
     return render(request, 'base/moderator/makeMods.html', context)
+
+
+def club_home(request):
+    return render(request, 'base/club/index.html')
+
+
+def member_list(request):
+    return render(request, 'base/member.html')
+
+
+def moderator_list(request):
+    return render(request, 'base/moderator.html')
+
+
+def pending_posts_list(request):
+    return render(request, 'base/pendingPosts.html')

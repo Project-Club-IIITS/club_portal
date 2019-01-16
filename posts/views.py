@@ -29,7 +29,8 @@ def posts(request):
     following_clubs = request.user.userprofile.following_clubs.all()
     following_clubs_id = [club.id for club in following_clubs]
 
-    posts = Post.objects.filter(is_approved=True, is_public=True, is_published=True).filter(club__id__in=following_clubs_id)
+    posts = Post.objects.filter(is_approved=True, is_public=True, is_published=True).filter(
+        club__id__in=following_clubs_id)
     post_filter_form = PostFilterForm(request.GET)
 
     posts = post_filter_form.filter_posts(posts)
@@ -280,9 +281,6 @@ def likePost(request, id):
         return JsonResponse(data)
 
 
-
-
-
 def create_post_generic(request, club, post_create_form):
     post = post_create_form.save(commit=False)
     post.author = request.user
@@ -365,8 +363,32 @@ def create_poll(request, club_name_slug):
         poll_create_form = PollCreateForm()
 
     return render(request, 'posts/poll_create.html', {'club_name': club_name_slug,
-                                                      "post_create_form":post_create_form,
-                                                      "poll_create_form":poll_create_form
+                                                      "post_create_form": post_create_form,
+                                                      "poll_create_form": poll_create_form
+                                                      }
+                  )
+
+
+def edit_poll(request, encrypted_id):
+    poll = get_object_or_404(Poll, poll__encrypted_id=encrypted_id)
+    if poll.post.author != request.user:
+        raise PermissionDenied("You are not authorized to edit this post")
+
+    if request.method == "POST":
+        post_form = PostCreationForm(request.POST, request.FILES, instance=poll.post)
+        poll_form = PollCreateForm(request.POST, instance=poll)
+
+        if post_form.is_valid() and poll_form.is_valid():
+            poll_form.save()
+            post_form.save()
+
+    else:
+        post_form = PostCreationForm()
+        poll_form = PollCreateForm()
+
+    return render(request, 'posts/poll_create.html', {'club_name': poll.post.club.name.replace(' ', '-'),
+                                                      "post_create_form": post_form,
+                                                      "poll_create_form": poll_form
                                                       }
                   )
 
@@ -399,16 +421,12 @@ def events_create(request, club_name_slug):
         postform = PostCreationForm(data=request.POST)
         eventform = EventForm(data=request.POST)
         if postform.is_valid() and eventform.is_valid():
-            post = postform.save(commit=False)
-            post.author = user
-            post.club = club
-            # postform.encrypted_id=
-            post = post.save()
+            post = create_post_generic(request, club, postform)
             event = eventform.save(commit=False)
             event.post = post
             event.save()
 
-            return redirect(request, '')
+            return redirect('posts:post_detail', club_name_slug, post.encrypted_id)
 
 
     else:
@@ -418,22 +436,25 @@ def events_create(request, club_name_slug):
     return render(request, 'posts/event_create.html', {'postform': postform, 'eventform': eventform})
 
 
-def events_update(request, club_name_slug, encrypted_id):
+def events_edit(request, encrypted_id):
     post = get_object_or_404(Post, encrypted_id=encrypted_id)
     event = get_object_or_404(Event, post=post)
-    club_name = club_name_slug.replace('-', ' ')
-    if event.post.club is club_name:
+    if request.user != post.author:
+        raise PermissionDenied("You are not allowed to edit this event")
+
+    if request.method == "POST":
         eventform = EventForm(request.POST or None, instance=event)
-        postform = PostCreationForm(request.POST or None, instance=post)
-        if request.method == 'POST':
-            if postform.is_valid() and eventform.is_valid():
-                postform.save()
-                eventform.save()
+        postform = PostCreationForm(request.POST, request.FILES, instance=post)
+        if postform.is_valid() and eventform.is_valid():
+            postform.save()
+            eventform.save()
 
-                return render(request, '')
+            return redirect('posts:post_detail', post.club.name.replace(' ', '-'), post.encrypted_id)
 
-        else:
-            return render(request, 'posts/event_update.html', {'postform': postform, 'eventform': eventform})
+    else:
+        eventform = EventForm(instance=event)
+        postform = PostCreationForm(instance=post)
+    return render(request, 'posts/event_create.html', {'postform': postform, 'eventform': eventform})
 
 
 def interested_event(request):
@@ -452,4 +473,3 @@ def interested_event(request):
         ret_data['add_success'] = True
 
     return JsonResponse(ret_data)
-

@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
+from django.urls import resolve
+
 from .forms import SignupForm, FirebaseGoogleLoginForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -74,7 +76,12 @@ def google_signin(request):
             if len(users) > 0 and google_form.cleaned_data['firebase_uid'] == users[0].googleauth.firebase_uid:
                 # User already validated. Directly login
                 login(request, users[0])
-                return redirect('base:index')
+                try:
+                    next_match = resolve(google_form.cleaned_data['next_url'])
+                    return redirect(google_form.cleaned_data['next_url'])
+
+                except:
+                    return redirect('base:index')
 
             # User not validated or uid has changed
             try:
@@ -113,13 +120,18 @@ def google_signin(request):
             guser.save()
 
             login(request, new_user)
-            return redirect('base:index')
+            try:
+                next_match = resolve(google_form.cleaned_data['next_url'])
+                return redirect(google_form.cleaned_data['next_url'])
+
+            except:
+                print(google_form.cleaned_data['next_url'])
+                return redirect('base:index')
 
         else:
+            print(google_form.errors)
             print("oops unclean data")
             return HttpResponse("Invalid data")
 
     else:
         return HttpResponse("Method GET not allowed")
-
-

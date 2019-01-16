@@ -31,7 +31,7 @@ SECRET_KEY = secret_settings.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
 
 if DEBUG is False and secret_settings.IS_PUBLIC is True:
     raise ImportError(
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'django_mailbox',
+    'crispy_forms',
 ]
 
 

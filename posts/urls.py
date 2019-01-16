@@ -25,7 +25,7 @@ urlpatterns = [
     path('<slug:club_name_slug>/<int:encrypted_id>/vote', views.cast_vote, name='cast-vote'),
 
     path('<slug:club_name_slug>/events/create', views.events_create, name="events_create"),
-    path('<slug:club_name_slug>/events/update/<int:encrypted_id>', views.events_update, name="events_update"),
+    path('<slug:club_name_slug>/events/update/<int:encrypted_id>', views.events_edit, name="events_edit"),
     path('ajax/interested_event', views.interested_event, name="interested_event"),
 
     path('', views.posts, name='posts'),

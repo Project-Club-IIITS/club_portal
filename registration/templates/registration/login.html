@@ -41,7 +41,7 @@
             <input type="submit" value="Sign In">
         </div>
         <div style="text-align: center;">
-        <img alt="Google SignIn" style="cursor:pointer;" src="{% static 'registration/images/google.png' %}" onclick="initiate_google_signin()">
+        <img alt="Google SignIn" style="cursor:pointer;max-width:100px;" src="{% static 'registration/images/google.png' %}" onclick="initiate_google_signin()">
         </div>
 
     </form>
@@ -78,6 +78,7 @@
         <input type="url" name="profile_pic_link" maxlength="200" id="id_profile_pic_link">
         <input type="email" name="email" required id="id_email">
         <input type="text" name="full_name" id="id_full_name">
+        <input type="text" name="next_url" id="id_next_url">
     </form>
 </div>
 </body>
@@ -86,6 +87,20 @@
 <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
 <script>
     // Initialize Firebase
+
+    function findGetParameter(parameterName) {
+        var result = null,
+            tmp = [];
+        location.search
+            .substr(1)
+            .split("&")
+            .forEach(function (item) {
+                tmp = item.split("=");
+                if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+            });
+        return result;
+    }
+
     var config = {
         apiKey: "AIzaSyBW31-QdouonJ0lAetZbr6AGLhZVMTpsMQ",
         authDomain: "iiits-club-portal.firebaseapp.com",
@@ -119,6 +134,12 @@
                 gog_form['email'].value = user.email;
                 gog_form['profile_pic_link'].value = user.photoURL;
                 gog_form['full_name'].value = user.displayName;
+
+                let next_param = findGetParameter('next');
+                if (next_param) {
+                    gog_form['next_url'].value = next_param;
+                }
+
                 gog_form.submit();
             } else {
                 document.getElementById("loader").style.display = "none";
