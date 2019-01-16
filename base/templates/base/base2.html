@@ -1,91 +1,123 @@
 {% load static %}
-<!DOCTYPE HTML>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static "css/navbar2.css" %}">
+    <link rel="stylesheet" href="{% static "css/navbar-footer.css" %}">
     {% block head %}
     {% endblock %}
-    <title>Future Imperfect by HTML5 UP</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <link rel="stylesheet" href="{% static 'css/navbar.css' %}"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>IOTA</title>
 </head>
 <body class="is-preload">
 
-<!-- Wrapper -->
-<div id="wrapper">
-    <!-- Header -->
-    <header id="header">
-        <h1><a href="index.html">Future Imperfect</a></h1>
-        <nav class="main">
-            <ul>
-                <li class="menu">
-                    <a class="fa-bars" href="#menu">
-                        <i class="fas fa-bars"></i>
-                    </a>
+<section class="navigation">
+    <div class="nav-container">
+        <div class="brand">
+            <a href="#">Logo</a>
+        </div>
+        <nav>
+            <div class="nav-mobile"><a id="nav-toggle" href="#"><span></span></a></div>
+            <ul class="nav-list">
+                <li>
+                    <a href="#">Home</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Services</a>
+                    <ul class="nav-dropdown">
+                        <li>
+                            <a href="#">Web Design</a>
+                        </li>
+                        <li>
+                            <a href="#">Web Development</a>
+                        </li>
+                        <li>
+                            <a href="#">Graphic Design</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Pricing</a>
+                </li>
+                <li>
+                    <a href="#">Portfolio</a>
+                    <ul class="nav-dropdown">
+                        <li>
+                            <a href="#">Web Design</a>
+                        </li>
+                        <li>
+                            <a href="#">Web Development</a>
+                        </li>
+                        <li>
+                            <a href="#">Graphic Design</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
                 </li>
             </ul>
         </nav>
-    </header>
-
-    <!-- Menu -->
-    <section id="menu">
-
-        <!-- Search -->
-        <section>
-            <form class="search" method="get" action="#">
-                <input type="text" name="query" placeholder="Search"/>
-            </form>
-        </section>
-
-        <!-- Links -->
-        <section>
-            <ul class="links">
-                <li>
-                    <a href="#">
-                        <h3>Lorem ipsum</h3>
-                        <p>Feugiat tempus veroeros dolor</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <h3>Dolor sit amet</h3>
-                        <p>Sed vitae justo condimentum</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <h3>Feugiat veroeros</h3>
-                        <p>Phasellus sed ultricies mi congue</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <h3>Etiam sed consequat</h3>
-                        <p>Porta lectus amet ultricies</p>
-                    </a>
-                </li>
-            </ul>
-        </section>
-
-        <!-- Actions -->
-        <section>
-            <ul class="actions stacked">
-                <li><a href="#" class="button large fit">Log In</a></li>
-            </ul>
-        </section>
-    </section>
-</div>
-
+    </div>
+</section>
 
 {% block content %}
 {% endblock %}
-<!-- SCRIPTS -->
+
+<div id="wrapper">
+        <!-- Footer -->
+        <footer id="footer">
+            <div class="inner">
+                <ul class="icons">
+                    <li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+                    <li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+                    <li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+                    <li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+                    <li><a href="#" class="icon alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+                </ul>
+                <ul class="copyright">
+                    <li>&copy; Untitled</li>
+                    <li>Made By <span>IOTA</span></li>
+                </ul>
+            </div>
+        </footer>
+    </div>
 <script src="{% static 'posts/js/jquery.min.js' %}"></script>
 <script src="{% static 'posts/js/browser.min.js' %}"></script>
 <script src="{% static 'posts/js/breakpoints.min.js' %}"></script>
 <script src="{% static 'posts/js/util.js' %}"></script>
 <script src="{% static 'posts/js/main.js' %}"></script>
+<script>
+    (function($) { // Begin jQuery
+  $(function() { // DOM ready
+    // If a link has a dropdown, add sub menu toggle.
+    $('nav ul li a:not(:only-child)').click(function(e) {
+      $(this).siblings('.nav-dropdown').toggle();
+      // Close one dropdown when selecting another
+      $('.nav-dropdown').not($(this).siblings()).hide();
+      e.stopPropagation();
+    });
+    // Clicking away from dropdown will remove the dropdown class
+    $('html').click(function() {
+      $('.nav-dropdown').hide();
+    });
+    // Toggle open and close nav styles on click
+    $('#nav-toggle').click(function() {
+      $('nav ul').slideToggle();
+    });
+    // Hamburger to X toggle
+    $('#nav-toggle').on('click', function() {
+      this.classList.toggle('active');
+    });
+  }); // end DOM ready
+})(jQuery); // end jQuery
+</script>
 
 {% block script %}
 {% endblock %}
