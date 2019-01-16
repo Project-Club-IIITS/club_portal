@@ -1,0 +1,75 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/poll_create.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    {{ club_name }}
+    <h2 style="margin-bottom: 0;">Create Poll</h2>
+    Add some details then select options
+
+
+
+    <div class="options">
+        <form action="{% url 'posts:create_poll' club_name %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ post_create_form.media }}
+            {{ post_create_form.as_p }}
+            {{ poll_create_form.as_p }}
+{#            <input type="text" name="title" class="poll-question" placeholder="Enter The Poll Question" required>#}
+            <br><br>
+            <div style="font-weight: bolder; font-size: larger">Add options for your poll:</div>
+            <br>
+            <ul class="option-list">
+                <li>
+                    <input type="text" name="0" placeholder="Write Your Option here!" required>
+                </li>
+                <li>
+                    <input type="text" name="1" placeholder="Write Your Option here!" required>
+                </li>
+            </ul>
+
+            <div class="row justify-content-around">
+                <div class="col-lg-3">
+                    <button id="add-option" class="add-option">Add Option Here</button>
+                </div>
+                <div class="col-lg-3 col-lg-offset-6">
+                    <input class="poll-submit" type="submit" value="Submit">
+                </div>
+            </div>
+            <input name="hidden-count" class="option-count" type="hidden" value="2">
+        </form>
+    </div>
+
+</div>
+
+<script>
+    let nameCounter = 1;
+
+    document.querySelector('.add-option').addEventListener('click', function() {
+
+        let liNode = document.createElement('li');
+        let inputField = document.createElement('input');
+
+        inputField.setAttribute("name",String(++nameCounter));
+        inputField.setAttribute("placeholder", "Write Your Option here!");
+        inputField.setAttribute("type","text");
+        inputField.required = true;
+
+        liNode.appendChild(inputField);
+
+        document.querySelector('.option-list').appendChild(liNode);
+
+        // No of options
+        document.querySelector('.option-count').value = nameCounter;
+    });
+
+
+</script>
+
+
+{% endblock %}

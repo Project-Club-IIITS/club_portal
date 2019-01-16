@@ -19,7 +19,7 @@ def club_logo_upload(instance, filename):
 
 
 class Club(models.Model):
-    name = models.CharField(max_length=100, validators=[club_name_validator])
+    name = models.CharField(max_length=100, validators=[club_name_validator], db_index=True)
     date_formed = models.DateField(auto_now_add=True)
     email = models.EmailField()
     about = models.TextField(help_text="Say a few lines about your club")
@@ -34,6 +34,17 @@ class Club(models.Model):
 
     def slug(self):
         return self.name.replace(' ', '-')
+
+
+class ClubMentor(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.PROTECT)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.club.name + " - " + self.user.username
 
 
 class ClubPresident(models.Model):
@@ -98,6 +109,16 @@ def president_add_moderator_member(sender, instance, created, **kwargs):
     except IntegrityError:
         # User is already a moderator. Do Nothing
         pass
+
+@receiver(signals.post_save, sender=ClubMentor)
+def mentor_add_moderator(sender, instance, created, **kwargs):
+    try:
+        with transaction.atomic():
+            ClubModerator.objects.create(user=instance.user, club=instance.club)
+    except IntegrityError:
+        # User is already a moderator. Do Nothing
+        pass
+
 
 
 @receiver(signals.pre_delete, sender=ClubModerator)

@@ -7,10 +7,9 @@ from django.db.models import F
 from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 
-# Create your views here.
 from base.models import Club, ClubModerator, ClubMember
-from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm
-from posts.models import PinnedPost, Post, Vote, Option
+from posts.models import PinnedPost, Post, Vote, Option, Poll, Event, PostApprover
+from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm, EventForm, PollCreateForm
 
 
 def redirect_with_args(url, GET_args=None, *args, **kwargs):
@@ -30,7 +29,8 @@ def posts(request):
     following_clubs = request.user.userprofile.following_clubs.all()
     following_clubs_id = [club.id for club in following_clubs]
 
-    posts = Post.objects.filter(is_approved=True, is_public=True).filter(club__id__in=following_clubs_id)
+    posts = Post.objects.filter(is_approved=True, is_public=True, is_published=True).filter(
+        club__id__in=following_clubs_id)
     post_filter_form = PostFilterForm(request.GET)
 
     posts = post_filter_form.filter_posts(posts)
@@ -89,7 +89,7 @@ def club_posts(request, club_name_slug):
     club_name = club_name_slug.replace('-', ' ')
     club = get_object_or_404(Club, name=club_name)
 
-    posts = club.post_set.filter(club=club, is_approved=True)
+    posts = club.post_set.filter(club=club, is_approved=True, is_published=True)
 
     is_member = True
     if not ClubMember.objects.filter(club=club, user=request.user, is_approved=True).exists():
@@ -114,6 +114,8 @@ def club_posts(request, club_name_slug):
     # Add more conditions on post_filter_form here
 
     # TODO Add a check here to make sure only public posts are shown to user is not a member of the club
+
+    # print(posts)
 
     paginator = Paginator(posts, 3)
     try:
@@ -174,46 +176,16 @@ def post_detail(request, club_name_slug, encrypted_id):
     club = get_object_or_404(Club, name=club_name)
     post = get_object_or_404(Post, encrypted_id=encrypted_id)
 
+    is_liked = request.user.liked_users.filter(id=post.id).exists()
+
     if (not post.is_public) and (not club.clubmember_set.filter(user=request.user).exists()):
         # Post is not public and User is not a club member
         raise PermissionDenied("You are not authorised to view this post")
 
-    return render(request, "posts/post_detail.html", {"post": post, "club_name_slug": club_name_slug})
-
-
-def add_post(request, club_name_slug):
-    if request.method == "POST":
-        form = PostCreationForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            club_name = club_name_slug.replace('-', ' ')
-            club = get_object_or_404(Club, name=club_name)
-            post.author = request.user
-            post.club = club
-            post.save()
-            return redirect("posts:posts", club_name_slug)
-    else:
-        form = PostCreationForm()
-    context = {
-        "form": form,
-    }
-    return render(request, "posts/post_add.html", context)
-
-
-@login_required
-def edit_post(request, club_name_slug, id):
-    post = get_object_or_404(Post, id=id)
-    if request.method == "POST":
-        form = PostCreationForm(request.POST, request.FILES, instance=post)
-        if form.is_valid():
-            form.save()
-            return redirect("posts:posts", club_name_slug)
-    else:
-        form = PostCreationForm(instance=post)
-    context = {
-        "form": form,
-    }
-    return render(request, "posts/post_edit.html", context)
+    return render(request, "posts/post_detail.html", {"post": post,
+                                                      "club_name_slug": club_name_slug,
+                                                      "is_liked": is_liked
+                                                      })
 
 
 @login_required
@@ -265,18 +237,220 @@ def cast_vote(request, club_name_slug, encrypted_id):
 
     v = Vote(poll=poll, user=request.user)
 
-    v.save()
-
     option.num_votes = F('num_votes') + 1
     # This is done to avoid race condition where 2 users may try to update db at the same time
     # https://docs.djangoproject.com/en/2.1/ref/models/expressions/#avoiding-race-conditions-using-f
 
     option.save()
 
-    # if poll.track_votes:
+    if poll.track_votes:
+        # Track the option user has voted for
+        v.option = option
+
+    v.save()
 
     response = redirect('posts:post_detail', club_name_slug, encrypted_id)
 
     response['location'] += '#results'
 
     return response
+
+
+@login_required()
+def likePost(request, id):
+    post = get_object_or_404(Post, id=id)
+
+    if request.method == 'POST':
+
+        is_liked = post.liked_users.filter(id=request.user.id).exists()
+        print(is_liked)
+
+        if (is_liked):
+            post.liked_users.remove(request.user)
+            is_liked = False
+        else:
+            post.liked_users.add(request.user)
+            is_liked = True
+
+        post.save()
+
+        data = {
+            'is_liked': is_liked
+        }
+
+        return JsonResponse(data)
+
+
+def create_post_generic(request, club, post_create_form):
+    post = post_create_form.save(commit=False)
+    post.author = request.user
+    post.club = club
+    post.save()
+
+    if ClubModerator.objects.filter(club=club, user=request.user).exists():
+        PostApprover.objects.create(post=post, user=request.user)
+        post.is_approved = True
+        post.save()
+
+    return post
+
+
+@login_required
+def create_post(request, club_name_slug):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    if not ClubMember.objects.filter(club=club, user=request.user).exists():
+        raise PermissionDenied("Only Club members can create posts")
+
+    if request.method == "POST":
+        form = PostCreationForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = create_post_generic(request, club, form)
+            return redirect("posts:post_detail", club_name_slug, post.encrypted_id)
+
+    else:
+        form = PostCreationForm()
+
+    context = {
+        "form": form,
+    }
+    return render(request, "posts/post_add.html", context)
+
+
+@login_required
+def edit_post(request, encrypted_id):
+    post = get_object_or_404(Post, encrypted_id=encrypted_id)
+    if post.author != request.user:
+        raise PermissionDenied("You are not authorized to edit this post")
+
+    if request.method == "POST":
+        form = PostCreationForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            club_name_slug = post.club.name.replace(' ', '-')
+            return redirect("posts:post_detail", club_name_slug, post.encrypted_id)
+    else:
+        form = PostCreationForm(instance=post)
+    context = {
+        "form": form,
+    }
+    return render(request, "posts/post_edit.html", context)
+
+
+def create_poll(request, club_name_slug):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    if request.method == "POST":
+        post_create_form = PostCreationForm(request.POST, request.FILES)
+        poll_create_form = PollCreateForm(request.POST)
+
+        if post_create_form.is_valid() and poll_create_form.is_valid():
+            post = create_post_generic(request, club, post_create_form)
+
+            poll = poll_create_form.save(commit=False)
+            poll.post = post
+            poll.save()
+
+            option_count = int(request.POST['hidden-count'])
+            for option in range(option_count):
+                Option.objects.create(poll=poll, option_text=request.POST[str(option)])
+
+            return redirect('posts:post_detail', club_name_slug, post.encrypted_id)
+    else:
+        post_create_form = PostCreationForm()
+        poll_create_form = PollCreateForm()
+
+    return render(request, 'posts/poll_create.html', {'club_name': club_name_slug,
+                                                      "post_create_form": post_create_form,
+                                                      "poll_create_form": poll_create_form
+                                                      }
+                  )
+
+
+def edit_poll(request, encrypted_id):
+    poll = get_object_or_404(Poll, poll__encrypted_id=encrypted_id)
+    if poll.post.author != request.user:
+        raise PermissionDenied("You are not authorized to edit this post")
+
+    if request.method == "POST":
+        post_form = PostCreationForm(request.POST, request.FILES, instance=poll.post)
+        poll_form = PollCreateForm(request.POST, instance=poll)
+
+        if post_form.is_valid() and poll_form.is_valid():
+            poll_form.save()
+            post_form.save()
+
+    else:
+        post_form = PostCreationForm()
+        poll_form = PollCreateForm()
+
+    return render(request, 'posts/poll_create.html', {'club_name': poll.post.club.name.replace(' ', '-'),
+                                                      "post_create_form": post_form,
+                                                      "poll_create_form": poll_form
+                                                      }
+                  )
+
+
+def events_create(request, club_name_slug):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    user = request.user
+
+    if request.method == "POST":
+        postform = PostCreationForm(data=request.POST)
+        eventform = EventForm(data=request.POST)
+        if postform.is_valid() and eventform.is_valid():
+            post = create_post_generic(request, club, postform)
+            event = eventform.save(commit=False)
+            event.post = post
+            event.save()
+
+            return redirect('posts:post_detail', club_name_slug, post.encrypted_id)
+
+
+    else:
+        postform = PostCreationForm()
+        eventform = EventForm()
+
+    return render(request, 'posts/event_create.html', {'postform': postform, 'eventform': eventform})
+
+
+def events_edit(request, encrypted_id):
+    post = get_object_or_404(Post, encrypted_id=encrypted_id)
+    event = get_object_or_404(Event, post=post)
+    if request.user != post.author:
+        raise PermissionDenied("You are not allowed to edit this event")
+
+    if request.method == "POST":
+        eventform = EventForm(request.POST or None, instance=event)
+        postform = PostCreationForm(request.POST, request.FILES, instance=post)
+        if postform.is_valid() and eventform.is_valid():
+            postform.save()
+            eventform.save()
+
+            return redirect('posts:post_detail', post.club.name.replace(' ', '-'), post.encrypted_id)
+
+    else:
+        eventform = EventForm(instance=event)
+        postform = PostCreationForm(instance=post)
+    return render(request, 'posts/event_create.html', {'postform': postform, 'eventform': eventform})
+
+
+def interested_event(request):
+    ret_data = {
+        'add_success': False
+    }
+    if request.user.is_annonymous:
+        return JsonResponse(ret_data)
+    user = request.user
+    encrypted_id = request.POST.get('encrypted_id')
+    post = get_object_or_404(Post, encrypted_id=encrypted_id)
+    event = get_object_or_404(Event, post=post)
+    if not event.interested_users.filter(user=user).exists():
+        event.interested_users.add(user)
+        event.save()
+        ret_data['add_success'] = True
+
+    return JsonResponse(ret_data)

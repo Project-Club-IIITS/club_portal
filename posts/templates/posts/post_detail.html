@@ -13,6 +13,10 @@
     <title>Post_Detail</title>
 {% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'posts/css/icons.css' %}">
+{% endblock %}
+
 {% block content %}
     <div id="main">
 
@@ -21,28 +25,37 @@
                 <div class="title">
                     <h2><a href="#">{{ post.title }}</a></h2>
 
-                    {% if request.user in post.subscribed_users.all %}
-                        <a href="#" class="button subscribed" id="subscribe_button" onclick='subscribe_toggle()'
-                           style=" box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important "
-                           title="Receive notifications about updates">
-                            Subscribed
-                        </a>
+                    <div class="row">
+                        <div class="col-lg-6" style="display:flex;justify-content: space-around;">
+                            {% if request.user in post.subscribed_users.all %}
+                                <a href="#" class="button subscribed" id="subscribe_button" onclick='subscribe_toggle()'
+                                   style=" box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important "
+                                   title="Receive notifications about updates">
+                                    Subscribed
+                                </a>
 
-                        <script>
-                            var cur_subscribe_status = true;
-                        </script>
+                                <script>
+                                    var cur_subscribe_status = true;
+                                </script>
 
-                    {% else %}
-                        <a href="#" class="button" id="subscribe_button" onclick='subscribe_toggle()'
-                           title="Receive notifications about updates">
-                            Subscribe
-                        </a><br>
-                        <span style="font-style: italic;color: gray; font-size: 90%;">(Stay in touch with all the updates of this post)</span>
+                            {% else %}
+                                <a href="#" class="button" id="subscribe_button" onclick='subscribe_toggle()'
+                                   title="Receive notifications about updates">
+                                    Subscribe
+                                </a><br>
+                                <span style="font-style: italic;color: gray; font-size: 90%;">(Stay in touch with all the updates of this post)</span>
 
-                        <script>
-                            var cur_subscribe_status = false;
-                        </script>
-                    {% endif %}
+                                <script>
+                                    var cur_subscribe_status = false;
+                                </script>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-lg-6" style="display:flex;justify-content: space-around;">
+                            <a href="{% url 'posts:post-edit' post.encrypted_id %}" class="button" style="text-align:right;">Edit</a>
+                        </div>
+
+                    </div>
 
                 </div>
                 <div class="meta">
@@ -66,18 +79,32 @@
                 {{ post.body|safe }}
             </p>
             {% if post.poll %}
-{#                <article class="post">#}
+                <article class="post">
 
                 {% include 'posts/_polls.html' %}
 
-{#                </article>#}
+                </article>
             {% endif %}
             <footer>
                 <ul class="stats">
-                    <li><a href="#" class="icon fa-heart fa-3x">28</a></li>
-                    <li><a href="#" class="icon fa-comment fa-3x">128</a></li>
+                    <li>
+                        <button type="submit" class="fabutton like" value="like">
+                            {% if is_liked %}
+                                <i class="fas fa-heart fa-3x liked-icon" id="like"></i>
+                            {% else %}
+                                <i class="far fa-heart fa-3x" id="like"></i>
+                            {% endif %}
+                        </button>
+                        <span style="font-size: 2rem;margin-left: 3px;color:#007bff;">28</span>
+                    </li>
+
+                    <li>
+                        <button type="submit" class="fabutton comment" value="comment">
+                            <i class="far fa-comment fa-3x"></i>
+                        </button>
+                        <span style="font-size: 2rem;margin-left: 3px;color:#007bff;">128</span>
+                    </li>
                     <li><a href="#" class="icon fa-thumbtack fa-3x"></a></li>
-                    <li><a href="{% url 'posts:post-edit' post.club post.id %}" class="icon fa-thumbtack fa-3x">Edit</a>
                     </li>
                 </ul>
             </footer>
@@ -204,6 +231,37 @@
 
             cur_subscribe_status = !cur_subscribe_status; // Toggle subscribe status
         }
+
+        /* Like, Comment Icon AJAX */
+
+
+        document.querySelector('.like').addEventListener('click', function(e) {
+
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'posts:like-post' post.id %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType:'json',
+                success: function(data) {
+                    if (data.is_liked) {
+                        $('#like').removeClass('far').addClass('fas').addClass('liked-icon');
+                    }
+                    else {
+                        $('#like').removeClass('fas').removeClass('liked-icon').addClass('far');
+                    }
+                }
+            });
+        });
+
+        document.querySelector('.comment').addEventListener('click', function() {
+            console.log('clicked!');
+        });
+
+
 
 
     </script>
