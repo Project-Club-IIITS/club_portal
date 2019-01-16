@@ -193,13 +193,23 @@
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+.navbar-fixed-top {
+  top: -70px; /* you'll have to figure out the exact number here */
+}
+
+.navbar-fixed-top, .navbar-fixed-bottom {
+  position: relative; /* this can also be static */
+}
+
+
     </style>
 </head>
 <body class="is-preload">
 
 
 <section id="header">
-    <nav class="position-absolute navbar navbar-expand-lg navbar-light bg-light w-100 pr-5 p-0">
+    <nav class="navbar navbar-static-top navbar-expand-lg navbar-light bg-light w-100 pr-5 p-0 flex align-items-center" style="top:0;">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
@@ -209,16 +219,16 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto px-3">
-                <li class="nav-item active px-3">
+                <li class="nav-item active px-3 py-2">
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item px-3">
+                <li class="nav-item px-3 py-2">
                     <a class="nav-link" href="#">Link</a>
                 </li>
-                <li class="nav-item px-3">
+                <li class="nav-item px-3 py-2">
                     <a class="nav-link" href="#">Contact</a>
                 </li>
-                <li class="nav-item dropdown px-3">
+                <li class="nav-item dropdown px-3 py-2">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Dropdown
@@ -230,10 +240,10 @@
                         <a class="dropdown-item" href="#">Photography Club</a>
                     </div>
                 </li>
-                <li class="nav-item px-3">
+                <li class="nav-item px-3 py-2">
                     <a class="nav-link" href="#">Signup</a>
                 </li>
-                <li class="nav-item px-3">
+                <li class="nav-item px-3 mt-2">
                     {#                    <a class="nav-link" href="#">Login</a>#}
                     {#                     <img src="{% static "images/download.jpg" %}" alt="image" height="50" width="50" style="border-radius:25px;">#}
                     {#                     <span>Vineet</span>#}
