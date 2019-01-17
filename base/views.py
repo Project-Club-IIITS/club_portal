@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render, get_object_or_404
+from django.db import IntegrityError
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 
@@ -54,3 +56,66 @@ def pending_posts_list(request, club_name_slug):
 
     return render(request, 'base/club/pendingPosts.html',
                   {"club": club, "club_name_slug": club_name_slug, "pending_posts": pending_posts})
+
+
+@login_required
+def add_member(request, club_name_slug, username):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    if not ClubModerator.objects.filter(club=club, user=request.user).exists():
+        raise PermissionDenied("You are not allowed to access this page")
+
+    users = User.objects.filter(username=username)
+    if not users.exists():
+        return HttpResponse("This user does not exist")
+
+    user = users[0]
+    try:
+        ClubMember.objects.create(club=club, user=user, is_approved=True)
+    except IntegrityError:
+        pass
+
+    return redirect('base:member_list', club_name_slug)
+
+
+@login_required
+def remove_member(request, club_name_slug, username):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    if not ClubModerator.objects.filter(club=club, user=request.user).exists():
+        raise PermissionDenied("You are not allowed to access this page")
+
+    members = ClubMember.objects.filter(club=club, user__username=username)
+    if not members.exists():
+        return HttpResponse("This user does not exist")
+
+    try:
+        members[0].delete()
+    except:
+        return HttpResponse("Some error occured. Try again later")
+
+    return redirect('base:member_list', club_name_slug)
+
+
+@login_required
+def approve_member(request, club_name_slug, username):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    if not ClubModerator.objects.filter(club=club, user=request.user).exists():
+        raise PermissionDenied("You are not allowed to access this page")
+
+    members = ClubMember.objects.filter(club=club, user__username=username)
+    if not members.exists():
+        return HttpResponse("This user does not exist")
+
+    member = members[0]
+    try:
+        member.is_approved = True
+        member.save()
+    except:
+        return HttpResponse("Some error occured. Try again later")
+
+    return redirect('base:member_list', club_name_slug)

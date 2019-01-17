@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Editorial by HTML5 UP</title>
+    <title>Club Admin</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <link rel="stylesheet" href="{% static 'admin_panel/css/admin_panel.css' %}"/>
@@ -33,8 +33,8 @@
 																<tr>
 																	<td>{{ member.user.get_full_name  }}</td>
 																	<td>{{ member.user.email }}</td>
-																	<td><a href="#" class="button primary small">Accept</a></td>
-																	<td><a href="#" class="button small">Reject</a></td>
+																	<td><a href="{% url 'base:approve_member' club_name_slug member.user.username %}" class="button primary small">Accept</a></td>
+																	<td><a href="{% url 'base:remove_member' club_name_slug member.user.username %}" class="button small">Reject</a></td>
 																</tr>
                                                             {% endfor %}
 {#																<tr>#}
@@ -87,7 +87,7 @@
 															<td>{{ member.user.get_full_name }}</td>
 															<td>{{ member.user.email }}</td>
 															<td>1</td>
-															<td><a href="#" class="button primary small">Remove</a></td>
+															<td><a href="{% url 'base:remove_member' club_name_slug member.user.username %}" class="button primary small">Remove</a></td>
 														</tr>
                                                     {% endfor %}
 													</tbody>
