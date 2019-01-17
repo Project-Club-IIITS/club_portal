@@ -60,7 +60,7 @@
         </div>
         {% if posts.has_next %}
             <a style="display:none;" class="infinite-more-link"
-               href="?page={{ posts.next_page_number }}">More</a>
+               href="?page={{ posts.next_page_number }}&{% for field in filter_form %}{% if field.name != 'page' %}{{ field.name }}={{ field.value }}&{% endif %}{% endfor %}">More</a>
         {% endif %}
 
         <div style="width: 100%; text-align: center; display: none" class="loading">

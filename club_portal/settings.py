@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'django_mailbox',
+    'crispy_forms',
 ]
 
 
