@@ -12,3 +12,4 @@ admin.site.register(Comment)
 admin.site.register(PinnedPost)
 admin.site.register(PostUpdate)
 admin.site.register(Event)
+
