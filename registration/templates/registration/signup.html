@@ -5,22 +5,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Login</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href='{% static "css/signup.css" %}'>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href='{% static "css/signup.css" %}'>
 </head>
+<div id="loader"></div>
 <body class="align">
-  <h1 style="text-align: center;color: white">IIITS Clubs</h1>
-  <div class="grid">
+<h1 style="text-align: center;color: white" id="heading">IIITS Clubs</h1>
+<div class="grid" id="style-main">
     <form action="" method="POST" class="form login">
         {% csrf_token %}
         {% if form.errors %}
             {% for field in form %}
                 {% for error in field.errors %}
-                <div class="alert alert-danger">
-                    <strong>{{ error|escape }}</strong>
-                </div>
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
                 {% endfor %}
             {% endfor %}
             {% for error in form.non_field_errors %}
@@ -31,49 +32,88 @@
         {% endif %}
 
 
-      <div class="form__field">
-        <label for="{{ form.first_name.id_for_label }}"><svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">First Name</span></label>
-        {{ form.first_name|add_class:"form__input"|attr:"placeholder:First Name" }}
-      </div>
+        <div class="form__field">
+            <label for="{{ form.first_name.id_for_label }}">
+                <svg class="icon">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use>
+                </svg>
+                <span class="hidden">First Name</span></label>
+            {{ form.first_name|add_class:"form__input"|attr:"placeholder:First Name" }}
+        </div>
 
-      <div class="form__field">
-        <label for="{{ form.last_name.id_for_label }}"><svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">First Name</span></label>
-        {{ form.last_name|add_class:"form__input"|attr:"placeholder:Last Name" }}
-      </div>
+        <div class="form__field">
+            <label for="{{ form.last_name.id_for_label }}">
+                <svg class="icon">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use>
+                </svg>
+                <span class="hidden">First Name</span></label>
+            {{ form.last_name|add_class:"form__input"|attr:"placeholder:Last Name" }}
+        </div>
 
-     <div class="form__field">
-        <label for="{{ form.email.id_for_label }}"><svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">First Name</span></label>
-        {{ form.email|add_class:"form__input"|attr:"placeholder:Email" }}
-      </div>
+        <div class="form__field">
+            <label for="{{ form.email.id_for_label }}">
+                <svg class="icon">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use>
+                </svg>
+                <span class="hidden">First Name</span></label>
+            {{ form.email|add_class:"form__input"|attr:"placeholder:Email" }}
+        </div>
 
-      <div class="form__field">
-        <label for="{{ form.username.id_for_label }}"><svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">Username</span></label>
-        {{ form.username|add_class:"form__input"|attr:"placeholder: Username" }}
-      </div>
+        <div class="form__field">
+            <label for="{{ form.username.id_for_label }}">
+                <svg class="icon">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use>
+                </svg>
+                <span class="hidden">Username</span></label>
+            {{ form.username|add_class:"form__input"|attr:"placeholder: Username" }}
+        </div>
 
-      <div class="form__field">
-        <label for="{{ form.password1.id_for_label }}"><svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">First Name</span></label>
-        {{ form.password1|add_class:"form__input"|attr:"placeholder:Password" }}
-      </div>
-      
-      <div class="form__field">
-        <label for="{{ form.password2.id_for_label }}"><svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">First Name</span></label>
-        {{ form.password2|add_class:"form__input"|attr:"placeholder:Re-Enter Password" }}
-      </div>
+        <div class="form__field">
+            <label for="{{ form.password1.id_for_label }}">
+                <svg class="icon">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use>
+                </svg>
+                <span class="hidden">First Name</span></label>
+            {{ form.password1|add_class:"form__input"|attr:"placeholder:Password" }}
+        </div>
+
+        <div class="form__field">
+            <label for="{{ form.password2.id_for_label }}">
+                <svg class="icon">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use>
+                </svg>
+                <span class="hidden">First Name</span></label>
+            {{ form.password2|add_class:"form__input"|attr:"placeholder:Re-Enter Password" }}
+        </div>
 
 
-
-      <div class="form__field">
-        <input type="submit" value="Sign Up">
-      </div>
-        <a href="javascript:void(0)" onclick="initiate_google_signin()">Google Sign in</a>
+        <div class="form__field">
+            <input type="submit" value="Sign Up">
+        </div>
+        <div style="text-align: center;">
+        <img alt="Google SignIn" style="cursor:pointer;max-width:100px;" src="{% static 'registration/images/google.png' %}" onclick="initiate_google_signin()">
+        </div>
     </form>
 
-    <p class="text--center">Already a member ?<a href="{% url 'registration:login' %}">Login Here</a> <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/icons.svg#arrow-right"></use></svg></p>
+    <p class="text--center">Already a member ?<a href="{% url 'registration:login' %}">Login Here</a>
+        <svg class="icon">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/icons.svg#arrow-right"></use>
+        </svg>
+    </p>
 
-  </div>
+</div>
 
-  <svg xmlns="http://www.w3.org/2000/svg" class="icons"><symbol id="arrow-right" viewBox="0 0 1792 1792"><path d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293H245q-52 0-84.5-37.5T128 1024V896q0-53 32.5-90.5T245 768h704L656 474q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z"/></symbol><symbol id="lock" viewBox="0 0 1792 1792"><path d="M640 768h512V576q0-106-75-181t-181-75-181 75-75 181v192zm832 96v576q0 40-28 68t-68 28H416q-40 0-68-28t-28-68V864q0-40 28-68t68-28h32V576q0-184 132-316t316-132 316 132 132 316v192h32q40 0 68 28t28 68z"/></symbol><symbol id="user" viewBox="0 0 1792 1792"><path d="M1600 1405q0 120-73 189.5t-194 69.5H459q-121 0-194-69.5T192 1405q0-53 3.5-103.5t14-109T236 1084t43-97.5 62-81 85.5-53.5T538 832q9 0 42 21.5t74.5 48 108 48T896 971t133.5-21.5 108-48 74.5-48 42-21.5q61 0 111.5 20t85.5 53.5 62 81 43 97.5 26.5 108.5 14 109 3.5 103.5zm-320-893q0 159-112.5 271.5T896 896 624.5 783.5 512 512t112.5-271.5T896 128t271.5 112.5T1280 512z"/></symbol></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icons">
+    <symbol id="arrow-right" viewBox="0 0 1792 1792">
+        <path d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293H245q-52 0-84.5-37.5T128 1024V896q0-53 32.5-90.5T245 768h704L656 474q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z"/>
+    </symbol>
+    <symbol id="lock" viewBox="0 0 1792 1792">
+        <path d="M640 768h512V576q0-106-75-181t-181-75-181 75-75 181v192zm832 96v576q0 40-28 68t-68 28H416q-40 0-68-28t-28-68V864q0-40 28-68t68-28h32V576q0-184 132-316t316-132 316 132 132 316v192h32q40 0 68 28t28 68z"/>
+    </symbol>
+    <symbol id="user" viewBox="0 0 1792 1792">
+        <path d="M1600 1405q0 120-73 189.5t-194 69.5H459q-121 0-194-69.5T192 1405q0-53 3.5-103.5t14-109T236 1084t43-97.5 62-81 85.5-53.5T538 832q9 0 42 21.5t74.5 48 108 48T896 971t133.5-21.5 108-48 74.5-48 42-21.5q61 0 111.5 20t85.5 53.5 62 81 43 97.5 26.5 108.5 14 109 3.5 103.5zm-320-893q0 159-112.5 271.5T896 896 624.5 783.5 512 512t112.5-271.5T896 128t271.5 112.5T1280 512z"/>
+    </symbol>
+</svg>
 
 </body>
 
@@ -84,8 +124,9 @@
         <input type="text" name="auth_token" id="id_auth_token">
         <input type="text" name="refresh_token" id="id_refresh_token">
         <input type="url" name="profile_pic_link" maxlength="200" id="id_profile_pic_link">
-        <input type="email" name="email" required id="id_email">
+        <input type="email" name="email" required id="gog_id_email">
         <input type="text" name="full_name" id="id_full_name">
+        <input type="text" name="next_url" id="id_next_url">
     </form>
 </div>
 
@@ -95,6 +136,19 @@
 <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
 <script>
     // Initialize Firebase
+    function findGetParameter(parameterName) {
+        var result = null,
+            tmp = [];
+        location.search
+            .substr(1)
+            .split("&")
+            .forEach(function (item) {
+                tmp = item.split("=");
+                if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+            });
+        return result;
+    }
+
     var config = {
         apiKey: "AIzaSyBW31-QdouonJ0lAetZbr6AGLhZVMTpsMQ",
         authDomain: "iiits-club-portal.firebaseapp.com",
@@ -109,13 +163,17 @@
 
 
     function initiate_google_signin() {
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("style-main").style.display = "none";
+        document.getElementById("heading").style.display = "none";
         var gog_form = document.forms["google_signin_form"];
         firebase.auth().signInWithPopup(provider).then(function (result) {
             // This gives you a Google Access Token. You can use it to access the Google API.
             var token = result.credential.accessToken;
             gog_form["auth_token"].value = token;
             // The signed-in user info.
-            if(user) {
+            var user = result.user;
+            if (user) {
                 {#TODO Add a loader here#}
                 gog_form['firebase_uid'].value = user.uid;
                 gog_form['refresh_token'].value = user.refreshToken;
@@ -123,20 +181,33 @@
                 gog_form['profile_pic_link'].value = user.photoURL;
                 gog_form['full_name'].value = user.displayName;
 
+                let next_param = findGetParameter('next');
+                if (next_param) {
+                    gog_form['next_url'].value = next_param;
+                }
                 gog_form.submit();
-            }
-            else{
-            {#    TODO Display a messege saying error occured#}
+            } else {
+                 document.getElementById("loader").style.display = "none";
+                document.getElementById("style-main").style.display = "block";
+                document.getElementById("heading").style.display = "block";
+
+                alert('Some Error Has Occured. PLease try again')
+                {#    TODO Display a messege saying error occured#}
             }
             // ...
         }).catch(function (error) {
             // Handle Errors here.
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("style-main").style.display = "block";
+            document.getElementById("heading").style.display = "block";
             var errorCode = error.code;
             var errorMessage = error.message;
             // The email of the user's account used.
             var email = error.email;
             // The firebase.auth.AuthCredential type that was used.
             var credential = error.credential;
+
+            alert('Some Error has occured')
             // ...
             {#    TODO Display a messege saying error has occured and try again later#}
         });

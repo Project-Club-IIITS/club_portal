@@ -31,31 +31,17 @@
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Description</th>
+                                <th>Email</th>
 
                             </tr>
                             </thead>
                             <tbody>
+                            {% for mod in moderators %}
                             <tr>
-                                <td>Lorem Ipsum</td>
-                                <td>Ante turpis integer aliquet porttitor.</td>
+                                <td>{{ mod.user.get_full_name }}</td>
+                                <td>{{ mod.user.email }}</td>
                             </tr>
-                            <tr>
-                                <td>Lorem Ipsum</td>
-                                <td>Vis ac commodo adipiscing arcu aliquet.</td>
-                            </tr>
-                            <tr>
-                                <td>Lorem Ipsum</td>
-                                <td> Morbi faucibus arcu accumsan lorem.</td>
-                            </tr>
-                            <tr>
-                                <td>Lorem Ipsum</td>
-                                <td>Vitae integer tempus condimentum.</td>
-                            </tr>
-                            <tr>
-                                <td>Lorem Ipsum</td>
-                                <td>Ante turpis integer aliquet porttitor.</td>
-                            </tr>
+                            {% endfor %}
                             </tbody>
 
                         </table>
@@ -72,12 +58,12 @@
         <div class="inner">
             <nav id="menu">
                 <header class="major">
-                    <h2>IOTA</h2>
+                    <h2>{{ club.name|title }} Admin</h2>
                 </header>
                 <ul>
-                    <li><a href="{% url 'base:member_list' %}">Members</a></li>
-                    <li><a href="{% url 'base:moderator_list' %}">Moderators</a></li>
-                    <li><a href="{% url 'base:pending_posts_list' %}">Posts</a></li>
+                    <li><a href="{% url 'base:member_list' club_name_slug %}">Members</a></li>
+                    <li><a href="{% url 'base:moderator_list' club_name_slug %}">Moderators</a></li>
+                    <li><a href="{% url 'base:pending_posts_list' club_name_slug %}">Posts</a></li>
                 </ul>
             </nav>
         </div>

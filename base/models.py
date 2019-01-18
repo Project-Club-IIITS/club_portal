@@ -21,19 +21,23 @@ def club_logo_upload(instance, filename):
 class Club(models.Model):
     name = models.CharField(max_length=100, validators=[club_name_validator], db_index=True)
     date_formed = models.DateField(auto_now_add=True)
-    email = models.EmailField()
-    about = models.TextField(help_text="Say a few lines about your club")
+    email = models.EmailField(null=True, blank=True)
+    about = models.TextField(help_text="Say a few lines about your club", null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_supported = models.BooleanField(default=True)
     num_users = models.IntegerField(default=0)
 
-    logo = models.ImageField(upload_to=club_logo_upload, blank=True)
+    logo = models.ImageField(upload_to=club_logo_upload, blank=True, null=True)
 
     def __str__(self):
         return self.name
 
     def slug(self):
         return self.name.replace(' ', '-')
+
+    def calc_users(self):
+        self.num_users = self.clubmember_set.all().count()
+        self.save()
 
 
 class ClubMentor(models.Model):
@@ -110,6 +114,7 @@ def president_add_moderator_member(sender, instance, created, **kwargs):
         # User is already a moderator. Do Nothing
         pass
 
+
 @receiver(signals.post_save, sender=ClubMentor)
 def mentor_add_moderator(sender, instance, created, **kwargs):
     try:
@@ -118,7 +123,6 @@ def mentor_add_moderator(sender, instance, created, **kwargs):
     except IntegrityError:
         # User is already a moderator. Do Nothing
         pass
-
 
 
 @receiver(signals.pre_delete, sender=ClubModerator)

@@ -40,7 +40,6 @@ class UserProfile(models.Model):
     profile_pic = models.ImageField(upload_to=get_profilepic_upload_url, blank=True, null=True)
     following_clubs = models.ManyToManyField(Club, blank=True)
 
-
     def __str__(self):
         return self.user.username
 
@@ -51,6 +50,9 @@ class GoogleAuth(models.Model):
     auth_token = models.TextField(null=True, blank=True)
     refresh_token = models.TextField(null=True, blank=True)
     profile_pic_link = models.URLField(null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
 
 
 class EmailConfirmation(models.Model):

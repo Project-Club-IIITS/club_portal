@@ -20,7 +20,11 @@ class FirebaseGoogleLoginForm(forms.ModelForm):
     full_name = forms.CharField(required=False)
     auth_token = forms.CharField(required=False)
     refresh_token = forms.CharField(required=False)
+    next_url = forms.CharField(required=False)
 
     class Meta:
         model = GoogleAuth
         fields = ('firebase_uid', 'auth_token', 'refresh_token', 'profile_pic_link')
+
+
+

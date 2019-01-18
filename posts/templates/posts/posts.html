@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load blog_tags %}
+{% load club_user_filters %}
 {% load static %}
 
 
@@ -34,7 +35,7 @@
                                         <img src="{{ post.author.googleauth.profile_pic_link }}" alt=""/>
                                     {% else %}
                                         <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
-                                        {#                                TODO Put author name and profile pic here#}
+
                                     {% endif %}
                                 </a>
                             </div>
@@ -61,7 +62,10 @@
                     </article>
                 </div>
             {% empty %}
-                <h2>No posts matching the given query</h2>
+                <div style="text-align: center;">
+                <h2>No posts found</h2>
+
+                </div>
 
             {% endfor %}
         </div>
@@ -99,6 +103,17 @@
             </ul>
         </section>
 
+        {% if not request.user|is_user_member:club %}
+        <section style="">
+            <h2 style="color: crimson">Note</h2>
+            <p style="color: crimson">
+                You are only seeing the public posts of this club as you are not a member. To see all posts, consider becoming a member.
+            </p>
+            <ul class="actions">
+                <li><a href="#" class="button" style="text-decoration: none;">Become Member</a></li>
+            </ul>
+        </section>
+        {% endif %}
         <!-- Mini Posts -->
         <section>
             <div class="mini-posts">

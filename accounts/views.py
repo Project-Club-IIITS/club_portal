@@ -138,7 +138,12 @@ def change_password(request):
 
 @login_required
 def profile(request):
-    return HttpResponse('This is userprofile')
+    context = {
+        'posts': request.user.post_set.all(),
+        'clubs': request.user.clubmember_set.all()
+    }
+
+    return render(request, 'accounts/profile.html', context)
 
 
 # from first_app.forms import calendar_data

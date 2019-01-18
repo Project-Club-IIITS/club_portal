@@ -54,7 +54,11 @@
                     </article>
                 </div>
             {% empty %}
+                <div style="text-align: center;">
                 <h2>No Recent Posts Available!</h2>
+                <div>You might not be seeing any posts because you are not following any clubs. Head over to the
+                    <a style="color: #2ebaae !important;" href="{% url 'base:all_clubs' %}"> clubs page </a> to follow some.</div>
+                </div>
 
             {% endfor %}
         </div>
@@ -95,7 +99,8 @@
         <section style="">
             <h2 style="color: crimson">Note</h2>
             <p style="color: crimson">
-                This section displays only the public posts of clubs you are following. To see private posts of clubs of which you are a member, you should go to the individual club page
+                This section displays only the public posts of clubs you ARE FOLLOWING. To see private posts of clubs of which you are a member, you should go to the individual club page.
+
             </p>
         </section>
         <!-- Mini Posts -->

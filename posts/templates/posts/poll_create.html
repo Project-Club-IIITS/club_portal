@@ -3,12 +3,12 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/poll_create.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/css/post_edit.css' %}">
 {% endblock %}
 
 {% block content %}
 
 <div class="container">
-    {{ club_name }}
     <h2 style="margin-bottom: 0;">Create Poll</h2>
     Add some details then select options
 
@@ -18,10 +18,47 @@
         <form action="{% url 'posts:create_poll' club_name %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ post_create_form.media }}
-            {{ post_create_form.as_p }}
+
+                <p>
+                    <span style="font-weight: 600;">Title:</span>
+                    {{ post_create_form.title }}
+                    {{ post_create_form.title.help_text }}
+                </p>
+
+                    <span style="font-weight: 600; vertical-align: top;margin-right:10px;">Body:</span>
+                    {{ post_create_form.media }}
+                    {{ post_create_form.body }}
+
+                <div class="checkbox" style="margin-top:10px;">
+                    <label for="id_cover_image">Cover image:</label>
+                    <input type="file" name="cover_image" accept="image/*" id="id_cover_image">
+                </div>
+
+                <div class="checkbox">
+
+                    {{ post_create_form.is_public.label_tag }}
+                    {{ post_create_form.is_public }}
+                    {{ post_create_form.is_public.help_text }}
+
+                </div>
+
+                <div class="checkbox" style="clear: both;">
+                    {{ post_create_form.is_published.label_tag }}
+                    {{ post_create_form.is_published }}
+                    <span class="helpText">{{ post_create_form.is_published.help_text }}</span>
+                </div>
+
+
             {{ poll_create_form.as_p }}
+
+
+
 {#            <input type="text" name="title" class="poll-question" placeholder="Enter The Poll Question" required>#}
             <br><br>
+
+
+
+
             <div style="font-weight: bolder; font-size: larger">Add options for your poll:</div>
             <br>
             <ul class="option-list">

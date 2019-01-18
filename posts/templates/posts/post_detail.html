@@ -4,10 +4,10 @@
 
 {% block head %}
     <style>
-    img{
-        max-width: 100%;
-        height: auto;
-    }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
     <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
     <title>Post_Detail</title>
@@ -26,7 +26,7 @@
                     <h2><a href="#">{{ post.title }}</a></h2>
 
                     <div class="row">
-                        <div class="col-lg-6" style="display:flex;justify-content: space-around;">
+                        <div class="col-lg-6">
                             {% if request.user in post.subscribed_users.all %}
                                 <a href="#" class="button subscribed" id="subscribe_button" onclick='subscribe_toggle()'
                                    style=" box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important "
@@ -51,12 +51,16 @@
                             {% endif %}
                         </div>
 
-                        <div class="col-lg-6" style="display:flex;justify-content: space-around;">
-                            <a href="{% url 'posts:post-edit' post.encrypted_id %}" class="button" style="text-align:right;">Edit</a>
-                        </div>
-
                     </div>
 
+                    {% if post.author == request.user %}
+                        <br>
+
+                        <div>
+                            <a href="{% url 'posts:post-edit' post.encrypted_id %}" class="button"
+                               style="text-align:right;">Edit</a>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="meta">
                     <time class="published" datetime="2015-11-01">{{ post.created }}</time>
@@ -75,13 +79,16 @@
             {% if post.cover_image %}
                 <span class="image featured"><img src="{{ post.cover_image.url }}" alt=""/></span>
             {% endif %}
+            {% if not post.is_approved %}
+            <p style="color:red; font-weight: bolder; font-style: italic">This post is not yet approved by moderators.</p>
+            {% endif %}
             <p style="max-width: 100%;">
                 {{ post.body|safe }}
             </p>
             {% if post.poll %}
                 <article class="post">
 
-                {% include 'posts/_polls.html' %}
+                    {% include 'posts/_polls.html' %}
 
                 </article>
             {% endif %}
@@ -219,14 +226,13 @@
                 subscribe_button.style = "";
                 subscribe_button.innerText = "Subscribe";
 
-            {#    TODO Add AJAX here to unsucribe#}
-            }
-            else{
+                {#    TODO Add AJAX here to unsucribe#}
+            } else {
                 // Not subscribed. Subscribe
                 subscribe_button.style = subscribed_box_style;
                 subscribe_button.innerText = "Subscribed";
 
-            {#    TODO Add AJAX here to subscribe#}
+                {#    TODO Add AJAX here to subscribe#}
             }
 
             cur_subscribe_status = !cur_subscribe_status; // Toggle subscribe status
@@ -235,7 +241,7 @@
         /* Like, Comment Icon AJAX */
 
 
-        document.querySelector('.like').addEventListener('click', function(e) {
+        document.querySelector('.like').addEventListener('click', function (e) {
 
             e.preventDefault();
 
@@ -245,44 +251,42 @@
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
-                dataType:'json',
-                success: function(data) {
+                dataType: 'json',
+                success: function (data) {
                     if (data.is_liked) {
                         $('#like').removeClass('far').addClass('fas').addClass('liked-icon');
-                    }
-                    else {
+                    } else {
                         $('#like').removeClass('fas').removeClass('liked-icon').addClass('far');
                     }
                 }
             });
         });
 
-        document.querySelector('.comment').addEventListener('click', function() {
+        document.querySelector('.comment').addEventListener('click', function () {
             console.log('clicked!');
         });
-
-
 
 
     </script>
 
     <script>
 
-/**
-*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        /**
+         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
 
-var disqus_config = function () {
-this.page.url = "http://localhost:8000/posts/{{ club_name_slug }}/{{ post.encrypted_id }}";  // Replace PAGE_URL with your page's canonical URL variable
-this.page.identifier = "{{ post.encrypted_id }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-};
+        var disqus_config = function () {
+            this.page.url = "http://localhost:8000/posts/{{ club_name_slug }}/{{ post.encrypted_id }}";  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = "{{ post.encrypted_id }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
 
-(function() { // DON'T EDIT BELOW THIS LINE
-var d = document, s = d.createElement('script');
-s.src = 'https://clubportal-1.disqus.com/embed.js';
-s.setAttribute('data-timestamp', +new Date());
-(d.head || d.body).appendChild(s);
-})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://clubportal-1.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
+        Disqus.</a></noscript>
 {% endblock %}
