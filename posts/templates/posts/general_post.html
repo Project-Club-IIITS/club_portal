@@ -13,7 +13,7 @@
 {% block content %}
 
 
-    <div id="main">
+    <div id="main" style="margin-top: 5vh;">
         <div class="infinite-container" id="all_posts">
             {% for post in posts %}
                 <div class="infinite-item">
@@ -83,7 +83,7 @@
 
     </div>
 
-    <section id="sidebar">
+    <section id="sidebar" style="margin-top: 5vh;">
 
         <!-- About -->
         <section class="blurb">
@@ -120,7 +120,7 @@
 {#                            <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>#}
 
                         </header>
-                        {% if p_post.post.cover_image.url %}
+                        {% if p_post.post.cover_image %}
                             <a href="{% url 'posts:post_detail' p_post.post.club.name|clubslug p_post.post.encrypted_id %}" class="image">
                                 <img src="{{ p_post.post.cover_image.url }}" alt=""/></a>
                         {% endif %}

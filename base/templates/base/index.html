@@ -8,117 +8,126 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
     <link rel="stylesheet" href="{% static "clubs/css/hero.css" %}"/>
     <link rel="stylesheet" href="{% static "css/club_portal_landing.css" %}"/>
+
+
 {% endblock %}
 
 {% block nav %}
 
-    <nav class="navbar navbar-static-top navbar-expand-lg navbar-light bg-light w-100 pr-5 p-0 flex align-items-center" style="top:0;">
-        <a class="navbar-brand" href="#">Navbar</a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-                style="height:2.8125rem!important;">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <nav class="navbar navbar-static-top navbar-expand-lg navbar-light bg-light w-100 pr-5 p-0 flex align-items-center nav-styles"
+             style="top:0;position: fixed;">
+            <a class="navbar-brand nav-styles" href="{% url 'base:index' %}" style="font-weight: bolder; font-size: 150%;padding-left: 5vh; font-family: 'Source Sans Pro', Helvetica, sans-serif;">IIITS Clubs</a>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto px-3">
-                <li class="nav-item active px-3 py-2">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item px-3 py-2">
-                    <a class="nav-link" href="{% url 'posts:posts' %}">All Posts</a>
-                </li>
-                <li class="nav-item px-3 py-2">
-                    <a class="nav-link" href="{% url 'base:all_clubs' %}">Clubs</a>
-                </li>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                    style="height:2.8125rem!important;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <li class="nav-item dropdown px-3 py-2">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto px-3">
 
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Select Club
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% for club in clubs %}
-                            <a class="dropdown-item"
-                               href="{% url 'posts:club_posts' club.name|clubslug %}">{{ club.name|title }}</a>
-                        {% endfor %}
-                        {#                        <a class="dropdown-item" href="#">IOTA</a>#}
-                        {#                        <a class="dropdown-item" href="#">Gradient</a>#}
-                        {#                        <a class="dropdown-item" href="#">Photography Club</a>#}
-                    </div>
-                </li>
 
-                {% if club_slug %}
-                    {% if request.user|is_user_moderator:club %}
-                        <li class="nav-item px-3 py-2">
-                            <a class="nav-link" href="{% url 'base:all_clubs' %}">Club-Admin</a>
+                    <li class="nav-item px-3 nav-item-scroll">
+                        <a class="nav-link" href="{% url 'posts:posts' %}">All Posts</a>
+                    </li>
+                    <li class="nav-item px-3">
+                        <a class="nav-link" href="{% url 'base:all_clubs' %}">Clubs</a>
+                    </li>
+
+                    <li class="nav-item dropdown px-3 nav-item-scroll">
+
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select Club
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for club in clubs %}
+                                <a class="dropdown-item"
+                                   href="{% url 'posts:club_posts' club.name|clubslug %}">{{ club.name|title }}</a>
+                            {% endfor %}
+                            {#                        <a class="dropdown-item" href="#">IOTA</a>#}
+                            {#                        <a class="dropdown-item" href="#">Gradient</a>#}
+                            {#                        <a class="dropdown-item" href="#">Photography Club</a>#}
+                        </div>
+                    </li>
+
+                    {% if club_slug %}
+
+                        {% if request.user|is_user_moderator:club %}
+                            <li class="nav-item px-3">
+                                <a class="nav-link" href="{% url 'base:all_clubs' %}">Club-Admin</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+
+                        <li class="nav-item px-3 nav-item-scroll">
+                            {#                    <a class="nav-link" href="#">Login</a>#}
+                            {#                     <img src="{% static "images/download.jpg" %}" alt="image" height="50" width="50" style="border-radius:25px;">#}
+                            {#                     <span>Vineet</span>#}
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="chip">
+                                    {% if request.user.userprofile.profile_pic %}
+                                        <img src="{{ request.user.userprofile.profile_pic.url }}" alt="Person"
+                                             width="96"
+                                             height="96"/>
+                                    {% elif request.user.googleauth.profile_pic_link %}
+                                        <img src="{{ request.user.googleauth.profile_pic_link }}" alt="Person"
+                                             width="96"
+                                             height="96"/>
+                                    {% else %}
+                                        <img src="{% static "posts/images/pic10.jpg" %}" alt="Person" width="96"
+                                             height="96"/>
+
+                                    {% endif %}
+                                    {#                                <img src="{% static "images/download.jpg" %}" alt="Person" width="96" height="96">#}
+                                    {{ request.user.get_full_name }}
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                                <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+
+                            </div>
+
+
+                            {#                    <div class="dropdown">#}
+                            {#                        <button class="dropbtn">#}
+                            {#                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"#}
+                            {#                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+                            {#                                <div class="chip">#}
+                            {#                                    <img src="{% static "images/download.jpg" %}" alt="Person" width="96" height="96">#}
+                            {#                                    John Doe#}
+                            {#                                </div>#}
+                            {#                            </a>#}
+                            {#                        </button>#}
+                            {#                        <div class="dropdown-content">#}
+                            {#                            <a href="#">Link 1</a>#}
+                            {#                            <a href="#">Link 2</a>#}
+                            {#                            <a href="#">Link 3</a>#}
+                            {#                        </div>#}
+                            {#                    </div>#}
+                        </li>
+                    {% else %}
+                        <li class="nav-item px-3 nav-item-scroll">
+                            <a class="nav-link"
+                               href="{% url 'registration:signup' %}?next={{ request.path }}">Signup</a>
+                        </li>
+                        <li class="nav-item px-3 nav-item-scroll">
+
+                            <a class="nav-link" href="{% url 'registration:login' %}?next={{ request.path }}">Login</a>
                         </li>
                     {% endif %}
-                {% endif %}
-                {% if request.user.is_authenticated %}
-
-                    <li class="nav-item px-3 mt-2">
-                        {#                    <a class="nav-link" href="#">Login</a>#}
-                        {#                     <img src="{% static "images/download.jpg" %}" alt="image" height="50" width="50" style="border-radius:25px;">#}
-                        {#                     <span>Vineet</span>#}
-                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <div class="chip">
-                                {% if request.user.userprofile.profile_pic %}
-                                    <img src="{{ request.user.userprofile.profile_pic.url }}" alt="Person" width="96"
-                                         height="96"/>
-                                {% elif request.user.googleauth.profile_pic_link %}
-                                    <img src="{{ request.user.googleauth.profile_pic_link }}" alt="Person" width="96"
-                                         height="96"/>
-                                {% else %}
-                                    <img src="{% static "posts/images/pic10.jpg" %}" alt="Person" width="96"
-                                         height="96"/>
-
-                                {% endif %}
-                                {#                                <img src="{% static "images/download.jpg" %}" alt="Person" width="96" height="96">#}
-                                {{ request.user.get_full_name }}
-                            </div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right mr-5" aria-labelledby="profileDropdown">
-                            <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
-                            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-
-                        </div>
-
-
-                        {#                    <div class="dropdown">#}
-                        {#                        <button class="dropbtn">#}
-                        {#                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"#}
-                        {#                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-                        {#                                <div class="chip">#}
-                        {#                                    <img src="{% static "images/download.jpg" %}" alt="Person" width="96" height="96">#}
-                        {#                                    John Doe#}
-                        {#                                </div>#}
-                        {#                            </a>#}
-                        {#                        </button>#}
-                        {#                        <div class="dropdown-content">#}
-                        {#                            <a href="#">Link 1</a>#}
-                        {#                            <a href="#">Link 2</a>#}
-                        {#                            <a href="#">Link 3</a>#}
-                        {#                        </div>#}
-                        {#                    </div>#}
-                    </li>
-                {% else %}
-                    <li class="nav-item px-3">
-                        <a class="nav-link" href="{% url 'registration:signup' %}?next={{ request.path }}">Signup</a>
-                        <a class="nav-link" href="{% url 'registration:login' %}?next={{ request.path }}">Login</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
-
+                </ul>
+            </div>
+        </nav>
 {% endblock %}
 
 {% block content %}
-    <section class="container-fluid h-100 w-100">
+    <section class="container-fluid h-100 w-100" style="margin-top: 5vh;">
         <div class="w-100 h-100"
              style="background: url('{% static "images/divider.jpg" %}') no-repeat center;background-size:cover; ">
             <div class="heading-container">
