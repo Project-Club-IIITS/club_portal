@@ -1,18 +1,80 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <form method="POST">
-        {% csrf_token %}
-        {{ postform.as_p }}
-        {{ eventform.as_p }}
-        <input type='submit'>
-    </form>
-</body>
-</html>
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-4">
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ postform.media }}
+
+            <p>
+                <span style="font-weight: 600;">Title:</span>
+                {{ postform.title }}
+                {{ postform.title.help_text }}
+            </p>
+
+
+            <div class="mt-6">
+                <span style="font-weight: 600; vertical-align: top;margin-right:10px;">Body:</span>
+                {{ postform.body }}
+            </div>
+
+            <div class="checkbox" style="margin-top:40px;">
+                {{ postform.cover_image }}
+            </div>
+
+
+            <div class="row mt-4">
+                <div class="col-lg-6">
+
+                    <span>{{ postform.is_public.label_tag }}</span>
+                    <span style="float:left;">{{ postform.is_public }}</span>
+                    {{ postform.is_public.help_text }}
+                </div>
+                {{ postform.is_published.label_tag }}
+                <span class="mt-2">{{ postform.is_published }}</span>
+                <span class="helpText">{{ postform.is_published.help_text }}</span>
+            </div>
+
+
+            <div class="row mb-4 mt-4">
+                <div class="col-lg-6">
+                    <strong>Start Date:</strong>
+                    {{ eventform.start_date|add_class:"datepicker" }}
+                </div>
+                <div class="col-lg-6">
+                    <strong>End Date:</strong>
+                    {{ eventform.end_date|add_class:"datepicker" }}
+                </div>
+            </div>
+            <div>
+                <strong>Venue:</strong>
+                {{ eventform.venue }}
+            </div>
+
+            <input type='submit' style="margin-top: 10px;">
+        </form>
+    </div>
+
+
+
+{% endblock %}
+
+{% block script %}
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        $(function () {
+            $(".datepicker").datepicker();
+        });
+      </script>
+{% endblock %}
