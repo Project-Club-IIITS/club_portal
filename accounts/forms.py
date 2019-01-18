@@ -35,7 +35,7 @@ class CalendarForm(forms.ModelForm):
     class Meta:
         model = Calendar
         fields = (
-            'title',
+            'work_title',
         )
 
 
