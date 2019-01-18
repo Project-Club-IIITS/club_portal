@@ -191,7 +191,7 @@
 
                         {% if request.user|is_user_moderator:club %}
                             <li class="nav-item px-3">
-                                <a class="nav-link" href="{% url 'base:all_clubs' %}">Club-Admin</a>
+                                <a class="nav-link" href="{% url 'base:member_list' club_slug %}">Club-Admin</a>
                             </li>
                         {% endif %}
                     {% endif %}

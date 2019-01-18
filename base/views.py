@@ -119,3 +119,18 @@ def approve_member(request, club_name_slug, username):
         return HttpResponse("Some error occured. Try again later")
 
     return redirect('base:member_list', club_name_slug)
+
+
+def request_join(request, club_name_slug):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    if not request.user.is_authenticated:
+        raise PermissionDenied()
+
+    try:
+        ClubMember.objects.create(club=club, user=request.user, is_approved=False)
+    except IntegrityError:
+        pass
+
+    return redirect('posts:club_posts', club_name_slug)

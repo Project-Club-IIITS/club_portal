@@ -7,7 +7,9 @@ app_name = "base"
 urlpatterns = [
     path('', TemplateView.as_view(template_name="base/index.html"), name='index'),
     path('clubs/', views.club_home, name='all_clubs'),
+    path('clubs/<slug:club_name_slug>/request-join/', views.request_join, name='club_request_join'),
     path('clubs/<slug:club_name_slug>/members/', views.member_list, name='member_list'),
+
     path('clubs/<slug:club_name_slug>/members/add/<str:username>/', views.add_member, name='add_member'),
     path('clubs/<slug:club_name_slug>/members/remove/<str:username>/', views.remove_member, name='remove_member'),
     path('clubs/<slug:club_name_slug>/members/approve/<str:username>/', views.approve_member, name='approve_member'),

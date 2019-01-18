@@ -80,7 +80,8 @@
                 <span class="image featured"><img src="{{ post.cover_image.url }}" alt=""/></span>
             {% endif %}
             {% if not post.is_approved %}
-            <p style="color:red; font-weight: bolder; font-style: italic">This post is not yet approved by moderators.</p>
+                <p style="color:red; font-weight: bolder; font-style: italic">This post is not yet approved by
+                    moderators.</p>
             {% endif %}
             <p style="max-width: 100%;">
                 {{ post.body|safe }}
@@ -91,6 +92,44 @@
                     {% include 'posts/_polls.html' %}
 
                 </article>
+            {% endif %}
+
+            {% if post.event %}
+                <style>
+                    .event-head {
+                        font-weight: bolder;
+                        font-size: 125%;
+                    }
+
+                    .event-info {
+                        font-size: 125%;
+                    }
+                </style>
+                <div>
+                    <span class="event-head">Venue : </span> <span class="event-info"> {{ post.event.venue }}</span>
+                </div>
+                <div>
+                    <span class="event-head">Starting On :</span> <span
+                        class="event-info">{{ post.event.start_date }}</span>
+                </div>
+                <div>
+                    <span class="event-head"> Ending On : </span> <span
+                        class="event-info">{{ post.event.end_date }}</span>
+                </div>
+
+                <div style="margin-top: 2vh;margin-bottom: 2vh;">
+                    {% if request.user not in post.event.interested_users.all %}
+                        <a href="javascript:void(0);"
+                           class="button large event-intersdted-button" style="text-decoration: none;">Are you going?
+                        </a>
+                    {% else %}
+                        <a href="javascript:void(0);"
+                           class="button large event-intersdted-button"
+                           style="text-decoration: none;box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important">You are going
+                        </a>
+                    {% endif %}
+                </div>
+
             {% endif %}
             <footer>
                 <ul class="stats">
@@ -193,6 +232,7 @@
             </article>
         </section>
 
+
         <section>
             <article class="post">
                 <div id="disqus_thread"></div>
@@ -202,6 +242,12 @@
 
     </div>
 
+    {#    <div style="display: none">#}
+    {#        <form action="#" method="post" id="interested-form">#}
+    {#            <input type="text" value="{{ post.encrypted_id }}">#}
+    {#            <input type="text" value="{{ request.user.username }}">#}
+    {#        </form>#}
+    {#    </div>#}
 
 
 {% endblock %}
@@ -267,6 +313,23 @@
         });
 
 
+        document.querySelector('.event-intersdted-button').addEventListener('click', function (e) {
+
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'posts:interested_event' %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    'encrypted_id': '{{ post.encrypted_id }}'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    location.reload(true)
+                }
+            });
+        });
     </script>
 
     <script>

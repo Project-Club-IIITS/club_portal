@@ -49,3 +49,12 @@ def has_user_casted_vote(poll, user):
 
     return Vote.objects.filter(poll=poll, user=user).exists()
 
+@register.filter
+def is_user_member_not_approved(user, club):
+    """
+    Checks whether incoming user is a moderator for the club
+    """
+    if not (isinstance(user, User) and isinstance(club, Club)):
+        raise ValueError("User must be an instance of User model and club must be an instance of Club model")
+
+    return club.clubmember_set.filter(user=user).exists()
