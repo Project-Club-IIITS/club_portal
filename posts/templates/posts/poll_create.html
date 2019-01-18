@@ -1,9 +1,12 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block styles %}
+{% block head %}
+
     <link rel="stylesheet" href="{% static 'css/poll_create.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
     <link rel="stylesheet" href="{% static 'posts/css/post_edit.css' %}">
+
 {% endblock %}
 
 {% block content %}

@@ -15,7 +15,32 @@
 
 
     <div id="main">
-        <div class="infinite-container" id="all_posts">
+
+        {% if  request.user|is_user_member:club %}
+
+            <section class="blurb d-xl-none" style="margin-top: 5vh;">
+                <h2 style="color: crimson;">Create</h2>
+                <div class="d-flex flex-row justify-content-between">
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:post-add' club_slug%}" class="button" style="text-decoration: none;">Post</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:create_poll' club_slug %}" class="button" style="text-decoration: none;">Poll</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:events_create' club_slug %}" class="button" style="text-decoration: none;">Event</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+        <div class="infinite-container" id="all_posts" style="margin-top: 5vh;">
             {% for post in posts %}
                 <div class="infinite-item">
                     <article class="post">
@@ -41,12 +66,13 @@
                             </div>
                         </header>
                         {% if post.cover_image %}
-                            <a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}" class="image featured">
+                            <a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}"
+                               class="image featured">
                                 <img src="{{ post.cover_image.url }}" alt="Cover Image"/>
                             </a>
                         {% endif %}
                         <p>
-                            {{ post.body|safe|truncatechars_html:100 }}
+                            {{ post.body|truncatechars_html:100|removeImg|safe }}
                         </p>
                         <footer>
                             <ul class="actions">
@@ -63,7 +89,7 @@
                 </div>
             {% empty %}
                 <div style="text-align: center;">
-                <h2>No posts found</h2>
+                    <h2>No posts found</h2>
 
                 </div>
 
@@ -71,7 +97,11 @@
         </div>
         {% if posts.has_next %}
             <a style="display:none;" class="infinite-more-link"
-               href="?page={{ posts.next_page_number }}&{% for field in filter_form %}{% if field.name != 'page' %}{{ field.name }}={{ field.value }}&{% endif %}{% endfor %}">More</a>
+               href="?page={{ posts.next_page_number }}&
+
+
+
+                       {% for field in filter_form %}{% if field.name != 'page' %}{{ field.name }}={{ field.value }}&{% endif %}{% endfor %}">More</a>
         {% endif %}
 
         <div style="width: 100%; text-align: center; display: none" class="loading">
@@ -93,7 +123,7 @@
     <section id="sidebar">
 
         <!-- About -->
-        <section class="blurb">
+        <section class="blurb" style="margin-top: 7vh;">
             <h2>About</h2>
             <p>
                 {{ club.about|safe|truncatechars_html:150 }}
@@ -103,22 +133,46 @@
             </ul>
         </section>
 
-        {% if not request.user|is_user_member:club %}
-        <section style="">
-            <h2 style="color: crimson">Note</h2>
-            <p style="color: crimson">
-                You are only seeing the public posts of this club as you are not a member. To see all posts, consider becoming a member.
-            </p>
-            <ul class="actions">
-                <li><a href="#" class="button" style="text-decoration: none;">Become Member</a></li>
-            </ul>
-        </section>
+        {% if  request.user|is_user_member:club %}
+
+            <section class="blurb">
+                <h2 style="color: crimson;">Create</h2>
+                <div class="d-flex flex-row justify-content-between">
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:post-add' club_slug %}" class="button" style="text-decoration: none;">Post</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:create_poll' club_slug %}" class="button" style="text-decoration: none;">Poll</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:events_create' club_slug %}" class="button" style="text-decoration: none;">Event</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        {% else %}
+            <section style="">
+                <h2 style="color: crimson">Note</h2>
+                <p style="color: crimson">
+                    You are only seeing the public posts of this club as you are not a member. To see all posts,
+                    consider becoming a member.
+                </p>
+                <ul class="actions">
+                    <li><a href="#" class="button" style="text-decoration: none;">Become Member</a></li>
+                </ul>
+            </section>
         {% endif %}
         <!-- Mini Posts -->
         <section>
             <div class="mini-posts">
                 <h3>Pinned Posts</h3>
-
+                <br>
                 {% for p_post in pinned_posts %}
                     <!-- Mini Post -->
                     <article class="mini-post">
@@ -139,7 +193,7 @@
                                     {#                                TODO Put author name and profile pic here#}
                                 {% endif %}
                             </a>
-{#                            <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>#}
+                            {#                            <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>#}
 
                         </header>
                         {% if p_post.post.cover_image %}
@@ -190,23 +244,23 @@
 
         <!-- Footer -->
         <section id="footer">
-{#            <ul class="icons">#}
-{#                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>#}
-{#                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>#}
-{#                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>#}
-{#                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>#}
-{#            </ul>#}
+            {#            <ul class="icons">#}
+            {#                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>#}
+            {#                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>#}
+            {#                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>#}
+            {#                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>#}
+            {#            </ul>#}
 
         </section>
 
     </section>
 
-<div style="display: none;" id="filter_form">
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ filter_form }}
-    </form>
-</div>
+    <div style="display: none;" id="filter_form">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ filter_form }}
+        </form>
+    </div>
 {% endblock %}
 
 
@@ -225,14 +279,14 @@
             }
         });
 
-       {% comment %} {#document.getElementById('search-button').addEventListener('onclick', () => {#}
-        {#    window.location = window.location.href + "?query=" + document.getElementById('search-query').value;#}
-        {#});#}
-        {##}{% endcomment %}
+        {% comment %} {#document.getElementById('search-button').addEventListener('onclick', () => {#}
+         {#    window.location = window.location.href + "?query=" + document.getElementById('search-query').value;#}
+         {#});#}
+         {##}{% endcomment %}
 
 
     </script>
-     <link rel="stylesheet"
+    <link rel="stylesheet"
           href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/default.min.css">
     <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>

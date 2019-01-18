@@ -13,7 +13,7 @@
     {% endblock %}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-{#    <link rel="stylesheet" href="{% static 'posts/css/fontawesome.min.css' %}">#}
+    {#    <link rel="stylesheet" href="{% static 'posts/css/fontawesome.min.css' %}">#}
     <link rel="stylesheet" href="{% static "css/navbar-footer.css" %}">
     <style>
         .chip {
@@ -35,73 +35,21 @@
         }
 
 
-{#        .dropbtn {#}
-{#  background-color: #4CAF50;#}
-{#  color: white;#}
-{#  padding: 16px;#}
-{#  font-size: 16px;#}
-{#  border: none;#}
-
-
-/* The container <div> - needed to position the dropdown content */
-{#.dropdown {#}
-{#  position: relative;#}
-{#  display: inline-block;#}
-
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd;}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
-
-.navbar-fixed-top {
-  top: -70px; /* you'll have to figure out the exact number here */
-}
-
-.navbar-fixed-top, .navbar-fixed-bottom {
-  position: relative; /* this can also be static */
-}
-
         {#        .dropbtn {#}
         {#  background-color: #4CAF50;#}
         {#  color: white;#}
         {#  padding: 16px;#}
         {#  font-size: 16px;#}
         {#  border: none;#}
-        {#{#}
 
 
         /* The container <div> - needed to position the dropdown content */
         {#.dropdown {#}
         {#  position: relative;#}
         {#  display: inline-block;#}
-        {#{#}
 
 
-      {% comment %}  /* Dropdown Content (Hidden by Default) */
-{#        Auth dropdown#}
+        /* Dropdown Content (Hidden by Default) */
         .dropdown-content {
             display: none;
             position: absolute;
@@ -132,117 +80,185 @@
         /* Change the background color of the dropdown button when the dropdown content is shown */
         .dropdown:hover .dropbtn {
             background-color: #3e8e41;
-        }{% endcomment %}
+        }
 
+        .navbar-fixed-top {
+            top: -70px; /* you'll have to figure out the exact number here */
+        }
+
+        .navbar-fixed-top, .navbar-fixed-bottom {
+            position: relative; /* this can also be static */
+        }
+
+        {#        .dropbtn {#}
+        {#  background-color: #4CAF50;#}
+        {#  color: white;#}
+        {#  padding: 16px;#}
+        {#  font-size: 16px;#}
+        {#  border: none;#}
+        {#{#}
+
+
+        /* The container <div> - needed to position the dropdown content */
+        {#.dropdown {#}
+        {#  position: relative;#}
+        {#  display: inline-block;#}
+        {#{#}
+
+
+        {% comment %}  /* Dropdown Content (Hidden by Default) */
+  {#        Auth dropdown#}
+          .dropdown-content {
+              display: none;
+              position: absolute;
+              background-color: #f1f1f1;
+              min-width: 160px;
+              box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+              z-index: 1;
+          }
+
+          /* Links inside the dropdown */
+          .dropdown-content a {
+              color: black;
+              padding: 12px 16px;
+              text-decoration: none;
+              display: block;
+          }
+
+          /* Change color of dropdown links on hover */
+          .dropdown-content a:hover {
+              background-color: #ddd;
+          }
+
+          /* Show the dropdown menu on hover */
+          .dropdown:hover .dropdown-content {
+              display: block;
+          }
+
+          /* Change the background color of the dropdown button when the dropdown content is shown */
+          .dropdown:hover .dropbtn {
+              background-color: #3e8e41;
+          }{% endcomment %}
+
+           .nav-item-scroll{
+               {#overflow: auto;#}
+           }
     </style>
 </head>
 <body class="is-preload">
 {% block nav %}
-<section id="header">
+    <section id="header" >
 
-    <nav class="navbar navbar-static-top navbar-expand-lg navbar-light bg-light w-100 pr-5 p-0 flex align-items-center" style="top:0;">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <nav class="navbar navbar-static-top navbar-expand-lg navbar-light bg-light w-100 pr-5 p-0 flex align-items-center"
+             style="top:0;position: fixed;">
+            <a class="navbar-brand" href="{% url 'base:index' %}" style="font-weight: bolder; font-size: 220%;padding-left: 5vh;">IIITS Clubs</a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-                style="height:2.8125rem!important;">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                    style="height:2.8125rem!important;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto px-3">
-                <li class="nav-item active px-3 py-2">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item px-3 py-2">
-                    <a class="nav-link" href="{% url 'posts:posts' %}">All Posts</a>
-                </li>
-                <li class="nav-item px-3 py-2">
-                    <a class="nav-link" href="{% url 'base:all_clubs' %}">Clubs</a>
-                </li>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto px-3">
 
-                <li class="nav-item dropdown px-3 py-2">
 
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Select Club
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% for club in clubs %}
-                            <a class="dropdown-item"
-                               href="{% url 'posts:club_posts' club.name|clubslug %}">{{ club.name|title }}</a>
-                        {% endfor %}
-                        {#                        <a class="dropdown-item" href="#">IOTA</a>#}
-                        {#                        <a class="dropdown-item" href="#">Gradient</a>#}
-                        {#                        <a class="dropdown-item" href="#">Photography Club</a>#}
-                    </div>
-                </li>
+                    <li class="nav-item px-3 nav-item-scroll">
+                        <a class="nav-link" href="{% url 'posts:posts' %}">All Posts</a>
+                    </li>
+                    <li class="nav-item px-3">
+                        <a class="nav-link" href="{% url 'base:all_clubs' %}">Clubs</a>
+                    </li>
 
-                {% if club_slug %}
-                    {% if request.user|is_user_moderator:club %}
-                        <li class="nav-item px-3 py-2">
-                            <a class="nav-link" href="{% url 'base:all_clubs' %}">Club-Admin</a>
+                    <li class="nav-item dropdown px-3 nav-item-scroll">
+
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select Club
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for club in clubs %}
+                                <a class="dropdown-item"
+                                   href="{% url 'posts:club_posts' club.name|clubslug %}">{{ club.name|title }}</a>
+                            {% endfor %}
+                            {#                        <a class="dropdown-item" href="#">IOTA</a>#}
+                            {#                        <a class="dropdown-item" href="#">Gradient</a>#}
+                            {#                        <a class="dropdown-item" href="#">Photography Club</a>#}
+                        </div>
+                    </li>
+
+                    {% if club_slug %}
+
+                        {% if request.user|is_user_moderator:club %}
+                            <li class="nav-item px-3">
+                                <a class="nav-link" href="{% url 'base:all_clubs' %}">Club-Admin</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+
+                        <li class="nav-item px-3 nav-item-scroll">
+                            {#                    <a class="nav-link" href="#">Login</a>#}
+                            {#                     <img src="{% static "images/download.jpg" %}" alt="image" height="50" width="50" style="border-radius:25px;">#}
+                            {#                     <span>Vineet</span>#}
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="chip">
+                                    {% if request.user.userprofile.profile_pic %}
+                                        <img src="{{ request.user.userprofile.profile_pic.url }}" alt="Person"
+                                             width="96"
+                                             height="96"/>
+                                    {% elif request.user.googleauth.profile_pic_link %}
+                                        <img src="{{ request.user.googleauth.profile_pic_link }}" alt="Person"
+                                             width="96"
+                                             height="96"/>
+                                    {% else %}
+                                        <img src="{% static "posts/images/pic10.jpg" %}" alt="Person" width="96"
+                                             height="96"/>
+
+                                    {% endif %}
+                                    {#                                <img src="{% static "images/download.jpg" %}" alt="Person" width="96" height="96">#}
+                                    {{ request.user.get_full_name }}
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                                <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+
+                            </div>
+
+
+                            {#                    <div class="dropdown">#}
+                            {#                        <button class="dropbtn">#}
+                            {#                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"#}
+                            {#                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+                            {#                                <div class="chip">#}
+                            {#                                    <img src="{% static "images/download.jpg" %}" alt="Person" width="96" height="96">#}
+                            {#                                    John Doe#}
+                            {#                                </div>#}
+                            {#                            </a>#}
+                            {#                        </button>#}
+                            {#                        <div class="dropdown-content">#}
+                            {#                            <a href="#">Link 1</a>#}
+                            {#                            <a href="#">Link 2</a>#}
+                            {#                            <a href="#">Link 3</a>#}
+                            {#                        </div>#}
+                            {#                    </div>#}
+                        </li>
+                    {% else %}
+                        <li class="nav-item px-3 nav-item-scroll">
+                            <a class="nav-link"
+                               href="{% url 'registration:signup' %}?next={{ request.path }}">Signup</a>
+                        </li>
+                        <li class="nav-item px-3 nav-item-scroll">
+
+                            <a class="nav-link" href="{% url 'registration:login' %}?next={{ request.path }}">Login</a>
                         </li>
                     {% endif %}
-                {% endif %}
-                {% if request.user.is_authenticated %}
-
-                    <li class="nav-item px-3 mt-2">
-                        {#                    <a class="nav-link" href="#">Login</a>#}
-                        {#                     <img src="{% static "images/download.jpg" %}" alt="image" height="50" width="50" style="border-radius:25px;">#}
-                        {#                     <span>Vineet</span>#}
-                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <div class="chip">
-                                {% if request.user.userprofile.profile_pic %}
-                                    <img src="{{ request.user.userprofile.profile_pic.url }}" alt="Person" width="96"
-                                         height="96"/>
-                                {% elif request.user.googleauth.profile_pic_link %}
-                                    <img src="{{ request.user.googleauth.profile_pic_link }}" alt="Person" width="96"
-                                         height="96"/>
-                                {% else %}
-                                    <img src="{% static "posts/images/pic10.jpg" %}" alt="Person" width="96"
-                                         height="96"/>
-
-                                {% endif %}
-                                {#                                <img src="{% static "images/download.jpg" %}" alt="Person" width="96" height="96">#}
-                                {{ request.user.get_full_name }}
-                            </div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right mr-5" aria-labelledby="profileDropdown">
-                            <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
-                            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-
-                        </div>
-
-
-                        {#                    <div class="dropdown">#}
-                        {#                        <button class="dropbtn">#}
-                        {#                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"#}
-                        {#                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-                        {#                                <div class="chip">#}
-                        {#                                    <img src="{% static "images/download.jpg" %}" alt="Person" width="96" height="96">#}
-                        {#                                    John Doe#}
-                        {#                                </div>#}
-                        {#                            </a>#}
-                        {#                        </button>#}
-                        {#                        <div class="dropdown-content">#}
-                        {#                            <a href="#">Link 1</a>#}
-                        {#                            <a href="#">Link 2</a>#}
-                        {#                            <a href="#">Link 3</a>#}
-                        {#                        </div>#}
-                        {#                    </div>#}
-                    </li>
-                {% else %}
-                    <li class="nav-item px-3">
-                        <a class="nav-link" href="{% url 'registration:signup' %}?next={{ request.path }}">Signup</a>
-                        <a class="nav-link" href="{% url 'registration:login' %}?next={{ request.path }}">Login</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
-</section>
+                </ul>
+            </div>
+        </nav>
+    </section>
 
 {% endblock nav %}
 <!-- Wrapper -->
@@ -282,7 +298,7 @@
     <!-- Footer -->
     <footer id="footer">
         <div class="inner">
-            <ul class="icons">
+            <ul class="icons .d-none .d-lg-block">
                 <li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
                 <li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
                 <li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
