@@ -10,7 +10,7 @@
     {% if poll.is_active and not poll|has_user_casted_vote:request.user %}
     <form action="{% url 'posts:cast-vote' club_name_slug post.encrypted_id %}" method="POST" id="form">
         <div class="question poll-question">
-            <h3>Do You Like Subu Kandswamy?</h3>
+            <h3>Cast your vote</h3>
             {% csrf_token %}
 
             {% for option in poll.option_set.all %}

@@ -31,13 +31,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto px-3">
 
-                <li class="nav-item px-3 nav-item-scroll">
+                <li class="nav-item px-3 nav-item-scroll mt-2">
                     <a class="nav-link" href="{% url 'base:index' %}">Home</a>
                 </li>
-                <li class="nav-item px-3 nav-item-scroll">
+                <li class="nav-item px-3 nav-item-scroll mt-2">
                     <a class="nav-link" href="{% url 'posts:posts' %}">All Posts</a>
                 </li>
-                <li class="nav-item dropdown px-3 nav-item-scroll">
+                <li class="nav-item dropdown px-3 nav-item-scroll mt-2">
 
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -153,7 +153,7 @@
             <h1 class="text-primary display-4 pt-5 mb-5 font-weight-bold" style="z-index:-1;">Clubs</h1>
             <div class="row">
                 {% for club in clubs %}
-                    <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2">
+                    <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2" onclick="window.location='{% url "posts:club_posts" club.name|clubslug %}'">
                         <div class="card">
 
                             <div class="image">
