@@ -1,0 +1,37 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <div class="mx-auto w-75">
+    {% for notification in user.receivedNotifications.all %}
+       
+    <div class="row accordion">
+        <div class="col-2">
+            <img class="img-fluid" src="https://image.shutterstock.com/image-vector/profile-placeholder-male-default-gray-450w-535853263.jpg"/>    
+        </div> 
+        <div class="col-10">   
+            <h5 class="font-weight-bold">
+                {{notification.sender.username}} sent you a message
+            </h5>
+            <div class="accordion-item" style="width:100%;">
+                <a> {{notification.title}} </a>
+                <div class="content">
+                    {{notification.message}}
+                </div>
+            </div>
+        </div>
+    </div>
+        <br/><br/>
+    {% endfor %}
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script>
+        const items = document.querySelectorAll(".accordion a");
+        function toggleAccordion(){
+            this.classList.toggle('active');
+            this.nextElementSibling.classList.toggle('active');
+        }
+        items.forEach(item => item.addEventListener('click', toggleAccordion));
+    </script>
+{% endblock script %}

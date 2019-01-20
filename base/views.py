@@ -2,13 +2,16 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from .models import Notification
-from django.core.mail import send_mail
 
 from .notifications import *
 
 
 class IndexView(TemplateView):
     template_name = "base/index.html"
+
+
+class NotificationView(TemplateView):
+    template_name = "base/notifications.html"
 
 
 def usersList(request):

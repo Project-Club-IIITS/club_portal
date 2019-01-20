@@ -2,21 +2,23 @@ from .models import Notification
 from django.core.mail import send_mail
 
 
-def sendNotification(sender, club, receiver, title, message):
-    Notification.objects.create(
-        sender=sender, club=club, receiver=receiver, title=title, message=message)
+def sendNotification(sender, club, receivers, title, message):
+    for receiver in receivers:
+        Notification.objects.create(
+            sender=sender, club=club, receiver=receiver, title=title, message=message)
+    del(receiver)
     sendEmailNotification(**locals())
     sendPushNotification(**locals())
 
 
-def sendEmailNotification(sender, club, receiver, title, message):
+def sendEmailNotification(sender, club, receivers, title, message):
     send_mail(
         title,
         message,
-        sender.email,
-        [receiver.email, ],
+        'tempsidm1999@gmail.com',
+        tuple(receiver.email for receiver in receivers)
     )
 
 
-def sendPushNotification(sender, club, receiver, title, message):
+def sendPushNotification(sender, club, receivers, title, message):
     pass
