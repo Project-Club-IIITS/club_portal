@@ -131,7 +131,7 @@ class Event(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     venue = models.CharField(max_length=200)
-    interested_users = models.ManyToManyField(User)
+    interested_users = models.ManyToManyField(User, blank=True)
 
 
 

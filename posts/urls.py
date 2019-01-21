@@ -12,6 +12,8 @@ urlpatterns = [
     path('like_post/<int:id>/', views.likePost, name='like-post'),
     path('edit-post/<int:encrypted_id>/', views.edit_post, name="post-edit"),
     path('edit-poll/<int:encrypted_id>/', views.edit_poll, name="poll-edit"),
+    path('edit-event/<int:encrypted_id>', views.events_edit, name="events_edit"),
+    # path('add-user-event-interested', views.interested_event)
     path('<slug:club_name_slug>/create-poll/', views.create_poll, name='create_poll'),
     # path('<slug:club_name_slug>/submit-poll/', views.submitPoll, name='submit_poll'),
     path('<slug:club_name_slug>/', views.club_posts, name="club_posts"),
@@ -25,7 +27,7 @@ urlpatterns = [
     path('<slug:club_name_slug>/<int:encrypted_id>/vote', views.cast_vote, name='cast-vote'),
 
     path('<slug:club_name_slug>/events/create', views.events_create, name="events_create"),
-    path('<slug:club_name_slug>/events/update/<int:encrypted_id>', views.events_edit, name="events_edit"),
+
     path('ajax/interested_event', views.interested_event, name="interested_event"),
 
     path('', views.posts, name='posts'),

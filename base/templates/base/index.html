@@ -17,6 +17,7 @@
 
     <nav class="navbar navbar-static-top navbar-expand-lg navbar-light bg-light w-100 pr-5 p-0 flex align-items-center nav-styles"
          style="top:0;position: fixed;z-index:20;">
+
         <a class="navbar-brand nav-styles" href="{% url 'base:index' %}"
            style="font-weight: bolder; font-size: 150%;padding-left: 5vh; font-family: 'Source Sans Pro', Helvetica, sans-serif;">IIITS
             Clubs</a>
@@ -30,13 +31,14 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto px-3">
 
-                <li class="nav-item px-3 nav-item-scroll">
+                <li class="nav-item px-3 nav-item-scroll mt-2">
                     <a class="nav-link" href="{% url 'base:index' %}">Home</a>
                 </li>
-                <li class="nav-item px-3 nav-item-scroll">
+                <li class="nav-item px-3 nav-item-scroll mt-2">
                     <a class="nav-link" href="{% url 'posts:posts' %}">All Posts</a>
                 </li>
-                <li class="nav-item dropdown px-3 nav-item-scroll">
+                <li class="nav-item dropdown px-3 nav-item-scroll mt-2">
+
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Select Club
@@ -86,7 +88,9 @@
                                 {{ request.user.get_full_name }}
                             </div>
                         </a>
+
                         <div class="dropdown-menu dropdown-menu-right mr-5" aria-labelledby="profileDropdown">
+
                             <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
 
@@ -148,94 +152,43 @@
         <div class="container">
             <h1 class="text-primary display-4 pt-5 mb-5 font-weight-bold" style="z-index:-1;">Clubs</h1>
             <div class="row">
-                <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2">
-                    <div class="card">
+                {% for club in clubs %}
+                    <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2" onclick="window.location='{% url "posts:club_posts" club.name|clubslug %}'">
+                        <div class="card">
 
-                        <div class="image">
-                            <img src="http://assets.materialup.com/uploads/fc97b003-ba72-4c6e-9dd3-19bf5002c244/preview.jpg"
-                                 width="100%">
+                            <div class="image">
+                                {% if club.logo %}
+                                    <img src="{{ club.logo.url }}"
+                                         width="100%">
+
+                                {% else %}
+                                    <img src="http://assets.materialup.com/uploads/fc97b003-ba72-4c6e-9dd3-19bf5002c244/preview.jpg"
+                                         width="100%">
+                                {% endif %}
+                            </div>
+
+                            <div class="text">
+
+                                {% if request.user.is_authenticated %}
+                                    {% if club in request.user.following_clubs.all %}
+                                        <div class="tick">&#10003;</div>
+                                    {% else %}
+                                        <div class="fab">&#43;</div>
+                                    {% endif %}
+                                    {% else %}
+                                    <div class="fab">&#43;</div>
+
+                                {% endif %}
+                                <h3>{{ club.name }}</h3>
+                                <p>{{ club.about|safe }}</p>
+
+
+                            </div>
+
                         </div>
-
-                        <div class="text">
-
-                            <div class="tick">&#10003;</div>
-
-                            <h3>Descrição da funcionalidade deve vir abaixo do título do caso de uso.</h3>
-                            <p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois
-                                divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis,
-                                nisi eros vermeio, in elementis mé pra quem é amistosis quis leo.</p>
-
-                        </div>
-
                     </div>
-                </div>
+                {% endfor %}
 
-                <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2">
-                    <div class="card">
-
-                        <div class="image">
-                            <img src="http://assets.materialup.com/uploads/fc97b003-ba72-4c6e-9dd3-19bf5002c244/preview.jpg"
-                                 width="100%">
-                        </div>
-
-                        <div class="text">
-
-                            <div class="fab">&#43;</div>
-
-                            <h3>Descrição da funcionalidade deve vir abaixo do título do caso de uso.</h3>
-                            <p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois
-                                divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis,
-                                nisi eros vermeio, in elementis mé pra quem é amistosis quis leo.</p>
-
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2">
-                    <div class="card">
-
-                        <div class="image">
-                            <img src="http://assets.materialup.com/uploads/fc97b003-ba72-4c6e-9dd3-19bf5002c244/preview.jpg"
-                                 width="100%">
-                        </div>
-
-                        <div class="text">
-
-                            <div class="fab">&#43;</div>
-
-                            <h3>Descrição da funcionalidade deve vir abaixo do título do caso de uso.</h3>
-                            <p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois
-                                divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis,
-                                nisi eros vermeio, in elementis mé pra quem é amistosis quis leo.</p>
-
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2">
-                    <div class="card">
-
-                        <div class="image">
-                            <img src="http://assets.materialup.com/uploads/fc97b003-ba72-4c6e-9dd3-19bf5002c244/preview.jpg"
-                                 width="100%">
-                        </div>
-
-                        <div class="text">
-
-                            <div class="fab">&#43;</div>
-
-                            <h3>Descrição da funcionalidade deve vir abaixo do título do caso de uso.</h3>
-                            <p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois
-                                divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis,
-                                nisi eros vermeio, in elementis mé pra quem é amistosis quis leo.</p>
-
-                        </div>
-
-                    </div>
-                </div>
 
             </div>
         </div>

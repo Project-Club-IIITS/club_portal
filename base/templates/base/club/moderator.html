@@ -1,27 +1,20 @@
+{% extends 'base/club/admin_base.html' %}
 {% load static %}
-<!DOCTYPE HTML>
-<html>
-<head>
-    <title>Editorial by HTML5 UP</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <link rel="stylesheet" href="{% static 'admin_panel/css/admin_panel.css' %}"/>
-</head>
-<body class="is-preload">
-<!-- Wrapper -->
-<div id="wrapper">
-    <!-- Main -->
-    <div id="main">
-        <div class="inner">
-            <!-- Section -->
+
+{% block title %}
+Club Moderators
+{% endblock %}
+{% block main_content %}
             <section>
                 <header class="major">
                     <div>
                         <h2>Moderators</h2>
                     </div>
                     <div class="search-box">
-                        <input class="search-input" type="text" name="addMember" id="moderatorAdd">
-                        <a href="#" class="button small">Add</a>
+                        <form action="{% url 'base:add_moderator_name_as_param' club_name_slug %}" method='get' style="display:flex;justify-content: center;">
+                            <input class="search-input" style="margin-right:8px;" type="text" name="username" id="moderatorAdd" placeholder="username">
+                            <button type="submit" class="button small" id="new-moderator">Add</button>
+                        </form>
                     </div>
 
                 </header>
@@ -32,15 +25,20 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Username</th>
+                                <th></th>
 
                             </tr>
                             </thead>
                             <tbody>
                             {% for mod in moderators %}
-                            <tr>
-                                <td>{{ mod.user.get_full_name }}</td>
-                                <td>{{ mod.user.email }}</td>
-                            </tr>
+                                <tr>
+                                    <td>{{ mod.user.get_full_name }}</td>
+                                    <td>{{ mod.user.email }}</td>
+                                    <td>{{ mod.user.username }}</td>
+                                    <td><a href="{% url 'base:remove_moderator' club_name_slug mod.user.username %}"
+                                           class="button primary small">Remove</a></td>
+                                </tr>
                             {% endfor %}
                             </tbody>
 
@@ -49,35 +47,4 @@
 
                 </div>
             </section>
-
-        </div>
-    </div>
-
-    <!-- Sidebar -->
-    <div id="sidebar">
-        <div class="inner">
-            <nav id="menu">
-                <header class="major">
-                    <h2>{{ club.name|title }} Admin</h2>
-                </header>
-                <ul>
-                    <li><a href="{% url 'base:member_list' club_name_slug %}">Members</a></li>
-                    <li><a href="{% url 'base:moderator_list' club_name_slug %}">Moderators</a></li>
-                    <li><a href="{% url 'base:pending_posts_list' club_name_slug %}">Posts</a></li>
-                </ul>
-            </nav>
-        </div>
-    </div>
-
-</div>
-
-<!-- Scripts -->
-<script src="{% static 'admin_panel/js/jquery.min.js' %}"></script>
-<script src="{% static 'admin_panel/js/browser.min.js' %}"></script>
-<script src="{% static 'admin_panel/js/breakpoints.min.js' %}"></script>
-<script src="{% static 'admin_panel/js/util.js' %}"></script>
-<script src="{% static 'admin_panel/js/admin_panel.js' %}"></script>
-
-
-</body>
-</html>
+{% endblock %}

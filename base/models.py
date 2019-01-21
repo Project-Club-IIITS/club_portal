@@ -25,19 +25,24 @@ class Club(models.Model):
     about = models.TextField(help_text="Say a few lines about your club", null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_supported = models.BooleanField(default=True)
-    num_users = models.IntegerField(default=0)
+    # num_users = models.IntegerField(default=0)
 
-    logo = models.ImageField(upload_to=club_logo_upload, blank=True, null=True)
+    back_img = models.ImageField(upload_to=club_logo_upload, blank=True, null=True)
 
     def __str__(self):
         return self.name
 
+    @property
     def slug(self):
         return self.name.replace(' ', '-')
 
     def calc_users(self):
         self.num_users = self.clubmember_set.all().count()
         self.save()
+
+
+class ClubSettings(models.Model):
+    club = models.OneToOneField(to=Club, on_delete=models.CASCADE)
 
 
 class ClubMentor(models.Model):
@@ -49,6 +54,9 @@ class ClubMentor(models.Model):
 
     def __str__(self):
         return self.club.name + " - " + self.user.username
+
+    class Meta:
+        unique_together = ('user', 'club')
 
 
 class ClubPresident(models.Model):

@@ -342,6 +342,9 @@ def create_poll(request, club_name_slug):
     club_name = club_name_slug.replace('-', ' ')
     club = get_object_or_404(Club, name=club_name)
 
+    if not ClubMember.objects.filter(club=club, user=request.user).exists():
+        raise PermissionDenied("Only Club members can create posts")
+
     if request.method == "POST":
         post_create_form = PostCreationForm(request.POST, request.FILES)
         poll_create_form = PollCreateForm(request.POST)
@@ -392,8 +395,9 @@ def edit_poll(request, encrypted_id):
                                                       }
                   )
 
+
 @login_required
-def edit_poll(request,encrypted_id):
+def edit_poll(request, encrypted_id):
     post = get_object_or_404(Post, encrypted_id=encrypted_id)
     if post.author != request.user:
         raise PermissionDenied("You are not authorized to edit this post")
@@ -412,11 +416,13 @@ def edit_poll(request,encrypted_id):
     return render(request, "posts/post_edit.html", context)
 
 
+@login_required
 def events_create(request, club_name_slug):
     club_name = club_name_slug.replace('-', ' ')
     club = get_object_or_404(Club, name=club_name)
     user = request.user
-
+    if not ClubMember.objects.filter(club=club, user=request.user).exists():
+        raise PermissionDenied("Only Club members can create posts")
     if request.method == "POST":
         postform = PostCreationForm(data=request.POST)
         eventform = EventForm(data=request.POST)
@@ -461,13 +467,13 @@ def interested_event(request):
     ret_data = {
         'add_success': False
     }
-    if request.user.is_annonymous:
+    if not request.user.is_authenticated:
         return JsonResponse(ret_data)
     user = request.user
     encrypted_id = request.POST.get('encrypted_id')
     post = get_object_or_404(Post, encrypted_id=encrypted_id)
     event = get_object_or_404(Event, post=post)
-    if not event.interested_users.filter(user=user).exists():
+    if user not in event.interested_users.all():
         event.interested_users.add(user)
         event.save()
         ret_data['add_success'] = True
