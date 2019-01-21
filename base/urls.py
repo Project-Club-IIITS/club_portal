@@ -5,6 +5,7 @@ from django.contrib.auth.views import TemplateView
 app_name = "base"
 
 urlpatterns = [
+
     path('', TemplateView.as_view(template_name="base/index.html"), name='index'),
     path('clubs/', views.club_home, name='all_clubs'),
     path('clubs/<slug:club_name_slug>/request-join/', views.request_join, name='club_request_join'),
@@ -26,5 +27,7 @@ urlpatterns = [
          name='remove_moderator_name_as_param'),
     path('clubs/<slug:club_name_slug>/moderators/remove/<str:username>/', views.remove_moderator,
          name='remove_moderator'),
+
+    path('notifications', views.NotificationView.as_view(), name='notifications'),
 
 ]

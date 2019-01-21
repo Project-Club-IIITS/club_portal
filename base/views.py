@@ -7,6 +7,10 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
+from .models import Notification
+
+from .notifications import *
+
 
 from base.forms import ClubForm
 from base.models import ClubModerator, Club, ClubMember, ClubMentor, ClubPresident, ClubSettings
@@ -15,6 +19,9 @@ from base.models import ClubModerator, Club, ClubMember, ClubMentor, ClubPreside
 class IndexView(TemplateView):
     template_name = "base/index.html"
 
+
+class NotificationView(TemplateView):
+    template_name = "base/notifications.html"
 
 def club_home(request):
     return render(request, 'base/club/index.html')
@@ -241,4 +248,9 @@ def club_groups(request, club_name_slug):
     if not ClubModerator.objects.filter(club=club, user=request.user).exists():
         raise PermissionDenied("You are not allowed to access this page")
 
+
     return render(request, 'base/club/groups.html', {"club": club, "club_name_slug": club_name_slug, })
+
+
+def sendNotificationToClub(request):
+    pass
