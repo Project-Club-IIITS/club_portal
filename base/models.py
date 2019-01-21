@@ -41,6 +41,9 @@ class Club(models.Model):
         self.num_users = self.clubmember_set.all().count()
         self.save()
 
+    class Meta:
+        ordering = ['name']
+
 
 class ClubSettings(models.Model):
     club = models.OneToOneField(to=Club, on_delete=models.CASCADE)

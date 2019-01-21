@@ -136,10 +136,11 @@ def remove_member(request, club_name_slug, username):
     if not members.exists():
         return HttpResponse("This user does not exist")
 
-    try:
-        members[0].delete()
-    except:
-        return HttpResponse("Some error occured. Try again later")
+    if members[0].user != club.clubpresident.user:
+        try:
+            members[0].delete()
+        except:
+            return HttpResponse("Some error occured. Try again later")
 
     return redirect('base:member_list', club_name_slug)
 
