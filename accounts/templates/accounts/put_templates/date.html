@@ -36,7 +36,7 @@
                 {% for i in events %}
                     <p> {{ i.work_title }} </p>
                 {% endfor %}
-                <div class="container">
+                <div class="container" style="margin-bottom: 50px;">
                     <form method="post">
                         {% csrf_token %}
 
@@ -47,24 +47,6 @@
                     <button type="submit">Create Event</button>
                     </form>
                  </div>
-                 <div>
-
-                    <form action="{% url 'accounts:choose' select='1' show='1'%}" method="post" >
-                        {% csrf_token %}
-
-                        <div class="event-input">
-                            <label for="id_month">Month:</label>
-                            {{ mandy.month }}
-                        </div>
-                        <div class="event-input">
-                            <label for="id_year">Year:</label>
-                            {{ mandy.year }}
-                        </div>
-
-                    <input type="submit" value="Check" class="btn btn-primary">
-                </form>
-
-                </div>
 
             </div>
              {% else %}

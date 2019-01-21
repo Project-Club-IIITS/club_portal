@@ -24,7 +24,6 @@ def listForPresident(request, club_name):
     except:
         moderators = []
 
-    print(moderators)
 
     context = {
         'mods': moderators,
