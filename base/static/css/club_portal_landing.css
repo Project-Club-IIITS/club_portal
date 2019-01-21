@@ -68,7 +68,7 @@ canvas {
 
         .heading {
             font-family: 'Montserrat', sans-serif;
-            font-size: 5rem;
+            font-size: 4rem;
             margin: 2rem -0.2rem;
             padding-top: 3rem;
         }
@@ -183,6 +183,7 @@ canvas {
                 font-size: 3rem;
                 margin: 2rem -0.2rem;
                 padding-top: 3rem;
+                line-height: 3rem;
             }
 
             .sub-heading {
@@ -198,4 +199,25 @@ canvas {
             }
 
         }
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .heading{
+      font-size:2rem;
+      margin-top:0rem!important;
+      margin-bottom: 0rem!important;
+  }
+    .heading-container{
+        margin-left:0.2rem !important;
+        margin-right:0.2rem !important;
+        padding-left: 0!important;
+        padding-right: 0!important;
+        padding-top: 9rem!important;
+        padding-bottom: 9rem!important;
+        line-height:3rem!important;
+    }
+    .sub-heading{
+        font-size:1rem;
+        line-height:1.5rem!important;
+    }
+}
 
