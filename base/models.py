@@ -20,9 +20,10 @@ def club_logo_upload(instance, filename):
 
 class Club(models.Model):
     name = models.CharField(max_length=100, validators=[club_name_validator], db_index=True)
+    full_name = models.CharField(max_length=100)
     date_formed = models.DateField(auto_now_add=True)
     email = models.EmailField(null=True, blank=True)
-    about = models.TextField(help_text="Say a few lines about your club", null=True, blank=True)
+    about = models.TextField(help_text="Say a few lines about your club", null=True, blank=True, max_length=500)
     is_active = models.BooleanField(default=True)
     is_supported = models.BooleanField(default=True)
     # num_users = models.IntegerField(default=0)

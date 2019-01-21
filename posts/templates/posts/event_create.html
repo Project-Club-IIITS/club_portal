@@ -11,7 +11,8 @@
 
 {% block content %}
 
-    <div class="container mt-4">
+    <div class="container mt-4" style="margin-top: 5vh;">
+        <h2 style="margin-bottom: 0;">Create Event</h2>
         <form action="" method="POST">
             {% csrf_token %}
             {{ postform.media }}

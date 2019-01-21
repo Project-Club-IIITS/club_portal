@@ -21,28 +21,28 @@ from base.models import ClubModerator, Club, ClubMember, ClubMentor, ClubPreside
 
 @run_in_background
 def send_new_post_notification(request, post):
+    if post.notify_followers:
+        receiver_users = None
+        if post.is_public:
+            receiver_users = [up.user for up in post.club.following_user_profiles.all()]
+        else:
+            receiver_users = [m.user for m in post.club.clubmember_set.all()]
 
-    receiver_users = None
-    if post.is_public:
-        receiver_users = [up.user for up in post.club.following_user_profiles.all()]
-    else:
-        receiver_users = [m.user for m in post.club.clubmember_set.all()]
+        sendNotification(request.user,
+                         post.club,
+                         receiver_users,
+                         "New Post",
+                         "A New Post",
+                         'new_post'
+                         )
 
-    sendNotification(request.user,
-                     post.club,
-                     receiver_users,
-                     "New Post",
-                     "A New Post",
-                     'new_post'
-                     )
-
-    sendEmailNotification(
-        receivers=receiver_users,
-        title="New Post",
-        message="New Post Email",
-        from_email=post.author.email,
-        html_message=""
-    )
+        sendEmailNotification(
+            receivers=receiver_users,
+            title="New Post",
+            message="New Post Email",
+            from_email=post.author.email,
+            html_message=""
+        )
 
 
 class IndexView(TemplateView):
@@ -326,3 +326,23 @@ def club_groups(request, club_name_slug):
 
 def sendNotificationToClub(request):
     pass
+
+
+@login_required
+def follow_club(request, club_name_slug):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    request.user.userprofile.following_clubs.add(club)
+
+    return redirect('posts:club_posts', club_name_slug)
+
+
+@login_required
+def unfollow_club(request, club_name_slug):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    request.user.userprofile.following_clubs.remove(club)
+
+    return redirect('posts:club_posts', club_name_slug)
