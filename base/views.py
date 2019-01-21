@@ -54,7 +54,7 @@ class NotificationView(TemplateView):
 
 
 def club_home(request):
-    return render(request, 'base/club/index.html')
+    return render(request, 'base/all_clubs.html')
 
 
 @login_required
