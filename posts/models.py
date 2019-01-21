@@ -138,5 +138,5 @@ class Event(models.Model):
 @receiver(signals.post_save, sender=Post)
 def create_profile_and_oauth(sender, instance, created, **kwargs):
     if created:
-        instance.encrypted_id = encrypt_id(instance.id)
+        # instance.encrypted_id = encrypt_id(instance.id)
         instance.save()
