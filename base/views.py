@@ -306,6 +306,9 @@ def club_settings(request, club_name_slug):
 
         if club_form.is_valid():
             club = club_form.save()
+            if 'back_img' in request.FILES:
+                club.back_img = request.FILES['back_img']
+                club.save()
             return redirect('base:club_settings', club.slug)
     else:
         club_form = ClubForm(instance=club)

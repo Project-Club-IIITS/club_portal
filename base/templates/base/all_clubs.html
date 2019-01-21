@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 {% load blog_tags %}
 {% load static %}
+{% get_static_prefix as STATIC_URL %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
@@ -12,16 +13,17 @@
     <div class="container">
         <h1 class="text-primary heading pt-5 mt-5 mb-5 font-weight-bold" style="z-index:-1;font-size: 200%;">Clubs</h1>
         <div class="row">
+
             {% for club in clubs %}
                 <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2"
                      onclick="window.location='{% url "posts:club_posts" club.name|clubslug %}'">
                     <div class="card">
                         <div class="image">
-                            {% if club.back_image %}
-                                <img src="{{ club.back_image.url }}"
+                            {% if club.back_img %}
+                                <img src="{{ club.back_img.url }}"
                                      width="100%">
                             {% else %}
-                                <img src="http://assets.materialup.com/uploads/fc97b003-ba72-4c6e-9dd3-19bf5002c244/preview.jpg"
+                                <img src="/static/clubs/images/back_img{{ 6|randomNumber }}.png"
                                      width="100%">
                             {% endif %}
                         </div>

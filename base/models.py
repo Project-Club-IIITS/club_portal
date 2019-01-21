@@ -127,6 +127,13 @@ class EmailProvider(models.Model):
     last_reset = models.DateTimeField(auto_now_add=True)
 
 
+# @receiver(signals.post_save, sender=Club)
+# def random_back_image(sender, instance, created, **kwargs):
+#     if created:
+#
+#         if not hasattr(instance.back_img,'url'):
+#             pass
+
 @receiver(signals.post_save, sender=ClubModerator)
 def moderator_add_member(sender, instance, created, **kwargs):
     # If a user is made a moderator, also make him a member of the club
