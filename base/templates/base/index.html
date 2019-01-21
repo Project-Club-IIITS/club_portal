@@ -57,14 +57,14 @@
                 {% if club_slug %}
 
                     {% if request.user|is_user_moderator:club %}
-                        <li class="nav-item px-3">
+                        <li class="nav-item px-3 mt-2">
                             <a class="nav-link" href="{% url 'base:all_clubs' %}">Club-Admin</a>
                         </li>
                     {% endif %}
                 {% endif %}
                 {% if request.user.is_authenticated %}
 
-                    <li class="nav-item px-3 nav-item-scroll">
+                    <li class="nav-item px-3 nav-item-scroll mt-2">
                         {#                    <a class="nav-link" href="#">Login</a>#}
                         {#                     <img src="{% static "images/download.jpg" %}" alt="image" height="50" width="50" style="border-radius:25px;">#}
                         {#                     <span>Vineet</span>#}
@@ -89,7 +89,7 @@
                             </div>
                         </a>
 
-                        <div class="dropdown-menu dropdown-menu-right mr-5" aria-labelledby="profileDropdown">
+                        <div class="dropdown-menu dropdown-menu-right mr-5 mt-2" aria-labelledby="profileDropdown">
 
                             <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
@@ -115,11 +115,11 @@
                         {#                    </div>#}
                     </li>
                 {% else %}
-                    <li class="nav-item px-3 nav-item-scroll">
+                    <li class="nav-item px-3 nav-item-scroll mt-2">
                         <a class="nav-link"
                            href="{% url 'registration:signup' %}?next={{ request.path }}">Signup</a>
                     </li>
-                    <li class="nav-item px-3 nav-item-scroll">
+                    <li class="nav-item px-3 nav-item-scroll mt-2">
 
                         <a class="nav-link" href="{% url 'registration:login' %}?next={{ request.path }}">Login</a>
                     </li>
@@ -150,7 +150,7 @@
     <section class="container-fluid" id="clubs-container">
         <canvas id="canvas" style="position:absolute!important;z-index:-1!important;"></canvas>
         <div class="container">
-            <h1 class="text-primary display-4 pt-5 mb-5 font-weight-bold" style="z-index:-1;">Clubs</h1>
+            <h1 class="text-primary heading pt-5 mb-5 font-weight-bold" style="z-index:-1;">Clubs</h1>
             <div class="row">
                 {% for club in clubs %}
                     <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2" onclick="window.location='{% url "posts:club_posts" club.name|clubslug %}'">
