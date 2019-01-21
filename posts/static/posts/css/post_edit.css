@@ -1,0 +1,15 @@
+.checkbox {
+    margin-bottom: 80px;
+}
+
+
+.checkbox * {
+    width: 48%;
+    float:left;
+
+    
+}
+
+.helpText {
+    clear:both;
+}

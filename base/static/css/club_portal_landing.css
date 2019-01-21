@@ -1,0 +1,201 @@
+canvas {
+            width: auto!important;
+            height: auto!important;
+        }
+
+        .buttons .btn-hover .color-5 {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .buttons {
+            margin: 0%;
+            text-align: left;
+        }
+
+        .tick{
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            position: absolute;
+            margin-top: -50px;
+            right: 20px;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, .3);
+            color: #fff;
+            font-size: 48px;
+            line-height: 48px;
+            text-align: center;
+            background:#549D3C;
+            -webkit-transition: -webkit-transform .2s ease-in-out;
+            transition: transform .2s ease-in-out;
+        }
+
+        .btn-hover {
+            width: 200px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            height: 55px;
+            text-align: center;
+            border: none;
+            background-size: 300% 100%;
+
+            border-radius: 50px;
+            moz-transition: all .4s ease-in-out;
+            -o-transition: all .4s ease-in-out;
+            -webkit-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+        }
+
+        .btn-hover:hover {
+            background-position: 100% 0;
+            moz-transition: all .4s ease-in-out;
+            -o-transition: all .4s ease-in-out;
+            -webkit-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+        }
+
+        .btn-hover:focus {
+            outline: none;
+        }
+
+        .btn-hover.color-5 {
+            background-image: linear-gradient(to right, #0ba360, #3cba92, #30dd8a, #2bb673);
+            box-shadow: 0 4px 15px 0 rgba(23, 168, 108, 0.75);
+        }
+
+        .heading {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 5rem;
+            margin: 2rem -0.2rem;
+            padding-top: 3rem;
+        }
+
+        .sub-heading {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            line-height: 3rem !important;
+        }
+
+        .heading-container {
+            margin: 0 3rem;
+            padding: 9rem 3rem;
+            width: 75%;
+        }
+
+        .navbar{
+            background-color: #fff ! important;
+            box-shadow:0 0 20px 0 rgba(200,200,200,0.6)
+        }
+
+        .card {
+            display: inline-block;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .15);
+            margin: 20px;
+            position: relative;
+            margin-bottom: 50px;
+            transition: all .2s ease-in-out;
+            cursor:pointer;
+        }
+
+        .card:hover {
+            /*box-shadow: 0 5px 22px 0 rgba(0,0,0,.25);*/
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+            margin-bottom: 54px;
+        }
+
+        .image {
+            height: 200px;
+            opacity: .7;
+            overflow: hidden;
+            transition: all .2s ease-in-out;
+        }
+
+        .image:hover,
+        .card:hover .image {
+            height: 200px;
+            opacity: 1;
+        }
+
+        .text {
+            background: #FFF;
+            padding: 20px;
+            min-height: 200px;
+        }
+
+        .text p {
+            margin-bottom: 0px;
+        }
+
+        .fab {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            position: absolute;
+            margin-top: -50px;
+            right: 20px;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, .3);
+            color: #fff;
+            font-size: 48px;
+            line-height: 48px;
+            text-align: center;
+            background: #0066A2;
+            -webkit-transition: -webkit-transform .2s ease-in-out;
+            transition: transform .2s ease-in-out;
+        }
+
+        .fab:hover {
+            background: #549D3C;
+            cursor: pointer;
+            -ms-transform: rotate(90deg);
+            -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .heading {
+                font-size: 3.5rem;
+            }
+
+            .sub-heading {
+                font-size: 2rem;
+            }
+
+            .heading-container {
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+
+            .heading-container {
+                width: 100%;
+                margin: 0 1rem;
+                padding: 9rem 0rem;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 767px) {
+            .heading {
+                font-family: 'Montserrat', sans-serif;
+                font-size: 3rem;
+                margin: 2rem -0.2rem;
+                padding-top: 3rem;
+            }
+
+            .sub-heading {
+                font-family: 'Montserrat', sans-serif;
+                font-size: 1.4rem;
+                line-height: 2.3rem !important;
+            }
+
+            .heading-container {
+                margin: 0 0.7rem;
+                padding: 0rem 3rem;
+                width: 100%;
+            }
+
+        }
+

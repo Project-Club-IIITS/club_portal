@@ -17,6 +17,7 @@ except ImportError:
     from . import public_settings as secret_settings
 
 import os
+import firebase_admin
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = secret_settings.BASE_DIR
@@ -53,7 +54,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'ckeditor',
+    'ckeditor_uploader',
+    'django_mailbox',
+    'crispy_forms',
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,6 +85,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'base.context_processors.clubs_processor',
             ],
         },
     },
@@ -122,7 +130,7 @@ USE_L10N = True
 USE_TZ = True
 
 LOGIN_URL = 'registration:login'
-LOGIN_REDIRECT_URL = 'base:index'
+LOGIN_REDIRECT_URL = 'posts:posts'
 
 LOGOUT_REDIRECT_URL = 'base:index'
 
@@ -146,6 +154,140 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
+
+CKEDITOR_UPLOAD_PATH = 'media/ckeditor'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'skin': 'moono',
+        # 'skin': 'office2013',
+        'toolbar_Basic': [
+            ['Bold', 'Italic']
+        ],
+        'toolbar_YourCustomToolbarConfig': [
+            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
+            {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
+            {'name': 'forms',
+             'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+                       'HiddenField']},
+            '/',
+            {'name': 'basicstyles',
+             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+            {'name': 'paragraph',
+             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+                       'Language']},
+            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            {'name': 'insert',
+             'items': ['Image','Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak']},
+            '/',
+            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            {'name': 'about', 'items': ['About']},
+            {'name': 'code', 'items': ['CodeSnippet']},
+
+            '/',  # put this to force next toolbar on new line
+            # {'name': 'yourcustomtools', 'items': [
+            #     # put the name of your editor.ui.addButton here
+            #     'Preview',
+            #     'Maximize',
+            #
+            # ]},
+        ],
+        'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
+        # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
+        # 'height': 291,
+        # 'width': '100%',
+        # 'filebrowserWindowHeight': 725,
+        # 'filebrowserWindowWidth': 940,
+        # 'toolbarCanCollapse': True,
+        # 'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
+        'tabSpaces': 4,
+        'extraPlugins': ','.join([
+            # your extra plugins here
+            'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
+            # 'devtools',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath',
+            'codesnippet',
+        ]),
+    }
+}
+
+# CKEDITOR_CONFIGS = {
+#     'default': {
+#         'skin': 'moono',
+#         # 'skin': 'office2013',
+#         'toolbar_Basic': [
+#             ['Source', '-', 'Bold', 'Italic']
+#         ],
+#         'toolbar_YourCustomToolbarConfig': [
+#             {'name': 'document', 'items': ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates']},
+#             {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
+#             {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
+#             {'name': 'forms',
+#              'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button',
+#                        'HiddenField']},
+#             '/',
+#             {'name': 'basicstyles',
+#              'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+#             {'name': 'paragraph',
+#              'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+#                        'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+#                        'Language']},
+#             {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+#             {'name': 'insert',
+#              'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
+#             '/',
+#             {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+#             {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+#             {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+#             {'name': 'about', 'items': ['About']},
+#             '/',  # put this to force next toolbar on new line
+#             {'name': 'yourcustomtools', 'items': [
+#                 # put the name of your editor.ui.addButton here
+#                 'Preview',
+#                 'Maximize',
+#
+#             ]},
+#         ],
+#         'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
+#         # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
+#         # 'height': 291,
+#         # 'width': '100%',
+#         # 'filebrowserWindowHeight': 725,
+#         # 'filebrowserWindowWidth': 940,
+#         # 'toolbarCanCollapse': True,
+#         # 'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
+#         'tabSpaces': 4,
+#         'extraPlugins': ','.join([
+#             'uploadimage', # the upload image feature
+#             # your extra plugins here
+#             'div',
+#             'autolink',
+#             'autoembed',
+#             'embedsemantic',
+#             'autogrow',
+#             # 'devtools',
+#             'widget',
+#             'lineutils',
+#             'clipboard',
+#             'dialog',
+#             'dialogui',
+#             'elementspath'
+#         ]),
+#     }
+# }
+
 
 # JWT Customization
 
@@ -181,3 +323,8 @@ EMAIL_HOST_USER = secret_settings.EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = secret_settings.EMAIL_HOST_PASSWORD
 
 POST_ID_SECRET_LENGTH = secret_settings.POST_ID_SECRET_LENGTH
+
+# Firebase credentials
+
+FIREBASE_CREDENTIALS = firebase_admin.credentials.Certificate(secret_settings.CREDENTIAL_CERTIFICATE_PATH)
+default_app = firebase_admin.initialize_app(FIREBASE_CREDENTIALS)

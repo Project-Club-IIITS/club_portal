@@ -1,0 +1,72 @@
+{% extends 'base/club/admin_base.html' %}
+{% load static %}
+{% block title %}
+Club Members
+{% endblock %}
+
+{% block main_content %}
+    <section>
+        <header class="major">
+            <h2>Pending Requests</h2>
+        </header>
+        <div class="posts">
+            <div class="table-wrapper" style="margin:0 auto;width:100%;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for member in pending_members %}
+                        <tr>
+                            <td>{{ member.user.get_full_name }}</td>
+                            <td>{{ member.user.email }}</td>
+                            <td><a href="{% url 'base:approve_member' club_name_slug member.user.username %}"
+                                   class="button primary small">Accept</a></td>
+                            <td><a href="{% url 'base:remove_member' club_name_slug member.user.username %}"
+                                   class="button small">Reject</a></td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+        <header class="major">
+            <h2>Members</h2>
+        </header>
+        <div class="posts">
+            <div class="table-wrapper" style="margin:0 auto;width:100%;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Year</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for member in members %}
+                        <tr>
+                            <td>{{ member.user.get_full_name }}</td>
+                            <td>{{ member.user.email }}</td>
+                            <td>1</td>
+                            <td><a href="{% url 'base:remove_member' club_name_slug member.user.username %}"
+                                   class="button primary small">Remove</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+
+    </section>
+{% endblock %}

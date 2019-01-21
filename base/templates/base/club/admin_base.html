@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>
+        {% block title %}
+            Club Admin
+        {% endblock %}
+    </title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="{% static 'admin_panel/css/admin_panel.css' %}"/>
+    {% block custom_head %}
+    {% endblock %}
+</head>
+
+<body class="is-preload">
+<div id="wrapper">
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <!-- Section -->
+            {% block main_content %}
+
+            {% endblock %}
+
+        </div>
+    </div>
+
+    {% block main_sidebar %}
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="inner">
+                <nav id="menu">
+                    <header class="major">
+                        <h2>{{ club.name|title }} Admin</h2>
+                    </header>
+                    <ul>
+                        <li><a href="{% url 'base:club_settings' club_name_slug %}">General</a></li>
+                        <li><a href="{% url 'base:member_list' club_name_slug %}">Members</a></li>
+                        <li><a href="{% url 'base:moderator_list' club_name_slug %}">Moderators</a></li>
+                        <li><a href="{% url 'base:pending_posts_list' club_name_slug %}">Posts</a></li>
+                        <li><a href="{% url 'base:club_groups' club_name_slug %}">Groups</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        </div>
+    {% endblock %}
+<!-- Sidebar -->
+{% block mobile_sidebar %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'admin_panel/js/jquery.min.js' %}"></script>
+    <script src="{% static 'admin_panel/js/browser.min.js' %}"></script>
+    <script src="{% static 'admin_panel/js/breakpoints.min.js' %}"></script>
+    <script src="{% static 'admin_panel/js/util.js' %}"></script>
+    <script src="{% static 'admin_panel/js/admin_panel.js' %}"></script>
+{% endblock %}
+
+{% block custom_scripts %}
+
+{% endblock %}
+</body>
+
+</html>

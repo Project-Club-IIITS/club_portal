@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block head %}
+    <title>Edit Poll</title>
+    <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+{% endblock %}
+{% block content %}
+        <div id="main">
+
+        <article class="post">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{ form.media }}
+
+                {{ form.as_p }}
+
+                <input type="submit" value="Save">
+            </form>
+        </article>
+
+        <section id="footer">
+            <ul class="icons">
+                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
+                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
+                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
+                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
+            </ul>
+            <p class="copyright">&copy; CYBERTEAM
+        </section>
+    </div>
+{% endblock %}
