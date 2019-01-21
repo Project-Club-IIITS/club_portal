@@ -24,7 +24,6 @@ def listForPresident(request, club_name):
     except:
         moderators = []
 
-    print(moderators)
 
     context = {
         'mods': moderators,
@@ -137,7 +136,7 @@ def change_password(request):
 def profile(request):
     context = {
         'posts': request.user.post_set.all(),
-        'clubs': request.user.clubmember_set.all()
+        'member_club': request.user.clubmember_set.all()
     }
 
     return render(request, 'accounts/profile.html', context)

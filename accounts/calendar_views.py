@@ -41,7 +41,6 @@ def hello(request, select, show):
 
         trig = select.split('m')
 
-        print(trig)
 
         year = int(trig[0])
         month = int(trig[1])
@@ -123,8 +122,6 @@ def hello(request, select, show):
                             if month_calendar[i][j] == dates_with_works[k] and q[m] == dates_needed[k]:
                                 b[i][j] = [dates_with_works[k], work_on_date[k]]
 
-            print('else')
-            print(form)
             return render(request, 'accounts/put_templates/date.html',
                           {'year_no': str(year) + 'm' + str(month), 'month_cal': month_calendar,
                            'zipped_data': zip(month_calendar, b), 'present_year': year_name, 'form': form,
@@ -185,8 +182,6 @@ def hello(request, select, show):
                             if month_calendar[i][j] == dates_with_works[k] and q[m] == dates_needed[k]:
                                 b[i][j] = [dates_with_works[k], work_on_date[k]]
 
-            print('else')
-            print(form)
             return render(request, 'accounts/put_templates/date.html',
                           {'year_no': str(year) + 'm' + str(month), 'month_cal': month_calendar,
                            'zipped_data': zip(month_calendar, b), 'present_year': year_name, 'form': form,
@@ -246,7 +241,6 @@ def hello(request, select, show):
                         if month_calendar[i][j] == dates_with_works[k] and q[m] == dates_needed[k]:
                             b[i][j] = [dates_with_works[k], work_on_date[k]]
 
-        print('else')
         return render(request, 'accounts/put_templates/date.html',
                       {'year_no': str(year) + 'm' + str(month), 'month_cal': month_calendar,
                        'zipped_data': zip(month_calendar, b), 'present_year': year_name, 'mandy': mandy})
@@ -265,7 +259,6 @@ def date(request, select, show):
         next_y = next_y + 1
     back_m = next_m
     back_y = next_y
-    print(next_m, next_y)
     return grid(request, next_y, next_m)
 
 
@@ -349,7 +342,6 @@ def grid(request, year, month):
             dates_needed.append(d)
             dates_with_works.append(int(d[8:10]))
 
-        print(dates_needed)
 
         for m in range(len(q)):
             for i in range(len(b)):
@@ -408,9 +400,7 @@ def grid(request, year, month):
             dates_needed.append(d)
             dates_with_works.append(int(d[8:10]))
 
-        # print(dates_with_works)
 
-        print(dates_needed)
 
         for m in range(len(q)):
             for i in range(len(b)):
@@ -419,8 +409,6 @@ def grid(request, year, month):
                         if month_calendar[i][j] == dates_with_works[k] and q[m] == dates_needed[k]:
                             b[i][j] = [dates_with_works[k], work_on_date[k]]
 
-        print("my name is laxman ssss")
-        print(form)
         return render(request, 'accounts/put_templates/date.html',
                       {'year_no': str(year) + 'm' + str(month), 'month_cal': month_calendar,
                        'zipped_data': zip(month_calendar, b), 'present_year': year_name, 'mandy': mandy})
