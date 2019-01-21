@@ -191,13 +191,11 @@ canvas {
                 font-size: 1.4rem;
                 line-height: 2.3rem !important;
             }
-
             .heading-container {
                 margin: 0 0.7rem;
                 padding: 0rem 3rem;
                 width: 100%;
             }
-
         }
 
 @media (min-width: 320px) and (max-width: 480px) {
