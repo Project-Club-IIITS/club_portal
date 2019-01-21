@@ -17,7 +17,14 @@
     <!-- Header -->
     <section id="header">
         <header>
-            <span class="image avatar"><img src="images/avatar.jpg" alt=""/></span>
+            <span class="image avatar">
+                {% if request.user.googleauth.profile_pic_link %}
+                    <img src="{{ request.user.googleauth.profile_pic_link }}" alt=""/>
+
+                {% else %}
+                    <img src="images/avatar.jpg" alt=""/>
+                {% endif %}
+            </span>
             <h1 id="logo"><a href="#">{{ request.user.username }}</a></h1>
             <p>I got reprogrammed by a rogue AI<br/>
                 and now I'm totally cray</p>
@@ -80,8 +87,7 @@
                                         {{ post.title }}
                                     </a>
                                 </h4>
-                                <p>Integer eu ante ornare amet commetus vestibulum blandit integer in curae ac faucibus
-                                    integer adipiscing ornare amet.</p>
+                                <p>{{ post.body|striptags|truncatechars:200 }}</p>
                             </div>
                         </article>
                         <hr>

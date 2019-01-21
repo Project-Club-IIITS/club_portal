@@ -137,6 +137,15 @@ class EmailProvider(models.Model):
 #         if not hasattr(instance.back_img,'url'):
 #             pass
 
+@receiver(signals.post_save, sender=ClubMember)
+def member_follow_club(sender, instance, created, **kwargs):
+    # If a user is made a moderator, also make him a member of the club
+    try:
+        instance.user.userprofile.following_clubs.add(instance.club)
+    except IntegrityError:
+        # User is already a member. Do Nothing
+        pass
+
 @receiver(signals.post_save, sender=ClubModerator)
 def moderator_add_member(sender, instance, created, **kwargs):
     # If a user is made a moderator, also make him a member of the club

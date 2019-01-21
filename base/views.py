@@ -92,7 +92,7 @@ def pending_posts_list(request, club_name_slug):
     if not ClubModerator.objects.filter(club=club, user=request.user).exists():
         raise PermissionDenied("You are not allowed to access this page")
 
-    pending_posts = club.post_set.filter(is_approved=False)
+    pending_posts = club.post_set.filter(is_approved=False, is_published=True)
 
     return render(request, 'base/club/pendingPosts.html',
                   {"club": club, "club_name_slug": club_name_slug, "pending_posts": pending_posts})
