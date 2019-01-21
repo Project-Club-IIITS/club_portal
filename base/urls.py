@@ -28,6 +28,9 @@ urlpatterns = [
     path('clubs/<slug:club_name_slug>/moderators/remove/<str:username>/', views.remove_moderator,
          name='remove_moderator'),
 
+    path('clubs/<slug:club_name_slug>/posts/approve/<int:encrypted_id>/', views.approve_post, name="approve_post"),
+    path('clubs/<slug:club_name_slug>/posts/reject/<int:encrypted_id>/', views.reject_post, name="reject_post"),
+
     path('notifications', views.NotificationView.as_view(), name='notifications'),
 
 ]

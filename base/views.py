@@ -7,13 +7,42 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
+
+from posts.models import Post, PostApprover
 from .models import Notification
 
 from .notifications import *
 
+from .utils import run_in_background
 
 from base.forms import ClubForm
 from base.models import ClubModerator, Club, ClubMember, ClubMentor, ClubPresident, ClubSettings
+
+
+@run_in_background
+def send_new_post_notification(request, post):
+
+    receiver_users = None
+    if post.is_public:
+        receiver_users = [up.user for up in post.club.following_user_profiles.all()]
+    else:
+        receiver_users = [m.user for m in post.club.clubmember_set.all()]
+
+    sendNotification(request.user,
+                     post.club,
+                     receiver_users,
+                     "New Post",
+                     "A New Post",
+                     'new_post'
+                     )
+
+    sendEmailNotification(
+        receivers=receiver_users,
+        title="New Post",
+        message="New Post Email",
+        from_email=post.author.email,
+        html_message=""
+    )
 
 
 class IndexView(TemplateView):
@@ -22,6 +51,7 @@ class IndexView(TemplateView):
 
 class NotificationView(TemplateView):
     template_name = "base/notifications.html"
+
 
 def club_home(request):
     return render(request, 'base/club/index.html')
@@ -201,6 +231,49 @@ def remove_moderator(request, club_name_slug, username=None):
 
 
 @login_required
+def approve_post(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    if not ClubModerator.objects.filter(club=club, user=request.user).exists():
+        raise PermissionDenied()
+
+    post = get_object_or_404(Post, club=club, encrypted_id=encrypted_id)
+
+    try:
+
+        post_approver = PostApprover.objects.create(user=request.user, post=post)
+    except IntegrityError:
+        pass
+
+    post.is_approved = True
+
+    post.save()
+
+    send_new_post_notification(request, post)
+
+    return redirect('base:pending_posts_list', club_name_slug)
+
+
+@login_required
+def reject_post(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    if not ClubModerator.objects.filter(club=club, user=request.user).exists():
+        raise PermissionDenied()
+
+    post = get_object_or_404(Post, club=club, encrypted_id=encrypted_id)
+
+    try:
+        post.delete()
+    except:
+        pass
+
+    return redirect('base:pending_posts_list', club_name_slug)
+
+
+@login_required
 def change_president(request, club_name_slug, username):
     club_name = club_name_slug.replace('-', ' ')
     club = get_object_or_404(Club, name=club_name)
@@ -247,7 +320,6 @@ def club_groups(request, club_name_slug):
     club = get_object_or_404(Club, name=club_name)
     if not ClubModerator.objects.filter(club=club, user=request.user).exists():
         raise PermissionDenied("You are not allowed to access this page")
-
 
     return render(request, 'base/club/groups.html', {"club": club, "club_name_slug": club_name_slug, })
 

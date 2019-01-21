@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError, transaction
 from django.contrib.auth.models import User
 
-
 # Create your models here.
 from django.db.models import signals, ProtectedError
 from django.dispatch import receiver
@@ -105,15 +104,14 @@ class Notification(models.Model):
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="sentNotifications")
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True, blank=True)
-    is_read = models.BooleanField(default=False, null=False)
-    receiver = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="receivedNotifications")
+    # is_read = models.BooleanField(default=False, null=False)
+    receivers = models.ManyToManyField(
+        User, related_name="receivedNotifications", blank=True)
 
     title = models.TextField()
     message = models.TextField()
 
     sent_at = models.DateTimeField(auto_now_add=True)
-
 
 
 class EmailProvider(models.Model):
@@ -175,4 +173,3 @@ def member_delete_moderator(sender, instance, **kwargs):
     mod_instance = ClubModerator.objects.filter(user=instance.user, club=instance.club)
     if mod_instance.exists():
         mod_instance.delete()
-

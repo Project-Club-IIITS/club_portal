@@ -4,6 +4,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/css/post_edit.css' %}">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 {% endblock %}
@@ -32,23 +33,30 @@
             </div>
 
 
-            <div class="row mt-4">
-                <div class="col-lg-6">
+            {#            <div class="">#}
+            <div class="checkbox">
 
-                    <span>{{ postform.is_public.label_tag }}</span>
-                    <span style="float:left;">{{ postform.is_public }}</span>
-                    {{ postform.is_public.help_text }}
-                </div>
+                <span>{{ postform.is_public.label_tag }}</span>
+                <span style="float:left;">{{ postform.is_public }}</span>
+                {{ postform.is_public.help_text }}
+            </div>
+            <div class="checkbox">
                 {{ postform.is_published.label_tag }}
                 <span class="mt-2">{{ postform.is_published }}</span>
                 <span class="helpText">{{ postform.is_published.help_text }}</span>
             </div>
+            {#            </div>#}
 
+            <div class="checkbox">
+                {{ postform.notify_followers.label_tag }}
+                <span class="mt-2">{{ postform.notify_followers }}</span>
+                <span class="helpText">{{ postform.notify_followers.help_text }}</span>
+            </div>
 
             <div class="row mb-4 mt-4">
                 <div class="col-lg-6">
                     <strong>Start Date:</strong>
-                    {{ eventform.start_date|add_class:"datepicker" }}
+                    {{ eventform.start_date|add_class:"datepicker"|attr:"autocomplete:off" }}
                 </div>
                 <div class="col-lg-6">
                     <strong>End Date:</strong>
@@ -76,5 +84,5 @@
         $(function () {
             $(".datepicker").datepicker();
         });
-      </script>
+    </script>
 {% endblock %}

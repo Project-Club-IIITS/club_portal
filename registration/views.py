@@ -23,6 +23,7 @@ from firebase_admin import auth
 def signup(request):
     fireform = FirebaseGoogleLoginForm()
     if request.method == 'POST':
+
         form = SignupForm(request.POST)
 
         if form.is_valid():

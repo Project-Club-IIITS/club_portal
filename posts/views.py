@@ -8,6 +8,7 @@ from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 
 from base.models import Club, ClubModerator, ClubMember
+from base.views import send_new_post_notification
 from posts.models import PinnedPost, Post, Vote, Option, Poll, Event, PostApprover
 from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm, EventForm, PollCreateForm
 
@@ -292,6 +293,7 @@ def create_post_generic(request, club, post_create_form):
         post.is_approved = True
         post.save()
 
+
     return post
 
 
@@ -307,6 +309,8 @@ def create_post(request, club_name_slug):
         form = PostCreationForm(request.POST, request.FILES)
         if form.is_valid():
             post = create_post_generic(request, club, form)
+            if post.is_approved:
+                send_new_post_notification(request, post)
             return redirect("posts:post_detail", club_name_slug, post.encrypted_id)
 
     else:
@@ -359,6 +363,9 @@ def create_poll(request, club_name_slug):
             option_count = int(request.POST['hidden-count'])
             for option in range(option_count):
                 Option.objects.create(poll=poll, option_text=request.POST[str(option)])
+
+            if post.is_approved:
+                send_new_post_notification(request, post)
 
             return redirect('posts:post_detail', club_name_slug, post.encrypted_id)
     else:
@@ -431,6 +438,9 @@ def events_create(request, club_name_slug):
             event = eventform.save(commit=False)
             event.post = post
             event.save()
+
+            if post.is_approved:
+                send_new_post_notification(request, post)
 
             return redirect('posts:post_detail', club_name_slug, post.encrypted_id)
 

@@ -40,6 +40,8 @@ class Post(models.Model):
     is_published = models.BooleanField(default=True,
                                        help_text="Uncheck this if you just want to save as draft and edit later before publishing")
 
+    notify_followers = models.BooleanField(default=False)
+
     liked_users = models.ManyToManyField(User, related_name='liked_users', blank=True)
 
     class Meta:
@@ -53,6 +55,9 @@ class PostApprover(models.Model):
     post = models.OneToOneField(to=Post, on_delete=models.CASCADE)
     user = models.ForeignKey(to=User, on_delete=models.PROTECT)
     approved_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ['post', 'user']
 
 class PostUpdate(models.Model):
     author = models.ForeignKey(to=User, on_delete=models.CASCADE)
@@ -138,5 +143,5 @@ class Event(models.Model):
 @receiver(signals.post_save, sender=Post)
 def create_profile_and_oauth(sender, instance, created, **kwargs):
     if created:
-        # instance.encrypted_id = encrypt_id(instance.id)
+        instance.encrypted_id = encrypt_id(instance.id)
         instance.save()

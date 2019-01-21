@@ -43,14 +43,12 @@
                 </div>
 
                 <div class="checkbox">
-                    <label for="follower">Notify Followers</label>
-                    <input type="checkbox" name="gender" id="follower"><br>
+                    {{ form.notify_followers.label_tag }}
+                    {{ form.notify_followers }}
+                    <span class="helpText">{{ form.notify_followers.help_text }}</span>
                 </div>
 
-                <div class="checkbox">
-                    <label for="member">Notify Members</label>
-                    <input type="checkbox" name="gender" id="member"><br>
-                </div>
+
 
                 <br><br>
                 <input type="submit" value="Submit">
