@@ -45,16 +45,20 @@
 
                 </div>
 
-                <div class="checkbox" style="clear: both;">
+                <div class="checkbox">
                     {{ post_create_form.is_published.label_tag }}
                     {{ post_create_form.is_published }}
                     <span class="helpText">{{ post_create_form.is_published.help_text }}</span>
                 </div>
 
 
-            {{ poll_create_form.as_p }}
-
-
+                <div class="checkbox">
+                    <label for="id_track_votes">Track Votes:</label>
+                    {{ poll_create_form.track_votes }}
+                    <span class="helpText">
+                        {{ poll_create_form.track_votes.help_text }}
+                    </span>
+                </div>
 
 {#            <input type="text" name="title" class="poll-question" placeholder="Enter The Poll Question" required>#}
             <br><br>
@@ -90,8 +94,8 @@
 <script>
     let nameCounter = 1;
 
-    document.querySelector('.add-option').addEventListener('click', function() {
-
+    document.querySelector('.add-option').addEventListener('click', function(e) {
+        e.preventDefault();
         let liNode = document.createElement('li');
         let inputField = document.createElement('input');
 

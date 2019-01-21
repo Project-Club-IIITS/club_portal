@@ -3,18 +3,57 @@
 
 {% block head %}
     <title>Post_Add</title>
-     <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/css/post_edit.css' %}">
 {% endblock %}
 
 {% block content %}
     <div id="main">
 
         <article class="post">
-            <form method="post" enctype="multipart/form-data">
+
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.media }}
-                {{ form.as_p }}
-                <input type="submit" value="create">
+
+                <p>
+                    <span style="font-weight: 600;">Title:</span>
+                    {{ form.title }}
+                    {{ form.title.help_text }}
+                </p>
+
+                <span style="font-weight: 600; vertical-align: top;margin-right:10px;">Body:</span>
+                {{ form.body }}
+
+                <div class="checkbox" style="margin-top:30px;">
+                    <label for="id_cover_image">Cover image:</label>
+                    <input type="file" name="cover_image" accept="image/*" id="id_cover_image">
+                </div>
+
+                <div class="checkbox">
+                    {{ form.is_public.label_tag }}
+                    {{ form.is_public }}
+                    {{ form.is_public.help_text }}
+                </div>
+
+                <div class="checkbox">
+                    {{ form.is_published.label_tag }}
+                    {{ form.is_published }}
+                    <span class="helpText">{{ form.is_published.help_text }}</span>
+                </div>
+
+                <div class="checkbox">
+                    <label for="follower">Notify Followers</label>
+                    <input type="checkbox" name="gender" id="follower"><br>
+                </div>
+
+                <div class="checkbox">
+                    <label for="member">Notify Members</label>
+                    <input type="checkbox" name="gender" id="member"><br>
+                </div>
+
+                <br><br>
+                <input type="submit" value="Submit">
             </form>
         </article>
 
