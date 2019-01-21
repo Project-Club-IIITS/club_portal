@@ -104,7 +104,7 @@ class ClubMember(models.Model):
 class Notification(models.Model):
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="sentNotifications")
-    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True, blank=True)
     is_read = models.BooleanField(default=False, null=False)
     receiver = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="receivedNotifications")
@@ -113,7 +113,7 @@ class Notification(models.Model):
     message = models.TextField()
 
     sent_at = models.DateTimeField(auto_now_add=True)
-# message
+
 
 
 class EmailProvider(models.Model):
