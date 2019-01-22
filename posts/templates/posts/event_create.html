@@ -16,7 +16,6 @@
     <div class="container mt-4" style="margin-top: 100px">
 
 
-
         {% for field, errors in postform.errors.items %}
             {% for error in errors %}
                 {{ field }} - {{ error }}
@@ -32,7 +31,7 @@
 
 
         <h2 style="margin-bottom: 0;">Create Event</h2>
-        <form action="" method="POST">
+        <form method="POST" id="event_submit" novalidate>
             {% csrf_token %}
             {{ postform.media }}
 
@@ -76,11 +75,13 @@
             <div class="row mb-4 mt-4">
                 <div class="col-lg-6">
                     <strong>Start Date:</strong>
-                    <input type="text" name="start_date_0" class="datepicker" size="10" required id="id_start_date_0" autocomplete="off">
-               </div>
+                    <input type="text" name="start_date" class="datepicker" size="10" required id="id_start_date"
+                           autocomplete="off">
+                </div>
                 <div class="col-lg-6">
                     <strong>End Date:</strong>
-                    <input type="text" name="end_date_0" class="datepicker" size="10" required id="id_end_date_0" autocomplete="off">
+                    <input type="text" name="end_date" class="datepicker" size="10" required id="id_end_date"
+                           autocomplete="off">
                 </div>
             </div>
 
@@ -88,11 +89,11 @@
             <div class="row mb-4 mt-4">
                 <div class="col-lg-6">
                     <label for="id_start_time_1">Start Time</label>
-                    <input type="text" id="id_start_date_1" name="start_date_1" class="timepicker">
+                    <input type="text" id="id_start_time" name="start_time" class="timepicker">
                 </div>
                 <div class="col-lg-6">
                     <label for="id_end_time_1">End Time</label>
-                    <input type="text" id="id_end_date_1" name="end_date_1" class="timepicker">
+                    <input type="text" id="id_end_time" name="end_time" class="timepicker">
                 </div>
             </div>
 
@@ -116,8 +117,31 @@
     <script src="{% static 'posts/js/jquery.timepicker.js' %}"></script>
     <script>
         $(function () {
-            $(".timepicker").timepicker()
             $(".datepicker").datepicker();
+            $('.timepicker').timepicker({'timeFormat': 'H:i:s'});
+
+
+            document.querySelector('#event_submit').addEventListener('submit', (e) => {
+
+                const startTime = document.querySelector('#id_start_time').value;
+                const endTime = document.querySelector('#id_end_time').value;
+
+                const startDay = document.querySelector('#id_start_date');
+                const endDay = document.querySelector('#id_end_date');
+
+
+                startDay.value = `${startDay.value} ${startTime}`;
+                endDay.value = `${endDay.value} ${endTime}`;
+
+
+                console.log(document.querySelector('#id_start_date').value);
+                console.log(document.querySelector('#id_end_date').value);
+            });
+
         });
     </script>
+
+
+
+
 {% endblock %}
