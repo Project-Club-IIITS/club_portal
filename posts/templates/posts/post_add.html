@@ -8,10 +8,10 @@
 {% endblock %}
 
 {% block content %}
-    <div id="main">
+    <div id="main" style="margin-top: 5vh;">
 
         <article class="post">
-
+            <h2 style="margin-bottom: 0;">Create Post</h2>
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.media }}

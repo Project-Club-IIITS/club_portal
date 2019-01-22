@@ -20,9 +20,10 @@ def club_logo_upload(instance, filename):
 
 class Club(models.Model):
     name = models.CharField(max_length=100, validators=[club_name_validator], db_index=True)
+    full_name = models.CharField(max_length=100)
     date_formed = models.DateField(auto_now_add=True)
     email = models.EmailField(null=True, blank=True)
-    about = models.TextField(help_text="Say a few lines about your club", null=True, blank=True)
+    about = models.TextField(help_text="Say a few lines about your club", null=True, blank=True, max_length=500)
     is_active = models.BooleanField(default=True)
     is_supported = models.BooleanField(default=True)
     # num_users = models.IntegerField(default=0)
@@ -39,6 +40,9 @@ class Club(models.Model):
     def calc_users(self):
         self.num_users = self.clubmember_set.all().count()
         self.save()
+
+    class Meta:
+        ordering = ['name']
 
 
 class ClubSettings(models.Model):
@@ -125,6 +129,13 @@ class EmailProvider(models.Model):
 
     last_reset = models.DateTimeField(auto_now_add=True)
 
+
+# @receiver(signals.post_save, sender=Club)
+# def random_back_image(sender, instance, created, **kwargs):
+#     if created:
+#
+#         if not hasattr(instance.back_img,'url'):
+#             pass
 
 @receiver(signals.post_save, sender=ClubModerator)
 def moderator_add_member(sender, instance, created, **kwargs):

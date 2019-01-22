@@ -9,6 +9,8 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name="base/index.html"), name='index'),
     path('clubs/', views.club_home, name='all_clubs'),
     path('clubs/<slug:club_name_slug>/request-join/', views.request_join, name='club_request_join'),
+    path('clubs/<slug:club_name_slug>/follow/', views.follow_club, name='club_follow'),
+    path('clubs/<slug:club_name_slug>/unfollow/', views.unfollow_club, name='club_unfollow'),
 
     path('clubs/<slug:club_name_slug>/admin/settings/', views.club_settings, name='club_settings'),
     path('clubs/<slug:club_name_slug>/admin/members/', views.member_list, name='member_list'),

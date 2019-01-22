@@ -21,7 +21,7 @@
 
             <div class="posts">
                 <div class="row">
-                    <form action="" method="post">
+                    <form action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div style='display:flex;justify-content: left; margin-bottom: 2vh;'>
                             <div style="margin-right:10px;font-size: 1.3em;">
@@ -29,6 +29,17 @@
                             </div>
                             <div>
                                 {{ club_form.name|add_class:"search-input" }}
+                            </div>
+                            <div style="color: crimson; font-weight: bolder">
+
+                            </div>
+                        </div>
+                        <div style='display:flex;justify-content: left; margin-bottom: 2vh;'>
+                            <div style="margin-right:10px;font-size: 1.3em;">
+                                <label for="{{ club_form.full_name.id_for_label }}">Club Full Name:</label>
+                            </div>
+                            <div>
+                                {{ club_form.full_name|add_class:"search-input" }}
                             </div>
                             <div style="color: crimson; font-weight: bolder">
 

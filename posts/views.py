@@ -342,6 +342,7 @@ def edit_post(request, encrypted_id):
     return render(request, "posts/post_edit.html", context)
 
 
+@login_required
 def create_poll(request, club_name_slug):
     club_name = club_name_slug.replace('-', ' ')
     club = get_object_or_404(Club, name=club_name)
@@ -378,7 +379,7 @@ def create_poll(request, club_name_slug):
                                                       }
                   )
 
-
+@login_required
 def edit_poll(request, encrypted_id):
     poll = get_object_or_404(Poll, poll__encrypted_id=encrypted_id)
     if poll.post.author != request.user:
@@ -403,24 +404,24 @@ def edit_poll(request, encrypted_id):
                   )
 
 
-@login_required
-def edit_poll(request, encrypted_id):
-    post = get_object_or_404(Post, encrypted_id=encrypted_id)
-    if post.author != request.user:
-        raise PermissionDenied("You are not authorized to edit this post")
-
-    if request.method == "POST":
-        form = PostCreationForm(request.POST, request.FILES, instance=post)
-        if form.is_valid():
-            form.save()
-            club_name_slug = post.club.name.replace(' ', '-')
-            return redirect("posts:post_detail", club_name_slug, post.encrypted_id)
-    else:
-        form = PostCreationForm(instance=post)
-    context = {
-        "form": form,
-    }
-    return render(request, "posts/post_edit.html", context)
+# @login_required
+# def edit_poll(request, encrypted_id):
+#     post = get_object_or_404(Post, encrypted_id=encrypted_id)
+#     if post.author != request.user:
+#         raise PermissionDenied("You are not authorized to edit this post")
+#
+#     if request.method == "POST":
+#         form = PostCreationForm(request.POST, request.FILES, instance=post)
+#         if form.is_valid():
+#             form.save()
+#             club_name_slug = post.club.name.replace(' ', '-')
+#             return redirect("posts:post_detail", club_name_slug, post.encrypted_id)
+#     else:
+#         form = PostCreationForm(instance=post)
+#     context = {
+#         "form": form,
+#     }
+#     return render(request, "posts/post_edit.html", context)
 
 
 @login_required
