@@ -16,7 +16,7 @@
             {% for option in poll.option_set.all %}
                 <div class="poll-option option">
                     <input type="radio" id="option_{{ option.id }}"
-                    name="option" value="{{ option.id }}">
+                    name="option" value="{{ option.id }}" style="visibility: hidden;">
                     <label for="option_{{ option.id }}">{{ option.option_text }}</label>
                 </div>
             {% empty %}
