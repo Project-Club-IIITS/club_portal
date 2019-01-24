@@ -358,10 +358,10 @@ def post_email_temp(request):
     post = Post.objects.all()[0]
     current_site = get_current_site(request)
 
-    # send_mail(subject="Welcome", message="Welcome text email", from_email="support@no-reply.clubs.iiits.in",
-    #           recipient_list=['adwaitthattey@gmail.com'],
-    #           html_message=render_to_string('base/emails/new_post.html', {"post": post, "domain": current_site.domain})
-    #           )
+    send_mail(subject="Welcome", message="Welcome text email", from_email="support@no-reply.clubs.iiits.in",
+              recipient_list=['adwaitthattey@gmail.com'],
+              html_message=render_to_string('base/emails/new_post.html', {"post": post, "domain": current_site.domain})
+              )
 
-    return render(request, 'base/emails/new_post.html', {"post": post, "domain": current_site.domain})
-    # return HttpResponse("email sent")
+    # return render(request, 'base/emails/new_post.html', {"post": post, "domain": current_site.domain})
+    return HttpResponse("email sent")
