@@ -360,4 +360,5 @@ def post_email_temp(request):
               html_message=render_to_string('base/emails/new_post.html', {"post": post})
               )
 
+    # return render(request, 'base/emails/new_post.html', {"post":post})
     return HttpResponse("email sent")
