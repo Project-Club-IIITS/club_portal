@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load blog_tags %}
 
 {% block head %}
     <title>Profile</title>
@@ -27,10 +28,11 @@
             </span>
             <h1 id="logo"><a href="#">{{ request.user.username }}</a></h1>
             <p>I got reprogrammed by a rogue AI<br/>
-                and now I'm totally cray</p>
+                and now I'm totally crazy</p>
         </header>
         <nav id="nav">
             <ul>
+                <li><a href="{% url 'posts:posts' %}">Back to Posts</a></li>
                 <li><a href="#one" class="active">About</a></li>
                 <li><a href="#two">Posts</a></li>
             </ul>
@@ -59,19 +61,32 @@
                         </li>
                     </ul>
 
-                    <h3>Clubs Follow:
-                        {% for clubMember in member_club %}
+                    <h3>Following:
+                        {% for club in request.user.userprofile.following_clubs.all %}
                             <span style="margin-left:1rem;cursor: none;"
-                                  class="btn btn-success">{{ clubMember.club.name }}</span>
+                                  class="btn btn-success">{{ club.name }}</span>
                         {% endfor %}
                     </h3>
 
+                    <h3>Member:
+                        {% for cm in request.user.clubmember_set.all %}
+                            <span style="margin-left:1rem;cursor: none;"
+                                  class="btn btn-success">{{ cm.club.name }}</span>
+                        {% endfor %}
+                    </h3>
+
+                    <h3>Moderator:
+                        {% for cm in request.user.clubmoderator_set.all %}
+                            <span style="margin-left:1rem;cursor: none;"
+                                  class="btn btn-success">{{ cm.club.name }}</span>
+                        {% endfor %}
+                    </h3>
                 </div>
             </section>
 
             <section id="two">
                 <div class="container">
-                    <h3 style="text-align: center;">Your Posts</h3>
+                    <h3 style="text-align: center;">My Posts</h3>
                     <p>
                         All Your posts will be displayed here !
                     </p>
@@ -83,8 +98,11 @@
                         <article>
                             <div class="inner">
                                 <h4>
-                                    <a href="">
+                                    <a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}">
                                         {{ post.title }}
+                                        {% if post.is_published is False %}
+                                        <span style="margin-left:1rem;cursor: none;" class="btn btn-success">Draft</span>
+                                        {% endif %}
                                     </a>
                                 </h4>
                                 <p>{{ post.body|striptags|truncatechars:200 }}</p>

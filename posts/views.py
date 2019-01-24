@@ -2,12 +2,16 @@ from time import sleep
 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db import IntegrityError
 from django.db.models import F
 from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
 
 from base.models import Club, ClubModerator, ClubMember
+from base.utils import run_in_background
 from base.views import send_new_post_notification
 from posts.models import PinnedPost, Post, Vote, Option, Poll, Event, PostApprover
 from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm, EventForm, PollCreateForm
@@ -23,6 +27,7 @@ def redirect_with_args(url, GET_args=None, *args, **kwargs):
             response['Location'] += str(key) + '=' + str(GET_args[key])
 
     return response
+
 
 
 @login_required
@@ -293,7 +298,7 @@ def create_post_generic(request, club, post_create_form):
         post.is_approved = True
         post.save()
 
-
+    post.subscribed_users.add(request.user)
     return post
 
 
@@ -379,6 +384,7 @@ def create_poll(request, club_name_slug):
                                                       }
                   )
 
+
 @login_required
 def edit_poll(request, encrypted_id):
     poll = get_object_or_404(Poll, poll__encrypted_id=encrypted_id)
@@ -453,6 +459,7 @@ def events_create(request, club_name_slug):
     return render(request, 'posts/event_create.html', {'postform': postform, 'eventform': eventform})
 
 
+@login_required
 def events_edit(request, encrypted_id):
     post = get_object_or_404(Post, encrypted_id=encrypted_id)
     event = get_object_or_404(Event, post=post)
@@ -474,6 +481,7 @@ def events_edit(request, encrypted_id):
     return render(request, 'posts/event_create.html', {'postform': postform, 'eventform': eventform})
 
 
+@login_required
 def interested_event(request):
     ret_data = {
         'add_success': False
@@ -490,3 +498,83 @@ def interested_event(request):
         ret_data['add_success'] = True
 
     return JsonResponse(ret_data)
+
+
+@login_required
+def subscribe(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    post.subscribed_users.add(request.user)
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)
+
+
+@login_required
+def unsubscribe(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    post.subscribed_users.remove(request.user)
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)
+
+
+@login_required
+def event_interested(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    if hasattr(post, 'event'):
+        post.event.interested_users.add(request.user)
+
+    post.subscribed_users.add(request.user)
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)
+
+
+@login_required
+def event_uninterested(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    if hasattr(post, 'event'):
+        post.event.interested_users.remove(request.user)
+
+    post.subscribed_users.remove(request.user)
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)
+
+
+@login_required
+def pin_post(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    if ClubModerator.objects.filter(user=request.user, club=club).exists():
+        try:
+            PinnedPost.objects.create(post=post)
+        except IntegrityError:
+            pass
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)
+
+
+@login_required
+def unpin_post(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    if ClubModerator.objects.filter(user=request.user, club=club).exists():
+        try:
+            PinnedPost.objects.filter(post=post).delete()
+        except:
+            pass
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)

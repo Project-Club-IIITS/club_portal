@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             {% if request.user in post.subscribed_users.all %}
-                                <a href="#" class="button subscribed" id="subscribe_button" onclick='subscribe_toggle()'
+                                <a href="{% url 'posts:unsubscribe' club_name_slug post.encrypted_id %}" class="button subscribed" id="subscribe_button" onclick='subscribe_toggle()'
                                    style=" box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important "
                                    title="Receive notifications about updates">
                                     Subscribed
@@ -39,7 +39,7 @@
                                 </script>
 
                             {% else %}
-                                <a href="#" class="button" id="subscribe_button" onclick='subscribe_toggle()'
+                                <a href="{% url 'posts:subscribe' club_name_slug post.encrypted_id %}" class="button" id="subscribe_button" onclick='subscribe_toggle()'
                                    title="Receive notifications about updates">
                                     Subscribe
                                 </a><br>
@@ -123,11 +123,11 @@
 
                 <div style="margin-top: 2vh;margin-bottom: 2vh;">
                     {% if request.user not in post.event.interested_users.all %}
-                        <a href="javascript:void(0);"
+                        <a href="{% url 'posts:event_interested' club_name_slug post.encrypted_id %}"
                            class="button large event-intersdted-button" style="text-decoration: none;">Are you going?
                         </a>
                     {% else %}
-                        <a href="javascript:void(0);"
+                        <a href="{% url 'posts:event_uninterested' club_name_slug post.encrypted_id %}"
                            class="button large event-intersdted-button"
                            style="text-decoration: none;box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important">You
                             are going
@@ -149,14 +149,17 @@
                         <span style="font-size: 2rem;margin-left: 3px;color:#007bff;">28</span>
                     </li>
 
-                    <li>
-                        <button type="submit" class="fabutton comment" value="comment">
-                            <i class="far fa-comment fa-3x"></i>
-                        </button>
-                        <span style="font-size: 2rem;margin-left: 3px;color:#007bff;">128</span>
-                    </li>
-                    <li><a href="#" class="icon fa-thumbtack fa-3x"></a></li>
-
+{#                    <li>#}
+{#                        <button type="submit" class="fabutton comment" value="comment">#}
+{#                            <i class="far fa-comment fa-3x"></i>#}
+{#                        </button>#}
+{#                        <span style="font-size: 2rem;margin-left: 3px;color:#007bff;">128</span>#}
+{#                    </li>#}
+                {% if post.pinnedpost %}
+                    <li title="This post is pinned"><a href="{% url 'posts:unpin-post' club_name_slug post.encrypted_id %}" class="fas fa-thumbtack fa-3x" style="color: #2ebaae ; text-decoration: none !important;"></a></li>
+                {% else %}
+                    <li title="Click to pin post"><a href="{% url 'posts:pin-post' club_name_slug post.encrypted_id %}" class="fa fa-thumbtack fa-3x" style="text-decoration: none !important;"></a></li>
+                {% endif %}
                 </ul>
             </footer>
         </article>

@@ -315,8 +315,8 @@ SIMPLE_JWT = {
 
 # Emails
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = secret_settings.EMAIL_HOST
 EMAIL_PORT = secret_settings.EMAIL_PORT
 EMAIL_USE_TLS = True

@@ -5,6 +5,7 @@ from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 
@@ -350,3 +351,13 @@ def unfollow_club(request, club_name_slug):
     request.user.userprofile.following_clubs.remove(club)
 
     return redirect('posts:club_posts', club_name_slug)
+
+
+def post_email_temp(request):
+    post = Post.objects.all()[0]
+    send_mail(subject="Welcome", message="Welcome text email", from_email="support@no-reply.clubs.iiits.in",
+              recipient_list=['adwaitthattey@gmail.com'],
+              html_message=render_to_string('base/emails/new_post.html', {"post": post})
+              )
+
+    return HttpResponse("email sent")

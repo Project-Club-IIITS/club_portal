@@ -35,4 +35,6 @@ urlpatterns = [
 
     path('notifications', views.NotificationView.as_view(), name='notifications'),
 
+    path('post_email_temp', views.post_email_temp)
+
 ]

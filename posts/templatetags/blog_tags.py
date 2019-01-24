@@ -4,7 +4,6 @@ import random
 
 register = template.Library()
 
-
 @register.filter
 def clubslug(value):
     return value.replace(' ', '-')
