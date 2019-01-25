@@ -57,8 +57,16 @@
                         <br>
 
                         <div>
+                        {% if post.poll %}
+                            <a href="{% url 'posts:poll-edit' post.encrypted_id %}" class="button"
+                               style="text-align:right;">Edit</a>
+                            {% elif post.event %}
+                            <a href="{% url 'posts:events_edit' post.encrypted_id %}" class="button"
+                               style="text-align:right;">Edit</a>
+                            {% else %}
                             <a href="{% url 'posts:post-edit' post.encrypted_id %}" class="button"
                                style="text-align:right;">Edit</a>
+                            {% endif %}
                         </div>
                     {% endif %}
                 </div>
@@ -316,7 +324,7 @@
             });
         });
 
-        
+
 
 
         {#document.querySelector('.event-intersdted-button').addEventListener('click', function (e) {#}

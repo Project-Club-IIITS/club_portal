@@ -23,8 +23,9 @@ class Post(models.Model):
 
     title = models.CharField(max_length=150)
     body = RichTextUploadingField(blank=True)  # from ckeditor
-    is_public = models.BooleanField(default=False)
-    cover_image = models.ImageField(null=True, blank=True)
+    is_public = models.BooleanField(default=False, help_text="If unchecked, only the members of the club can see this post.")
+    cover_image = models.ImageField(null=True, blank=True,
+                                    help_text="Images larger than 2.2 MBs are not supported. \n You may get a 403 error if you try to upload images that exceed this size")
 
     created = models.DateTimeField(auto_now_add=True)
 
@@ -40,7 +41,7 @@ class Post(models.Model):
     is_published = models.BooleanField(default=True,
                                        help_text="Uncheck this if you just want to save as draft and edit later before publishing")
 
-    notify_followers = models.BooleanField(default=False)
+    notify_followers = models.BooleanField(default=False, help_text="Check this if you would like to send email to all members/followers about this new post")
 
     liked_users = models.ManyToManyField(User, related_name='liked_users', blank=True)
 
