@@ -122,6 +122,7 @@ def hello(request, select, show):
                             if month_calendar[i][j] == dates_with_works[k] and q[m] == dates_needed[k]:
                                 b[i][j] = [dates_with_works[k], work_on_date[k]]
 
+            print(b)
             return render(request, 'accounts/put_templates/date.html',
                           {'year_no': str(year) + 'm' + str(month), 'month_cal': month_calendar,
                            'zipped_data': zip(month_calendar, b), 'present_year': year_name, 'form': form,
@@ -182,6 +183,7 @@ def hello(request, select, show):
                             if month_calendar[i][j] == dates_with_works[k] and q[m] == dates_needed[k]:
                                 b[i][j] = [dates_with_works[k], work_on_date[k]]
 
+            print(b)
             return render(request, 'accounts/put_templates/date.html',
                           {'year_no': str(year) + 'm' + str(month), 'month_cal': month_calendar,
                            'zipped_data': zip(month_calendar, b), 'present_year': year_name, 'form': form,
@@ -240,7 +242,7 @@ def hello(request, select, show):
                     for k in range(len(dates_with_works)):
                         if month_calendar[i][j] == dates_with_works[k] and q[m] == dates_needed[k]:
                             b[i][j] = [dates_with_works[k], work_on_date[k]]
-
+        print(b)
         return render(request, 'accounts/put_templates/date.html',
                       {'year_no': str(year) + 'm' + str(month), 'month_cal': month_calendar,
                        'zipped_data': zip(month_calendar, b), 'present_year': year_name, 'mandy': mandy})
