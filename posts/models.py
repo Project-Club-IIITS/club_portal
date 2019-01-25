@@ -48,7 +48,7 @@ class Post(models.Model):
     no_likes = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ['-last_updated']
+        ordering = ['-created']
 
     def __str__(self):
         return self.title[:20]

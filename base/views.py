@@ -11,7 +11,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 
 from posts.models import Post, PostApprover, PostUpdate
-from .models import Notification
+from .models import Notification, News
 
 from .notifications import *
 
@@ -368,3 +368,11 @@ def post_email_temp(request):
     current_site = get_current_site(request)
     return render(request, 'base/emails/welcome.html', {"domain": current_site.domain, "admin": admin})
     # return HttpResponse("email sent")
+
+
+def index(request):
+    news = News.objects.all()
+
+    top_posts = Post.objects.filter(is_approved=True, is_public=True, is_published=True)[10:]
+
+    return render(request, 'base/index.html', {"news": news, "posts": top_posts})

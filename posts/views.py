@@ -123,7 +123,7 @@ def club_posts(request, club_name_slug):
 
     # print(posts)
 
-    paginator = Paginator(posts, 3)
+    paginator = Paginator(posts, 10)
     try:
         posts_page = paginator.page(page)
 

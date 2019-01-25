@@ -45,7 +45,7 @@
 
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Select Club
+                            Club Posts
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             {% for club in clubs %}
@@ -95,7 +95,7 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown" style="margin-right:6%!important;">
                                 <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
                                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-                                <a class="dropdown-item" href="{% url 'accounts:index' select='1' show='1'%}">Calendar</a>
+                                <a class="dropdown-item" href="{% url 'accounts:index' select='1' show='1'%}">Calendar <sup style="color: red">Beta</sup></a>
 
                             </div>
 

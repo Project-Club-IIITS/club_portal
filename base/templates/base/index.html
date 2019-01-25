@@ -2,6 +2,7 @@
 {% load static %}
 {% load blog_tags %}
 {% load club_user_filters %}
+{% load humanize %}
 
 
 {% block head %}
@@ -145,7 +146,8 @@
                 </div>
                 <div class="buttons" style="float: left; margin-top: 2vh; margin-left: 1vw;">
                     <a class="explore" href="{% url 'base:all_clubs' %}">
-                        <button class="btn-hover color-5" onclick="window.location='{% url "base:all_clubs" %}'"><span class="font-weight-bold">Clubs</span></button>
+                        <button class="btn-hover color-5" onclick="window.location='{% url "base:all_clubs" %}'"><span
+                                class="font-weight-bold">Clubs</span></button>
                     </a>
                 </div>
             </div>
@@ -159,118 +161,88 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 h-50 w-100 p-2">
                     <h1 class="text-primary sub-heading font-weight-bold" style="z-index:-1;">News</h1>
                     <div class="news-corner">
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">Just Now</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">2 mins</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">39 mins</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">29th December, 2018</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">29th December, 2018</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">29th December, 2018</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
-                    </div>
+                        {% for n in news %}
+                            <div class="news-headline" onclick="">
+                                <pre class="small text-success">{{ n.created_time|naturaltime }}</pre>
+                                <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">{{ n.message }}</p>
+                            </div>
+                            <hr/>
+                        {% empty %}
+                            <div class="news-headline" onclick="">
+                                <pre class="small text-success">-</pre>
+                                <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">
+                                    No Recent News</p>
+                            </div>
+                            <hr/>
+                        {% endfor %}
 
+                    </div>
 
 
                 </div>
                 <div class="col-lg-8 col-md-6 col-sm-12 h-50 w-100 p-2">
-                    <h1 class="text-primary sub-heading font-weight-bold" style="z-index:-1;">Top Posts</h1>
+                    <h1 class="text-primary sub-heading font-weight-bold" style="z-index:-1;">Recent Posts</h1>
                     <div class="news-corner">
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">Just Now</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">2 mins</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">39 mins</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">29th December, 2018</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">29th December, 2018</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
-                        <div class="news-headline" onclick="">
-                            <pre class="small text-success">29th December, 2018</pre>
-                            <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam</p>
-                        </div>
-                        <hr/>
+                        {% for p in posts %}
+                            <div class="news-headline" onclick="">
+                                <pre class="small text-success">{{ p.club.name }} | {{ p.created|naturaltime }}</pre>
+                                <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">
+                                    {{ p.title }}</p>
+                            </div>
+                            <hr/>
+                        {% empty %}
+                            <div class="news-headline" onclick="">
+                                <pre class="small text-success">-</pre>
+                                <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">
+                                    No Recent Posts</p>
+                            </div>
+                            <hr/>
+                        {% endfor %}
+
                     </div>
                 </div>
             </div>
-{#            <h1 class="text-primary heading pt-5 mb-5 font-weight-bold" style="z-index:-1;">Clubs</h1>#}
-{#            <div class="row">#}
-{#                {% for club in clubs %}#}
-{#                    <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2" onclick="window.location='{% url "posts:club_posts" club.name|clubslug %}'">#}
-{#                        <div class="card">#}
-{##}
-{#                            <div class="image">#}
-{#                                {% if club.logo %}#}
-{#                                    <img src="{{ club.logo.url }}"#}
-{#                                         width="100%">#}
-{##}
-{#                                {% else %}#}
-{#                                    <img src="http://assets.materialup.com/uploads/fc97b003-ba72-4c6e-9dd3-19bf5002c244/preview.jpg"#}
-{#                                         width="100%">#}
-{#                                {% endif %}#}
-{#                            </div>#}
-{##}
-{#                            <div class="text">#}
-{##}
-{#                                {% if request.user.is_authenticated %}#}
-{#                                    {% if club in request.user.following_clubs.all %}#}
-{#                                        <div class="tick">&#10003;</div>#}
-{#                                    {% else %}#}
-{#                                        <div class="fab">&#43;</div>#}
-{#                                    {% endif %}#}
-{#                                    {% else %}#}
-{#                                    <div class="fab">&#43;</div>#}
-{##}
-{#                                {% endif %}#}
-{#                                <h3>{{ club.name }}</h3>#}
-{#                                <p>{{ club.about|safe }}</p>#}
-{##}
-{##}
-{#                            </div>#}
-{##}
-{#                        </div>#}
-{#                    </div>#}
-{#                {% endfor %}#}
-{##}
-{##}
-{#            </div>#}
+            {#            <h1 class="text-primary heading pt-5 mb-5 font-weight-bold" style="z-index:-1;">Clubs</h1>#}
+            {#            <div class="row">#}
+            {#                {% for club in clubs %}#}
+            {#                    <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2" onclick="window.location='{% url "posts:club_posts" club.name|clubslug %}'">#}
+            {#                        <div class="card">#}
+            {##}
+            {#                            <div class="image">#}
+            {#                                {% if club.logo %}#}
+            {#                                    <img src="{{ club.logo.url }}"#}
+            {#                                         width="100%">#}
+            {##}
+            {#                                {% else %}#}
+            {#                                    <img src="http://assets.materialup.com/uploads/fc97b003-ba72-4c6e-9dd3-19bf5002c244/preview.jpg"#}
+            {#                                         width="100%">#}
+            {#                                {% endif %}#}
+            {#                            </div>#}
+            {##}
+            {#                            <div class="text">#}
+            {##}
+            {#                                {% if request.user.is_authenticated %}#}
+            {#                                    {% if club in request.user.following_clubs.all %}#}
+            {#                                        <div class="tick">&#10003;</div>#}
+            {#                                    {% else %}#}
+            {#                                        <div class="fab">&#43;</div>#}
+            {#                                    {% endif %}#}
+            {#                                    {% else %}#}
+            {#                                    <div class="fab">&#43;</div>#}
+            {##}
+            {#                                {% endif %}#}
+            {#                                <h3>{{ club.name }}</h3>#}
+            {#                                <p>{{ club.about|safe }}</p>#}
+            {##}
+            {##}
+            {#                            </div>#}
+            {##}
+            {#                        </div>#}
+            {#                    </div>#}
+            {#                {% endfor %}#}
+            {##}
+            {##}
+            {#            </div>#}
         </div>
 
     </section>
