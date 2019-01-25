@@ -221,7 +221,7 @@
                                     {{ request.user.get_full_name }}
                                 </div>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown" style="margin-right:6%!important;">
                                 <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
                                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                                 <a class="dropdown-item" href="{% url 'accounts:date' select='1' show='1'%}">Calendar</a>
@@ -297,18 +297,18 @@
 
 <div id="wrapper">
     <!-- Footer -->
-    <footer id="footer">
+    <footer id="footer" class="bg-light">
         <div class="inner">
             <ul class="icons .d-none .d-lg-block">
-                <li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
-                <li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
-                <li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
-                <li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
-                <li><a href="#" class="icon alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+                <li><i class="fab fa-twitter"></i></li>
+                <li><i class="fab fa-facebook-f"></i></li>
+                <li><i class="fab fa-instagram"></i></li>
+                <li><i class="fab fa-github"></i></li>
+                <li><i class="fab fa-linkedin-in"></i></li>
             </ul>
             <ul class="copyright">
-                <li>&copy; Copyright 2019</li>
-                <li>Made By <span>IOTA</span></li>
+                <li class="text-dark">&copy; Copyright 2019</li>
+                <li class="text-dark">Made By <span class="author-name">IOTA</span></li>
             </ul>
         </div>
     </footer>
