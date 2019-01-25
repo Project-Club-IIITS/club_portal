@@ -12,7 +12,7 @@ from django.template.loader import render_to_string
 
 from base.models import Club, ClubModerator, ClubMember
 from base.utils import run_in_background
-from base.views import send_new_post_notification
+from base.views import send_new_post_notification, send_post_update_notification
 from posts.models import PinnedPost, Post, Vote, Option, Poll, Event, PostApprover
 from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm, EventForm, PollCreateForm
 
@@ -27,7 +27,6 @@ def redirect_with_args(url, GET_args=None, *args, **kwargs):
             response['Location'] += str(key) + '=' + str(GET_args[key])
 
     return response
-
 
 
 @login_required
@@ -210,6 +209,7 @@ def post_update(request, club_name_slug, encrypted_id):
         p_update.post = post
         p_update.author = request.user
         p_update.save()
+        send_post_update_notification(request, p_update)
         return redirect('posts:post_detail', post.club.name.replace(' ', '-'), post.encrypted_id)
 
 
@@ -273,9 +273,11 @@ def likePost(request, id):
 
         if (is_liked):
             post.liked_users.remove(request.user)
+            post.reclac_likes()
             is_liked = False
         else:
             post.liked_users.add(request.user)
+            post.reclac_likes()
             is_liked = True
 
         post.save()

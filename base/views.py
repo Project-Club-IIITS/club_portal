@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 
-from posts.models import Post, PostApprover
+from posts.models import Post, PostApprover, PostUpdate
 from .models import Notification
 
 from .notifications import *
@@ -38,13 +38,18 @@ def send_new_post_notification(request, post):
                          'new_post'
                          )
 
-        sendEmailNotification(
-            receivers=receiver_users,
-            title="New Post",
-            message="New Post Email",
-            from_email=post.author.email,
-            html_message=""
-        )
+        sendNewPostEmailNotification(request, receiver_users, post)
+
+
+@run_in_background
+def send_post_approved_notification(request, post):
+    sendPostApprovedEmailNotification(request, post)
+
+
+@run_in_background
+def send_post_update_notification(request, post_update):
+    receivers = list(post_update.post.subscribed_users.all())
+    sendPostUpdateEmailNotification(request, receivers, post_update)
 
 
 class IndexView(TemplateView):
@@ -246,6 +251,9 @@ def approve_post(request, club_name_slug, encrypted_id):
     try:
 
         post_approver = PostApprover.objects.create(user=request.user, post=post)
+        send_post_approved_notification(request, post)
+        send_new_post_notification(request, post)
+
     except IntegrityError:
         pass
 
@@ -355,13 +363,8 @@ def unfollow_club(request, club_name_slug):
 
 
 def post_email_temp(request):
-    post = Post.objects.all()[0]
+    post_update = PostUpdate.objects.all()[0]
+    admin = User.objects.get(username='admin')
     current_site = get_current_site(request)
-
-    send_mail(subject="Welcome", message="Welcome text email", from_email="support@no-reply.clubs.iiits.in",
-              recipient_list=['adwaitthattey@gmail.com'],
-              html_message=render_to_string('base/emails/new_post.html', {"post": post, "domain": current_site.domain})
-              )
-
-    # return render(request, 'base/emails/new_post.html', {"post": post, "domain": current_site.domain})
-    return HttpResponse("email sent")
+    return render(request, 'base/emails/welcome.html', {"domain": current_site.domain, "admin": admin})
+    # return HttpResponse("email sent")

@@ -146,7 +146,7 @@
                                 <i class="far fa-heart fa-3x" id="like"></i>
                             {% endif %}
                         </button>
-                        <span style="font-size: 2rem;margin-left: 3px;color:#007bff;">28</span>
+                        <span style="font-size: 2rem;margin-left: 3px;color:#007bff;">{{ post.no_likes }}</span>
                     </li>
 
 {#                    <li>#}
@@ -316,9 +316,7 @@
             });
         });
 
-        document.querySelector('.comment').addEventListener('click', function () {
-            console.log('clicked!');
-        });
+        
 
 
         {#document.querySelector('.event-intersdted-button').addEventListener('click', function (e) {#}

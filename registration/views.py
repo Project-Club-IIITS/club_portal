@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.urls import resolve
 
+from base.notifications import sendWelcomeEmail
 from base.utils import run_in_background
 from posts.models import Post
 from .forms import SignupForm, FirebaseGoogleLoginForm
@@ -21,14 +22,11 @@ from .models import EmailConfirmation
 
 from firebase_admin import auth
 
+
 @run_in_background
-def send_welcome_email():
-    post = Post.objects.all[0]
-    send_mail(subject="Welcome", message="Welcome text email", from_email="support@no-reply.clubs.iiits.in",
-              recipient_list=['adwaitthattey@gmail.com'],
-              html_message=render_to_string('base/emails/new_post.html', {"post": post})
-              )
-    pass
+def send_welcome_email(request, user):
+    sendWelcomeEmail(request, user)
+
 
 def signup(request):
     fireform = FirebaseGoogleLoginForm()
@@ -117,6 +115,8 @@ def google_signin(request):
                     new_user.last_name = " ".join(names[1:])
 
                 new_user.save()
+
+                send_welcome_email(request, new_user)
 
             else:
                 # Login
