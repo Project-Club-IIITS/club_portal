@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block head %}
     <title>Post_Add</title>
@@ -28,12 +29,15 @@
                 <div class="checkbox" style="margin-top:30px;">
                     <label for="id_cover_image">Cover image:</label>
                     <input type="file" name="cover_image" accept="image/*" id="id_cover_image">
+
+                    <p>{{ form.cover_image.help_text|linebreaksbr }}</p>
                 </div>
+
 
                 <div class="checkbox">
                     {{ form.is_public.label_tag }}
                     {{ form.is_public }}
-                    {{ form.is_public.help_text }}
+                    <span class="helpText">{{ form.is_public.help_text }}</span>
                 </div>
 
                 <div class="checkbox">

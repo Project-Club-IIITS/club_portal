@@ -10,6 +10,7 @@ from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 
+from accounts.models import Calendar
 from base.models import Club, ClubModerator, ClubMember
 from base.utils import run_in_background
 from base.views import send_new_post_notification, send_post_update_notification
@@ -358,12 +359,16 @@ def create_poll(request, club_name_slug):
         raise PermissionDenied("Only Club members can create posts")
 
     if request.method == "POST":
+        print(request.POST)
         post_create_form = PostCreationForm(request.POST, request.FILES)
         poll_create_form = PollCreateForm(request.POST)
 
         if post_create_form.is_valid() and poll_create_form.is_valid():
             post = create_post_generic(request, club, post_create_form)
 
+            if 'cover_image' in request.FILES:
+                post.cover_image = request.FILES['cover_image']
+                post.save()
             poll = poll_create_form.save(commit=False)
             poll.post = post
             poll.save()
@@ -389,7 +394,7 @@ def create_poll(request, club_name_slug):
 
 @login_required
 def edit_poll(request, encrypted_id):
-    poll = get_object_or_404(Poll, poll__encrypted_id=encrypted_id)
+    poll = get_object_or_404(Poll, post__encrypted_id=encrypted_id)
     if poll.post.author != request.user:
         raise PermissionDenied("You are not authorized to edit this post")
 
@@ -401,13 +406,17 @@ def edit_poll(request, encrypted_id):
             poll_form.save()
             post_form.save()
 
+            return redirect('posts:post_detail', poll.post.club.name.replace(' ', '-'), poll.post.encrypted_id )
+
     else:
-        post_form = PostCreationForm()
-        poll_form = PollCreateForm()
+        post_form = PostCreationForm(instance=poll.post)
+        poll_form = PollCreateForm(instance=poll)
+
 
     return render(request, 'posts/poll_create.html', {'club_name': poll.post.club.name.replace(' ', '-'),
                                                       "post_create_form": post_form,
-                                                      "poll_create_form": poll_form
+                                                      "poll_create_form": poll_form,
+                                                      "edit": True
                                                       }
                   )
 
@@ -440,7 +449,7 @@ def events_create(request, club_name_slug):
     if not ClubMember.objects.filter(club=club, user=request.user).exists():
         raise PermissionDenied("Only Club members can create posts")
     if request.method == "POST":
-        postform = PostCreationForm(data=request.POST)
+        postform = PostCreationForm(request.POST, request.FILES)
         eventform = EventForm(data=request.POST)
         if postform.is_valid() and eventform.is_valid():
             post = create_post_generic(request, club, postform)
@@ -499,6 +508,8 @@ def interested_event(request):
         event.save()
         ret_data['add_success'] = True
 
+    Calendar.objects.create(date=event.start_date.date(), work_title=event.post.title, user=user)
+
     return JsonResponse(ret_data)
 
 
@@ -509,6 +520,7 @@ def subscribe(request, club_name_slug, encrypted_id):
     post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
 
     post.subscribed_users.add(request.user)
+
 
     return redirect('posts:post_detail', club_name_slug, encrypted_id)
 
