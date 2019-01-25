@@ -1,19 +1,55 @@
 from time import sleep
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
+
+from posts.models import Post, PostApprover, PostUpdate
 from .models import Notification
 
 from .notifications import *
 
+from .utils import run_in_background
 
 from base.forms import ClubForm
 from base.models import ClubModerator, Club, ClubMember, ClubMentor, ClubPresident, ClubSettings
+
+
+@run_in_background
+def send_new_post_notification(request, post):
+    if post.notify_followers:
+        receiver_users = None
+        if post.is_public:
+            receiver_users = [up.user for up in post.club.following_user_profiles.all()]
+        else:
+            receiver_users = [m.user for m in post.club.clubmember_set.all()]
+
+        sendNotification(request.user,
+                         post.club,
+                         receiver_users,
+                         "New Post",
+                         "A New Post",
+                         'new_post'
+                         )
+
+        sendNewPostEmailNotification(request, receiver_users, post)
+
+
+@run_in_background
+def send_post_approved_notification(request, post):
+    sendPostApprovedEmailNotification(request, post)
+
+
+@run_in_background
+def send_post_update_notification(request, post_update):
+    receivers = list(post_update.post.subscribed_users.all())
+    sendPostUpdateEmailNotification(request, receivers, post_update)
 
 
 class IndexView(TemplateView):
@@ -22,6 +58,7 @@ class IndexView(TemplateView):
 
 class NotificationView(TemplateView):
     template_name = "base/notifications.html"
+
 
 def club_home(request):
     return render(request, 'base/all_clubs.html')
@@ -62,7 +99,7 @@ def pending_posts_list(request, club_name_slug):
     if not ClubModerator.objects.filter(club=club, user=request.user).exists():
         raise PermissionDenied("You are not allowed to access this page")
 
-    pending_posts = club.post_set.filter(is_approved=False)
+    pending_posts = club.post_set.filter(is_approved=False, is_published=True)
 
     return render(request, 'base/club/pendingPosts.html',
                   {"club": club, "club_name_slug": club_name_slug, "pending_posts": pending_posts})
@@ -106,10 +143,11 @@ def remove_member(request, club_name_slug, username):
     if not members.exists():
         return HttpResponse("This user does not exist")
 
-    try:
-        members[0].delete()
-    except:
-        return HttpResponse("Some error occured. Try again later")
+    if members[0].user != club.clubpresident.user:
+        try:
+            members[0].delete()
+        except:
+            return HttpResponse("Some error occured. Try again later")
 
     return redirect('base:member_list', club_name_slug)
 
@@ -201,6 +239,52 @@ def remove_moderator(request, club_name_slug, username=None):
 
 
 @login_required
+def approve_post(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    if not ClubModerator.objects.filter(club=club, user=request.user).exists():
+        raise PermissionDenied()
+
+    post = get_object_or_404(Post, club=club, encrypted_id=encrypted_id)
+
+    try:
+
+        post_approver = PostApprover.objects.create(user=request.user, post=post)
+        send_post_approved_notification(request, post)
+        send_new_post_notification(request, post)
+
+    except IntegrityError:
+        pass
+
+    post.is_approved = True
+
+    post.save()
+
+    send_new_post_notification(request, post)
+
+    return redirect('base:pending_posts_list', club_name_slug)
+
+
+@login_required
+def reject_post(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    if not ClubModerator.objects.filter(club=club, user=request.user).exists():
+        raise PermissionDenied()
+
+    post = get_object_or_404(Post, club=club, encrypted_id=encrypted_id)
+
+    try:
+        post.delete()
+    except:
+        pass
+
+    return redirect('base:pending_posts_list', club_name_slug)
+
+
+@login_required
 def change_president(request, club_name_slug, username):
     club_name = club_name_slug.replace('-', ' ')
     club = get_object_or_404(Club, name=club_name)
@@ -233,6 +317,9 @@ def club_settings(request, club_name_slug):
 
         if club_form.is_valid():
             club = club_form.save()
+            if 'back_img' in request.FILES:
+                club.back_img = request.FILES['back_img']
+                club.save()
             return redirect('base:club_settings', club.slug)
     else:
         club_form = ClubForm(instance=club)
@@ -248,9 +335,36 @@ def club_groups(request, club_name_slug):
     if not ClubModerator.objects.filter(club=club, user=request.user).exists():
         raise PermissionDenied("You are not allowed to access this page")
 
-
     return render(request, 'base/club/groups.html', {"club": club, "club_name_slug": club_name_slug, })
 
 
 def sendNotificationToClub(request):
     pass
+
+
+@login_required
+def follow_club(request, club_name_slug):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    request.user.userprofile.following_clubs.add(club)
+
+    return redirect('posts:club_posts', club_name_slug)
+
+
+@login_required
+def unfollow_club(request, club_name_slug):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+
+    request.user.userprofile.following_clubs.remove(club)
+
+    return redirect('posts:club_posts', club_name_slug)
+
+
+def post_email_temp(request):
+    post_update = PostUpdate.objects.all()[0]
+    admin = User.objects.get(username='admin')
+    current_site = get_current_site(request)
+    return render(request, 'base/emails/welcome.html', {"domain": current_site.domain, "admin": admin})
+    # return HttpResponse("email sent")

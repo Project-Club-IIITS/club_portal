@@ -4,14 +4,34 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/css/post_edit.css' %}">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <link rel="stylesheet" href="{% static 'posts/css/jquery.timepicker.min.css' %}">
 
 {% endblock %}
 
 {% block content %}
 
-    <div class="container mt-4">
-        <form action="" method="POST">
+    <div class="container mt-4" style="margin-top: 100px">
+
+
+        {% for field, errors in postform.errors.items %}
+            {% for error in errors %}
+                {{ field }} - {{ error }}
+            {% endfor %}
+        {% endfor %}
+
+        {% for field, errors in eventform.errors.items %}
+            {% for error in errors %}
+                {{ field }} - {{ error }}
+            {% endfor %}
+        {% endfor %}
+
+
+
+        <h2 style="margin-bottom: 0;">Create Event</h2>
+        <form method="POST" id="event_submit" novalidate>
             {% csrf_token %}
             {{ postform.media }}
 
@@ -32,33 +52,56 @@
             </div>
 
 
-            <div class="row mt-4">
-                <div class="col-lg-6">
+            {#            <div class="">#}
+            <div class="checkbox">
 
-                    <span>{{ postform.is_public.label_tag }}</span>
-                    <span style="float:left;">{{ postform.is_public }}</span>
-                    {{ postform.is_public.help_text }}
-                </div>
+                <span>{{ postform.is_public.label_tag }}</span>
+                <span style="float:left;">{{ postform.is_public }}</span>
+                {{ postform.is_public.help_text }}
+            </div>
+            <div class="checkbox">
                 {{ postform.is_published.label_tag }}
                 <span class="mt-2">{{ postform.is_published }}</span>
                 <span class="helpText">{{ postform.is_published.help_text }}</span>
+            </div>
+            {#            </div>#}
+
+            <div class="checkbox">
+                {{ postform.notify_followers.label_tag }}
+                <span class="mt-2">{{ postform.notify_followers }}</span>
+                <span class="helpText">{{ postform.notify_followers.help_text }}</span>
+            </div>
+
+            <div class="row mb-4 mt-4">
+                <div class="col-lg-6">
+                    <strong>Start Date:</strong>
+                    <input type="text" name="start_date" class="datepicker" size="10" required id="id_start_date"
+                           autocomplete="off">
+                </div>
+                <div class="col-lg-6">
+                    <strong>End Date:</strong>
+                    <input type="text" name="end_date" class="datepicker" size="10" required id="id_end_date"
+                           autocomplete="off">
+                </div>
             </div>
 
 
             <div class="row mb-4 mt-4">
                 <div class="col-lg-6">
-                    <strong>Start Date:</strong>
-                    {{ eventform.start_date|add_class:"datepicker" }}
+                    <label for="id_start_time_1">Start Time</label>
+                    <input type="text" id="id_start_time" name="start_time" class="timepicker">
                 </div>
                 <div class="col-lg-6">
-                    <strong>End Date:</strong>
-                    {{ eventform.end_date|add_class:"datepicker" }}
+                    <label for="id_end_time_1">End Time</label>
+                    <input type="text" id="id_end_time" name="end_time" class="timepicker">
                 </div>
             </div>
+
             <div>
                 <strong>Venue:</strong>
                 {{ eventform.venue }}
             </div>
+
 
             <input type='submit' style="margin-top: 10px;">
         </form>
@@ -71,10 +114,34 @@
 {% block script %}
 
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
+    <script src="{% static 'posts/js/jquery.timepicker.js' %}"></script>
     <script>
         $(function () {
             $(".datepicker").datepicker();
+            $('.timepicker').timepicker({'timeFormat': 'H:i:s'});
+
+
+            document.querySelector('#event_submit').addEventListener('submit', (e) => {
+
+                const startTime = document.querySelector('#id_start_time').value;
+                const endTime = document.querySelector('#id_end_time').value;
+
+                const startDay = document.querySelector('#id_start_date');
+                const endDay = document.querySelector('#id_end_date');
+
+
+                startDay.value = `${startDay.value} ${startTime}`;
+                endDay.value = `${endDay.value} ${endTime}`;
+
+
+                console.log(document.querySelector('#id_start_date').value);
+                console.log(document.querySelector('#id_end_date').value);
+            });
+
         });
-      </script>
+    </script>
+
+
+
+
 {% endblock %}

@@ -33,7 +33,7 @@ class EventForm(forms.ModelForm):
 class PostCreationForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "body", "cover_image", 'is_public', 'is_published')
+        fields = ("title", "body", "cover_image", 'is_public', 'is_published', 'notify_followers')
 
 
 class PostUpdateForm(forms.ModelForm):

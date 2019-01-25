@@ -2,12 +2,17 @@ from time import sleep
 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db import IntegrityError
 from django.db.models import F
 from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
 
 from base.models import Club, ClubModerator, ClubMember
+from base.utils import run_in_background
+from base.views import send_new_post_notification, send_post_update_notification
 from posts.models import PinnedPost, Post, Vote, Option, Poll, Event, PostApprover
 from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm, EventForm, PollCreateForm
 
@@ -204,6 +209,7 @@ def post_update(request, club_name_slug, encrypted_id):
         p_update.post = post
         p_update.author = request.user
         p_update.save()
+        send_post_update_notification(request, p_update)
         return redirect('posts:post_detail', post.club.name.replace(' ', '-'), post.encrypted_id)
 
 
@@ -267,9 +273,11 @@ def likePost(request, id):
 
         if (is_liked):
             post.liked_users.remove(request.user)
+            post.reclac_likes()
             is_liked = False
         else:
             post.liked_users.add(request.user)
+            post.reclac_likes()
             is_liked = True
 
         post.save()
@@ -292,6 +300,7 @@ def create_post_generic(request, club, post_create_form):
         post.is_approved = True
         post.save()
 
+    post.subscribed_users.add(request.user)
     return post
 
 
@@ -307,6 +316,8 @@ def create_post(request, club_name_slug):
         form = PostCreationForm(request.POST, request.FILES)
         if form.is_valid():
             post = create_post_generic(request, club, form)
+            if post.is_approved:
+                send_new_post_notification(request, post)
             return redirect("posts:post_detail", club_name_slug, post.encrypted_id)
 
     else:
@@ -338,6 +349,7 @@ def edit_post(request, encrypted_id):
     return render(request, "posts/post_edit.html", context)
 
 
+@login_required
 def create_poll(request, club_name_slug):
     club_name = club_name_slug.replace('-', ' ')
     club = get_object_or_404(Club, name=club_name)
@@ -360,6 +372,9 @@ def create_poll(request, club_name_slug):
             for option in range(option_count):
                 Option.objects.create(poll=poll, option_text=request.POST[str(option)])
 
+            if post.is_approved:
+                send_new_post_notification(request, post)
+
             return redirect('posts:post_detail', club_name_slug, post.encrypted_id)
     else:
         post_create_form = PostCreationForm()
@@ -372,6 +387,7 @@ def create_poll(request, club_name_slug):
                   )
 
 
+@login_required
 def edit_poll(request, encrypted_id):
     poll = get_object_or_404(Poll, poll__encrypted_id=encrypted_id)
     if poll.post.author != request.user:
@@ -396,24 +412,24 @@ def edit_poll(request, encrypted_id):
                   )
 
 
-@login_required
-def edit_poll(request, encrypted_id):
-    post = get_object_or_404(Post, encrypted_id=encrypted_id)
-    if post.author != request.user:
-        raise PermissionDenied("You are not authorized to edit this post")
-
-    if request.method == "POST":
-        form = PostCreationForm(request.POST, request.FILES, instance=post)
-        if form.is_valid():
-            form.save()
-            club_name_slug = post.club.name.replace(' ', '-')
-            return redirect("posts:post_detail", club_name_slug, post.encrypted_id)
-    else:
-        form = PostCreationForm(instance=post)
-    context = {
-        "form": form,
-    }
-    return render(request, "posts/post_edit.html", context)
+# @login_required
+# def edit_poll(request, encrypted_id):
+#     post = get_object_or_404(Post, encrypted_id=encrypted_id)
+#     if post.author != request.user:
+#         raise PermissionDenied("You are not authorized to edit this post")
+#
+#     if request.method == "POST":
+#         form = PostCreationForm(request.POST, request.FILES, instance=post)
+#         if form.is_valid():
+#             form.save()
+#             club_name_slug = post.club.name.replace(' ', '-')
+#             return redirect("posts:post_detail", club_name_slug, post.encrypted_id)
+#     else:
+#         form = PostCreationForm(instance=post)
+#     context = {
+#         "form": form,
+#     }
+#     return render(request, "posts/post_edit.html", context)
 
 
 @login_required
@@ -432,6 +448,9 @@ def events_create(request, club_name_slug):
             event.post = post
             event.save()
 
+            if post.is_approved:
+                send_new_post_notification(request, post)
+
             return redirect('posts:post_detail', club_name_slug, post.encrypted_id)
 
 
@@ -442,6 +461,7 @@ def events_create(request, club_name_slug):
     return render(request, 'posts/event_create.html', {'postform': postform, 'eventform': eventform})
 
 
+@login_required
 def events_edit(request, encrypted_id):
     post = get_object_or_404(Post, encrypted_id=encrypted_id)
     event = get_object_or_404(Event, post=post)
@@ -463,6 +483,7 @@ def events_edit(request, encrypted_id):
     return render(request, 'posts/event_create.html', {'postform': postform, 'eventform': eventform})
 
 
+@login_required
 def interested_event(request):
     ret_data = {
         'add_success': False
@@ -479,3 +500,83 @@ def interested_event(request):
         ret_data['add_success'] = True
 
     return JsonResponse(ret_data)
+
+
+@login_required
+def subscribe(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    post.subscribed_users.add(request.user)
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)
+
+
+@login_required
+def unsubscribe(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    post.subscribed_users.remove(request.user)
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)
+
+
+@login_required
+def event_interested(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    if hasattr(post, 'event'):
+        post.event.interested_users.add(request.user)
+
+    post.subscribed_users.add(request.user)
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)
+
+
+@login_required
+def event_uninterested(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    if hasattr(post, 'event'):
+        post.event.interested_users.remove(request.user)
+
+    post.subscribed_users.remove(request.user)
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)
+
+
+@login_required
+def pin_post(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    if ClubModerator.objects.filter(user=request.user, club=club).exists():
+        try:
+            PinnedPost.objects.create(post=post)
+        except IntegrityError:
+            pass
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)
+
+
+@login_required
+def unpin_post(request, club_name_slug, encrypted_id):
+    club_name = club_name_slug.replace('-', ' ')
+    club = get_object_or_404(Club, name=club_name)
+    post = get_object_or_404(Post, encrypted_id=encrypted_id, club=club)
+
+    if ClubModerator.objects.filter(user=request.user, club=club).exists():
+        try:
+            PinnedPost.objects.filter(post=post).delete()
+        except:
+            pass
+
+    return redirect('posts:post_detail', club_name_slug, encrypted_id)

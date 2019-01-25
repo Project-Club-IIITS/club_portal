@@ -40,7 +40,11 @@ class Post(models.Model):
     is_published = models.BooleanField(default=True,
                                        help_text="Uncheck this if you just want to save as draft and edit later before publishing")
 
+    notify_followers = models.BooleanField(default=False)
+
     liked_users = models.ManyToManyField(User, related_name='liked_users', blank=True)
+
+    no_likes = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['-last_updated']
@@ -48,11 +52,19 @@ class Post(models.Model):
     def __str__(self):
         return self.title[:20]
 
+    def reclac_likes(self):
+        self.no_likes = self.liked_users.count()
+        self.save()
+
 
 class PostApprover(models.Model):
     post = models.OneToOneField(to=Post, on_delete=models.CASCADE)
     user = models.ForeignKey(to=User, on_delete=models.PROTECT)
     approved_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ['post', 'user']
+
 
 class PostUpdate(models.Model):
     author = models.ForeignKey(to=User, on_delete=models.CASCADE)
@@ -107,6 +119,7 @@ class Option(models.Model):
     def __str__(self):
         return self.poll.post.title[:10] + "... : " + self.option_text + ":" + str(self.num_votes)
 
+
 class Vote(models.Model):
     poll = models.ForeignKey(to=Poll, on_delete=models.CASCADE)
     option = models.ForeignKey(Option, null=True, blank=True, on_delete=models.CASCADE)
@@ -118,6 +131,7 @@ class Vote(models.Model):
 
     def __str__(self):
         return self.user.username + "-" + self.poll.post.title[:10] + "..."
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -134,9 +148,8 @@ class Event(models.Model):
     interested_users = models.ManyToManyField(User, blank=True)
 
 
-
 @receiver(signals.post_save, sender=Post)
 def create_profile_and_oauth(sender, instance, created, **kwargs):
     if created:
-        # instance.encrypted_id = encrypt_id(instance.id)
+        instance.encrypted_id = encrypt_id(instance.id)
         instance.save()

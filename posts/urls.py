@@ -25,11 +25,18 @@ urlpatterns = [
     path('<slug:club_name_slug>/<int:encrypted_id>/issue-update', views.post_update, name="post-update"),
 
     path('<slug:club_name_slug>/<int:encrypted_id>/vote', views.cast_vote, name='cast-vote'),
+    path('<slug:club_name_slug>/<int:encrypted_id>/subscribe', views.subscribe, name='subscribe'),
+    path('<slug:club_name_slug>/<int:encrypted_id>/unsubscribe', views.unsubscribe, name='unsubscribe'),
+    path('<slug:club_name_slug>/<int:encrypted_id>/event_interested', views.event_interested, name='event_interested'),
+    path('<slug:club_name_slug>/<int:encrypted_id>/event_not_interested', views.event_uninterested,
+         name='event_uninterested'),
 
     path('<slug:club_name_slug>/events/create', views.events_create, name="events_create"),
 
-    path('ajax/interested_event', views.interested_event, name="interested_event"),
+    # path('ajax/interested_event', views.interested_event, name="interested_event"),
 
+    path('<slug:club_name_slug>/<int:encrypted_id>/pin', views.pin_post, name="pin-post"),
+    path('<slug:club_name_slug>/<int:encrypted_id>/unpin', views.unpin_post, name="unpin-post"),
     path('', views.posts, name='posts'),
 
 ]

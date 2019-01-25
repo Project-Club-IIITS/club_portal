@@ -218,7 +218,7 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown" style="margin-right:6%!important;">
                                 <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
                                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-                                <a class="dropdown-item" href="{% url 'accounts:date' select='1' show='1'%}">Calendar</a>
+{#                                <a class="dropdown-item" href="{% url 'accounts:date' select='1' show='1'%}">Calendar</a>#}
 
                             </div>
 
@@ -243,7 +243,7 @@
                     {% else %}
                         <li class="nav-item px-3 nav-item-scroll">
                             <a class="nav-link"
-                               href="{% url 'registration:signup' %}?next={{ request.path }}">Signup</a>
+                               href="{% url 'registration:login' %}?next={{ request.path }}">Signup</a>
                         </li>
                         <li class="nav-item px-3 nav-item-scroll">
 
@@ -291,7 +291,7 @@
 
 <div id="wrapper" class="p-0">
     <!-- Footer -->
-    <footer id="footer" class="w-100 text-center" style="background-color: #fff!important;">
+    <footer id="footer" class="w-100 text-center">
         <div class="inner">
             <ul class=".d-none .d-lg-block">
                 <li class="px-3"><i class="fab fa-twitter"></i></li>

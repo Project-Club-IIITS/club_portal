@@ -38,7 +38,7 @@ class UserProfile(models.Model):
     batch = models.CharField(max_length=3, choices=BATCH_CHOICES, null=True, blank=True)
     roll_no = models.CharField(max_length=100, null=True, blank=True)
     profile_pic = models.ImageField(upload_to=get_profilepic_upload_url, blank=True, null=True)
-    following_clubs = models.ManyToManyField(Club, blank=True)
+    following_clubs = models.ManyToManyField(Club, blank=True, related_name='following_user_profiles')
 
     def __str__(self):
         return self.user.username

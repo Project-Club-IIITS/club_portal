@@ -9,6 +9,8 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name="base/index.html"), name='index'),
     path('clubs/', views.club_home, name='all_clubs'),
     path('clubs/<slug:club_name_slug>/request-join/', views.request_join, name='club_request_join'),
+    path('clubs/<slug:club_name_slug>/follow/', views.follow_club, name='club_follow'),
+    path('clubs/<slug:club_name_slug>/unfollow/', views.unfollow_club, name='club_unfollow'),
 
     path('clubs/<slug:club_name_slug>/admin/settings/', views.club_settings, name='club_settings'),
     path('clubs/<slug:club_name_slug>/admin/members/', views.member_list, name='member_list'),
@@ -28,6 +30,11 @@ urlpatterns = [
     path('clubs/<slug:club_name_slug>/moderators/remove/<str:username>/', views.remove_moderator,
          name='remove_moderator'),
 
+    path('clubs/<slug:club_name_slug>/posts/approve/<int:encrypted_id>/', views.approve_post, name="approve_post"),
+    path('clubs/<slug:club_name_slug>/posts/reject/<int:encrypted_id>/', views.reject_post, name="reject_post"),
+
     path('notifications', views.NotificationView.as_view(), name='notifications'),
+
+    path('post_email_temp', views.post_email_temp)
 
 ]
