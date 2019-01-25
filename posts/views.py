@@ -547,6 +547,8 @@ def event_interested(request, club_name_slug, encrypted_id):
 
     post.subscribed_users.add(request.user)
 
+    Calendar.objects.create(date=post.event.start_date.date(), work_title=post.event.post.title, user=request.user)
+
     return redirect('posts:post_detail', club_name_slug, encrypted_id)
 
 

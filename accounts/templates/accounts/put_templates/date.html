@@ -148,7 +148,7 @@
                             {% if i.5 == 0 %}
                                 <div class="calendar__day day" data-toggle="modal" data-target="#myModal"></div>
                             {% else %}
-                                <button type="button" class="btn btn-cal" onclick="location.href='{% url 'accounts:index' select=year_no show=i.5 %}'" >{{ i.5 }}</button>
+                                <button type="button" class="btn btn-cal" style="" onclick="location.href='{% url 'accounts:index' select=year_no show=i.5 %}'" >{{ i.5 }}</button>
 
                             {% endif %}
 
