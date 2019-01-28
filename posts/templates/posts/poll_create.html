@@ -71,6 +71,7 @@
             {% if not edit %}
 
                 <div style="font-weight: bolder; font-size: larger">Add options for your poll:</div>
+                <p style="color:red;font-style: italic; font-weight: bold">Be Careful! Options once set can not be changed.</p>
                 <br>
                 <ul class="option-list">
 
@@ -108,7 +109,7 @@
 
     <script>
         {% if not edit %}
-
+        let nameCounter = 1;
         document.querySelector('.add-option').addEventListener('click', function (e) {
             e.preventDefault();
             let liNode = document.createElement('li');

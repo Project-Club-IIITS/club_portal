@@ -147,7 +147,7 @@
             <footer>
                 <ul class="stats">
                     <li>
-                        <button type="submit" class="fabutton like" value="like">
+                        <button type="submit" class="fabutton like" value="like" style="all: unset">
                             {% if is_liked %}
                                 <i class="fas fa-heart fa-3x liked-icon" id="like"></i>
                             {% else %}
@@ -164,9 +164,9 @@
 {#                        <span style="font-size: 2rem;margin-left: 3px;color:#007bff;">128</span>#}
 {#                    </li>#}
                 {% if post.pinnedpost %}
-                    <li title="This post is pinned"><a href="{% url 'posts:unpin-post' club_name_slug post.encrypted_id %}" class="fas fa-thumbtack fa-3x" style="color: #2ebaae ; text-decoration: none !important;"></a></li>
+                    <li title="This post is pinned" class="mt-1"><a href="{% url 'posts:unpin-post' club_name_slug post.encrypted_id %}" class="fas fa-thumbtack fa-3x" style="color: #2ebaae ; text-decoration: none !important;"></a></li>
                 {% else %}
-                    <li title="Click to pin post"><a href="{% url 'posts:pin-post' club_name_slug post.encrypted_id %}" class="fa fa-thumbtack fa-3x" style="text-decoration: none !important;"></a></li>
+                    <li title="Click to pin post" class="mt-1"><a href="{% url 'posts:pin-post' club_name_slug post.encrypted_id %}" class="fa fa-thumbtack fa-3x" style="text-decoration: none !important;"></a></li>
                 {% endif %}
                 </ul>
             </footer>
