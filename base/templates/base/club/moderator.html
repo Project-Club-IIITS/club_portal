@@ -1,0 +1,50 @@
+{% extends 'base/club/admin_base.html' %}
+{% load static %}
+
+{% block title %}
+Club Moderators
+{% endblock %}
+{% block main_content %}
+            <section>
+                <header class="major">
+                    <div>
+                        <h2>Moderators</h2>
+                    </div>
+                    <div class="search-box">
+                        <form action="{% url 'base:add_moderator_name_as_param' club_name_slug %}" method='get' style="display:flex;justify-content: center;">
+                            <input class="search-input" style="margin-right:8px;" type="text" name="username" id="moderatorAdd" placeholder="username">
+                            <button type="submit" class="button small" id="new-moderator">Add</button>
+                        </form>
+                    </div>
+
+                </header>
+                <div class="posts">
+                    <div class="table-wrapper" style="margin:0 auto;width:100%;">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Username</th>
+                                <th></th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for mod in moderators %}
+                                <tr>
+                                    <td>{{ mod.user.get_full_name }}</td>
+                                    <td>{{ mod.user.email }}</td>
+                                    <td>{{ mod.user.username }}</td>
+                                    <td><a href="{% url 'base:remove_moderator' club_name_slug mod.user.username %}"
+                                           class="button primary small">Remove</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </section>
+{% endblock %}

@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import EmailConfirmation, UserProfile, GoogleAuth
 
-# Register your models here.
+
+admin.site.register(EmailConfirmation)
+admin.site.register(UserProfile)
+admin.site.register(GoogleAuth)

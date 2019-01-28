@@ -1,0 +1,146 @@
+{% extends 'base/club/admin_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block custom_head %}
+    <style>
+    input{
+        color: black !important;
+    }
+    textarea{
+        color: black !important;
+    }
+    </style>
+{% endblock %}
+{% block main_content %}
+    <section>
+        <header class="major">
+            <h2>
+                General Settings
+            </h2>
+
+            <div class="posts">
+                <div class="row">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div style='display:flex;justify-content: left; margin-bottom: 2vh;'>
+                            <div style="margin-right:10px;font-size: 1.3em;">
+                                <label for="{{ club_form.name.id_for_label }}">Club Name:</label>
+                            </div>
+                            <div>
+                                {{ club_form.name|add_class:"search-input" }}
+                            </div>
+                            <div style="color: crimson; font-weight: bolder">
+
+                            </div>
+                        </div>
+                        <div style='display:flex;justify-content: left; margin-bottom: 2vh;'>
+                            <div style="margin-right:10px;font-size: 1.3em;">
+                                <label for="{{ club_form.full_name.id_for_label }}">Club Full Name:</label>
+                            </div>
+                            <div>
+                                {{ club_form.full_name|add_class:"search-input" }}
+                            </div>
+                            <div style="color: crimson; font-weight: bolder">
+
+                            </div>
+                        </div>
+                        <div style='display:flex;justify-content: left;'>
+                            <div style="margin-right:10px;font-size: 1.3em;">
+                                <label for="{{ club_form.email.id_for_label }}">Club Email:</label>
+                            </div>
+                            <div>
+                                {{ club_form.email|add_class:"search-input" }}
+                            </div>
+                        </div>
+                        {% comment %}<div style='display:flex;justify-content: left;'>
+                            <div style="margin-right:10px;font-size: 1.3em;">
+                                <label for="moderatorAdd">Logo:</label>
+                            </div>
+                            <div>
+                               {{ club_form.back_img }}
+                            </div>
+                        </div>{% endcomment %}
+
+                        <div style='display:flex;justify-content: left;'>
+                            <div style="margin-right:10px;font-size: 1.3em;">
+                                <label for="moderatorAdd">Cover Image:</label>
+                            </div>
+                            <div>
+                                {{ club_form.back_img }}
+                            </div>
+                        </div>
+
+                        <div style='display:flex;justify-content: left;'>
+                            <div style="margin-right:10px;font-size: 1.3em;">
+                                <label for="{{ club_form.about.id_for_label }}">About:</label>
+                            </div>
+                            <div>
+
+                                <textarea style="border: 2px solid crimson" rows="5" cols="85" name="about" id="{{ club_form.about.id_for_label }}">{{ club_form.about.value }}</textarea>
+                            </div>
+                        </div>
+                        <div style="margin-top: 2vh;">
+                            <button type="submit" class="button small"> Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </header>
+        <header class="major">
+            <h2>
+                About
+            </h2>
+
+            <div class="posts">
+
+
+                <div style='display:flex;justify-content: left; margin-bottom: 2vh;'>
+                    <div style="margin-right:10px;font-size: 1.3em;">
+                        <label>President: </label>
+                    </div>
+                    <div>
+                        <span style="font-size: 1.1rem; color: black; font-weight: bold">{{ club.clubpresident.user.get_full_name }}  ({{ club.clubpresident.user.email }})</span>
+                    </div>
+                </div>
+
+                <div style='display:flex;justify-content: left; margin-bottom: 2vh;'>
+                    <div style="margin-right:10px;font-size: 1.3em;">
+                        <label>Members: </label>
+                    </div>
+                    <div>
+                        <span style="font-size: 1.1rem; color: black; font-weight: bold">{{ club.clubmember_set.count }}</span>
+                    </div>
+                </div>
+
+                <div style='display:flex;justify-content: left; margin-bottom: 2vh;'>
+                    <div style="margin-right:10px;font-size: 1.3em;">
+                        <label>Moderators: </label>
+                    </div>
+                    <div>
+                        <span style="font-size: 1.1rem; color: black; font-weight: bold">{{ club.clubmoderator_set.count }}</span>
+                    </div>
+                </div>
+
+                <div style='display:flex;justify-content: left; margin-bottom: 2vh;'>
+                    <div style="margin-right:10px;font-size: 1.3em;">
+                        <label>Followers: </label>
+                    </div>
+                    <div>
+                        <span style="font-size: 1.1rem; color: black; font-weight: bold">{{ club.following_user_profiles.count }}</span>
+                    </div>
+                </div>
+
+                <div style='display:flex;justify-content: left; margin-bottom: 2vh;'>
+                    <div style="margin-right:10px;font-size: 1.3em;">
+                        <label>Posts: </label>
+                    </div>
+                    <div>
+                        <span style="font-size: 1.1rem; color: black; font-weight: bold">{{ club.post_set.count }}</span>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+    </section>
+{% endblock %}

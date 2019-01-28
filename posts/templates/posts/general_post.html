@@ -1,0 +1,188 @@
+{% extends 'base/base.html' %}
+{% load blog_tags %}
+{% load static %}
+
+
+{% block head %}
+    <title>Posts</title>
+    <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+    <link rel="stylesheet" href="{% static "posts/css/loader.css" %}"/>
+{% endblock %}
+
+
+{% block content %}
+
+
+    <div id="main" style="margin-top: 5vh;">
+        <div class="infinite-container" id="all_posts">
+            {% for post in posts %}
+                <div class="infinite-item">
+                    <article class="post">
+                        <header>
+                            <div class="title">
+                                <h2>
+                                    <a href="{% url 'posts:post_detail'  post.club.name|clubslug post.encrypted_id %}">{{ post.title }}</a>
+                                </h2>
+{#                                <p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>#}
+                            </div>
+                            <div class="meta">
+                                <time class="published" datetime="2015-10-22">{{ post.created }}</time>
+                                <a href="#" class="author"><span class="name">{{ post.author.get_full_name }}</span>
+                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
+                                {#                                TODO Put author name and profile pic here#}
+                            </div>
+                        </header>
+                        {% if post.cover_image %}
+                            <a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}" class="image featured">
+                                <img src="{{ post.cover_image.url }}" alt="Cover Image"/>
+                            </a>
+                        {% endif %}
+                        <p>
+                            {{ post.body|truncatechars_html:450|removeImg|safe}}
+                        </p>
+                        <footer>
+                            <ul class="actions">
+                                <li><a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}"
+                                       class="button large">Continue Reading</a>
+                                </li>
+                            </ul>
+                            {% comment %}<ul class="stats">
+                                <i class="fas fa-heart"></i>
+                                <li><a href="#" class="icon fa-heart fa-2x">{{ post.votes }}</a></li>
+                                <li><a href="#" class="icon fa-comment fa-2x">128</a></li>
+                            </ul>{% endcomment %}
+                        </footer>
+                    </article>
+                </div>
+            {% empty %}
+                <div style="text-align: center;">
+                <h2>No Recent Posts Available!</h2>
+                <div>You might not be seeing any posts because you are not following any clubs. Head over to the
+                    <a style="color: #2ebaae !important;" href="{% url 'base:all_clubs' %}"> clubs page </a> to follow some.</div>
+                </div>
+
+            {% endfor %}
+        </div>
+        {% if posts.has_next %}
+            <a style="display:none;" class="infinite-more-link"
+               href="?page={{ posts.next_page_number }}&{% for field in filter_form %}{% if field.name != 'page' %}{{ field.name }}={{ field.value }}&{% endif %}{% endfor %}">More</a>
+        {% endif %}
+
+        <div style="width: 100%; text-align: center; display: none" class="loading">
+            <div class="lds-ripple">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        {#        <ul class="actions pagination">#}
+        {#            <li><a href="" class="disabled button large previous">Previous Page</a></li>#}
+        {#            <li><a href="#" class="button large next">Next Page</a></li>#}
+        {#        </ul>#}
+
+    </div>
+    <section id="sidebar" style="margin-top: 5vh;">
+	{% comment %}
+        <!-- About -->
+        <section class="blurb">
+            <h2>About</h2>
+            <p>
+                {{ club.about|safe|truncatechars_html:150 }}
+            </p>
+{#            <ul class="actions">#}
+{#                <li><a href="#" class="button">Learn More</a></li>#}
+{#            </ul>#}
+        </section>
+
+	{% endcomment %}
+
+        <section style="">
+            <h2 style="color: crimson">Note</h2>
+            <p style="color: crimson">
+                This section displays only the public posts of clubs you ARE FOLLOWING. To see private posts of clubs of which you are a member, you should go to the individual club page.
+
+            </p>
+        </section>
+        <!-- Mini Posts -->
+        <section>
+            <div class="mini-posts">
+                <h3>Pinned Posts</h3>
+
+                {% for p_post in pinned_posts %}
+                    <!-- Mini Post -->
+                    <article class="mini-post">
+                        <header>
+                            <h3><a href="{% url 'posts:post_detail' p_post.post.club.name|clubslug p_post.post.encrypted_id %}">{{ p_post.post.title|truncatechars_html:26 }}</a></h3>
+                            <time class="published" datetime="2015-10-18">{{ p_post.post.created }}</time>
+
+                            <a href="{% url 'posts:post_detail' p_post.post.club.name|clubslug p_post.post.encrypted_id %}" class="author">
+                                <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
+{#                            <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>#}
+
+                        </header>
+                        {% if p_post.post.cover_image %}
+                            <a href="{% url 'posts:post_detail' p_post.post.club.name|clubslug p_post.post.encrypted_id %}" class="image">
+                                <img src="{{ p_post.post.cover_image.url }}" alt=""/></a>
+                        {% endif %}
+
+                    </article>
+
+                {% empty %}
+                    <p>No Pinned Posts</p>
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <!-- Posts List -->
+        <section>
+            <h3>Top Posts</h3>
+            <ul class="posts">
+                {% for post in top_posts %}
+                <li>
+                    <article>
+                        <header>
+                            <h3><a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}">{{ post.title }}</a></h3>
+                            <time class="published" datetime="2015-10-10">{{ post.created }}</time>
+                        </header>
+                        <a href="#" class="author">
+                            <img src="{% static "posts/images/pic10.jpg" %}" alt=""/></a>
+{#                        TODO Put user profile pic here#}
+                    </article>
+                </li>
+
+                {% endfor %}
+            </ul>
+        </section>
+
+
+
+
+
+
+
+    </section>
+
+
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'common_assests/imakewebthings-waypoints-34d9f6d/lib/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'common_assests/imakewebthings-waypoints-34d9f6d/lib/shortcuts/infinite.min.js' %}"></script>
+    <script>
+        var infinite = new Waypoint.Infinite({
+            element: $('.infinite-container')[0],
+            onBeforePageLoad: function () {
+                $('.loading').show();
+            },
+            onAfterPageLoad: function ($items) {
+                $('.loading').hide();
+                {#$('.collapsible').collapsible();#}
+            }
+        });
+    </script>
+
+{% endblock %}

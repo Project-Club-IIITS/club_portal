@@ -1,0 +1,136 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block head %}
+
+    <link rel="stylesheet" href="{% static 'css/poll_create.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/css/post_edit.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container" style="margin-top: 5vh;">
+        <h2 style="margin-bottom: 0;">Create Poll</h2>
+        Add some details then select options
+
+
+        <div class="options">
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ post_create_form.media }}
+
+                <p>
+                    <span style="font-weight: 600;">Title:</span>
+                    {{ post_create_form.title }}
+                    {{ post_create_form.title.help_text }}
+                </p>
+
+                <span style="font-weight: 600; vertical-align: top;margin-right:10px;">Body:</span>
+                {{ post_create_form.media }}
+                {{ post_create_form.body }}
+
+                <div class="checkbox" style="margin-top:10px;">
+                    <label for="id_cover_image">Cover image:</label>
+                    <input type="file" name="cover_image" accept="image/*" id="id_cover_image">
+                    <p>{{ post_create_form.cover_image.help_text|linebreaksbr }}</p>
+                </div>
+
+                <div class="checkbox">
+
+                    {{ post_create_form.is_public.label_tag }}
+                    {{ post_create_form.is_public }}
+                    <span class="helpText">{{ post_create_form.is_public.help_text }}</span>
+
+                </div>
+
+                <div class="checkbox">
+                    {{ post_create_form.is_published.label_tag }}
+                    {{ post_create_form.is_published }}
+                    <span class="helpText">{{ post_create_form.is_published.help_text }}</span>
+                </div>
+
+                <div class="checkbox">
+                    {{ post_create_form.notify_followers.label_tag }}
+                    {{ post_create_form.notify_followers }}
+                    <span class="helpText">{{ post_create_form.notify_followers.help_text }}</span>
+                </div>
+
+                <div class="checkbox">
+                    <label for="id_track_votes">Track Votes:</label>
+                    {{ poll_create_form.track_votes }}
+                    <span class="helpText">
+                        {{ poll_create_form.track_votes.help_text }}
+                    </span>
+                </div>
+
+                {#            <input type="text" name="title" class="poll-question" placeholder="Enter The Poll Question" required>#}
+                <br><br>
+
+            {% if not edit %}
+
+                <div style="font-weight: bolder; font-size: larger">Add options for your poll:</div>
+                <p style="color:red;font-style: italic; font-weight: bold">Be Careful! Options once set can not be changed.</p>
+                <br>
+                <ul class="option-list">
+
+
+                        <li>
+                            <input type="text" name="0" placeholder="Write Your Option here!" required>
+                        </li>
+                        <li>
+                            <input type="text" name="1" placeholder="Write Your Option here!" required>
+                        </li>
+
+                </ul>
+
+                <div class="row justify-content-around">
+                    <div class="col-lg-3">
+                        <button id="add-option" class="add-option">Add Option Here</button>
+                    </div>
+                    <div class="col-lg-3 col-lg-offset-6">
+                        <input class="poll-submit" type="submit" value="Submit">
+                    </div>
+                </div>
+                <input name="hidden-count" class="option-count" type="hidden" value="2">
+            {% else %}
+                <div class="row">
+
+                    <div class="col-lg-3 col-lg-offset-6">
+                        <input class="poll-submit" type="submit" value="Submit">
+                    </div>
+                </div>
+            {% endif %}
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        {% if not edit %}
+        let nameCounter = 1;
+        document.querySelector('.add-option').addEventListener('click', function (e) {
+            e.preventDefault();
+            let liNode = document.createElement('li');
+            let inputField = document.createElement('input');
+
+            inputField.setAttribute("name", String(++nameCounter));
+            inputField.setAttribute("placeholder", "Write Your Option here!");
+            inputField.setAttribute("type", "text");
+            inputField.required = true;
+
+            liNode.appendChild(inputField);
+
+            document.querySelector('.option-list').appendChild(liNode);
+
+            // No of options
+            document.querySelector('.option-count').value = nameCounter + 1;
+        });
+
+        {% endif %}
+
+    </script>
+
+
+{% endblock %}
