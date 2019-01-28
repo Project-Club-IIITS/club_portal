@@ -15,7 +15,10 @@
                     <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Type</th>
                         <th>Author</th>
+                        <th>Public?</th>
+                        <th>Notify?</th>
 
                     </tr>
                     </thead>
@@ -24,9 +27,32 @@
                         <tr>
                             <td><a href="{% url 'posts:post_detail' club_name_slug post.encrypted_id %}"
                                    class="">{{ post.title|truncatechars_html:30 }}</a></td>
+                            <td>
+                                {% if post.poll %}
+                                Poll
+                                {% elif post.event %}
+                                Event
+                                {% else %}
+                                Post
+                                {% endif %}
+                            </td>
                             <td>{{ post.author.get_full_name }}</td>
-                            <td><a href="#" class="button primary small">Accept</a></td>
-                            <td><a href="#" class="button small">Reject</a></td>
+                            <td>
+                                {% if post.is_public %}
+                                Yes
+                                {% else %}
+                                No
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if post.notify_followers %}
+                                Yes
+                                {% else %}
+                                No
+                                {% endif %}
+                            </td>
+                            <td><a href="{% url 'base:approve_post' club_name_slug post.encrypted_id %}" class="button primary small">Accept</a></td>
+                            <td><a href="{% url 'base:reject_post' club_name_slug post.encrypted_id %}" class="button small">Reject</a></td>
                         </tr>
                     {% endfor %}
 
@@ -51,6 +77,7 @@
                     </thead>
                     <tbody>
                     {% for post in club.post_set.all %}
+                        {% if post.is_approved %}
                         <tr>
                             <td><a href="{% url 'posts:post_detail' club_name_slug post.encrypted_id %}"
                                    class="">{{ post.title|truncatechars_html:30 }}</a></td>
@@ -67,6 +94,7 @@
                             <td><a href="#" class="button primary small">Remove</a></td>
 
                         </tr>
+                        {% endif %}
                     {% endfor %}
 
                     </tbody>

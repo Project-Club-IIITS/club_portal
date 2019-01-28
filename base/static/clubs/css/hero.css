@@ -1002,7 +1002,7 @@ body {
 					}
 
 					#navButton .toggle:before {
-						none;
+						display:none;
 					}
 
 					#navButton .toggle:after {
@@ -1976,7 +1976,7 @@ body {
 }
 
 #footer{
-	background-color: grey;
+	background-color: white;
 }
 
     .icon {

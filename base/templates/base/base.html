@@ -15,135 +15,6 @@
           integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     {#    <link rel="stylesheet" href="{% static 'posts/css/fontawesome.min.css' %}">#}
     <link rel="stylesheet" href="{% static "css/navbar-footer.css" %}">
-    <style>
-        .chip {
-            display: inline-block;
-            padding: 0 25px;
-            height: 50px;
-            font-size: 16px;
-            line-height: 50px;
-            border-radius: 25px;
-            background-color: #f1f1f1;
-        }
-
-        .chip img {
-            float: left;
-            margin: 0 10px 0 -25px;
-            height: 50px;
-            width: 50px;
-            border-radius: 50%;
-        }
-
-
-        {#        .dropbtn {#}
-        {#  background-color: #4CAF50;#}
-        {#  color: white;#}
-        {#  padding: 16px;#}
-        {#  font-size: 16px;#}
-        {#  border: none;#}
-
-
-        /* The container <div> - needed to position the dropdown content */
-        {#.dropdown {#}
-        {#  position: relative;#}
-        {#  display: inline-block;#}
-
-
-        /* Dropdown Content (Hidden by Default) */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f1f1f1;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
-
-        /* Links inside the dropdown */
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        /* Change color of dropdown links on hover */
-        .dropdown-content a:hover {
-            background-color: #ddd;
-        }
-
-        /* Show the dropdown menu on hover */
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        /* Change the background color of the dropdown button when the dropdown content is shown */
-        .dropdown:hover .dropbtn {
-            background-color: #3e8e41;
-        }
-
-        .navbar-fixed-top {
-            top: -70px; /* you'll have to figure out the exact number here */
-        }
-
-        .navbar-fixed-top, .navbar-fixed-bottom {
-            position: relative; /* this can also be static */
-        }
-
-        {#        .dropbtn {#}
-        {#  background-color: #4CAF50;#}
-        {#  color: white;#}
-        {#  padding: 16px;#}
-        {#  font-size: 16px;#}
-        {#  border: none;#}
-        {#{#}
-
-
-        /* The container <div> - needed to position the dropdown content */
-        {#.dropdown {#}
-        {#  position: relative;#}
-        {#  display: inline-block;#}
-        {#{#}
-
-
-        {% comment %}  /* Dropdown Content (Hidden by Default) */
-  {#        Auth dropdown#}
-          .dropdown-content {
-              display: none;
-              position: absolute;
-              background-color: #f1f1f1;
-              min-width: 160px;
-              box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-              z-index: 1;
-          }
-
-          /* Links inside the dropdown */
-          .dropdown-content a {
-              color: black;
-              padding: 12px 16px;
-              text-decoration: none;
-              display: block;
-          }
-
-          /* Change color of dropdown links on hover */
-          .dropdown-content a:hover {
-              background-color: #ddd;
-          }
-
-          /* Show the dropdown menu on hover */
-          .dropdown:hover .dropdown-content {
-              display: block;
-          }
-
-          /* Change the background color of the dropdown button when the dropdown content is shown */
-          .dropdown:hover .dropbtn {
-              background-color: #3e8e41;
-          }{% endcomment %}
-
-           .nav-item-scroll{
-               {#overflow: auto;#}
-           }
-    </style>
 </head>
 <body class="is-preload">
 {% block nav %}
@@ -174,12 +45,12 @@
 
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Select Club
+                            Club Posts
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             {% for club in clubs %}
                                 <a class="dropdown-item"
-                                   href="{% url 'posts:club_posts' club.name|clubslug %}">{{ club.name|title }}</a>
+                                   href="{% url 'posts:club_posts' club.name %}">{{ club.name|title }}</a>
                             {% endfor %}
                             {#                        <a class="dropdown-item" href="#">IOTA</a>#}
                             {#                        <a class="dropdown-item" href="#">Gradient</a>#}
@@ -221,10 +92,10 @@
                                     {{ request.user.get_full_name }}
                                 </div>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown" style="margin-right:6%!important;">
                                 <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
                                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-{#                                <a class="dropdown-item" href="{% url 'accounts:date' select='1' show='1'%}">Calendar</a>#}
+				{#                              <a class="dropdown-item" href="{% url 'accounts:index' select='1' show='1'%}">Calendar <sup style="color: red">Beta</sup></a> #}
 
                             </div>
 
@@ -249,7 +120,7 @@
                     {% else %}
                         <li class="nav-item px-3 nav-item-scroll">
                             <a class="nav-link"
-                               href="{% url 'registration:signup' %}?next={{ request.path }}">Signup</a>
+                               href="{% url 'registration:login' %}?next={{ request.path }}">Signup</a>
                         </li>
                         <li class="nav-item px-3 nav-item-scroll">
 
@@ -295,20 +166,20 @@
 
 </div>
 
-<div id="wrapper">
+<div id="wrapper" class="p-0">
     <!-- Footer -->
-    <footer id="footer">
+    <footer id="footer" class="w-100 text-center">
         <div class="inner">
-            <ul class="icons .d-none .d-lg-block">
-                <li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
-                <li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
-                <li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
-                <li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
-                <li><a href="#" class="icon alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+            <ul class=".d-none .d-lg-block">
+                <li class="px-3"><i class="fab fa-twitter"></i></li>
+                <li class="px-3"><i class="fab fa-facebook-f"></i></li>
+                <li class="px-3"><i class="fab fa-instagram"></i></li>
+                <li class="px-3"><i class="fab fa-github"></i></li>
+                <li class="px-3"><i class="fab fa-linkedin-in"></i></li>
             </ul>
             <ul class="copyright">
-                <li>&copy; Copyright 2019</li>
-                <li>Made By <span>IOTA</span></li>
+                <li class="text-dark">&copy; Copyright 2019</li>
+                <li class="text-dark">Made By <span class="author-name">IOTA</span></li>
             </ul>
         </div>
     </footer>

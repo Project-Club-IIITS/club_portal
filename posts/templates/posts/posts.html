@@ -42,6 +42,44 @@
                     </div>
                 </div>
             </section>
+        {% else %}
+            <section class="blurb d-xl-none">
+                <h2 style="color: crimson">Note</h2>
+                <p style="color: crimson">
+                    You are only seeing the public posts of this club as you are not a member. To see all posts,
+                    consider becoming a member.
+                </p>
+
+                {% if request.user|is_user_member_not_approved:club %}
+
+                    <p style="color:blue">
+                        Your member request has been submitted and is pending approval from club moderators
+                    </p>
+                    <ul class="actions">
+
+                    <li><a href="javascript:void(0);" class="button"
+                           style="text-decoration: none;box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important">Requested</a></li>
+
+                {% else %}
+                    <ul class="actions">
+                    <li><a href="{% url 'base:club_request_join' club_slug %}" class="button"
+                           style="text-decoration: none;">Become Member</a></li>
+
+
+                {% endif %}
+
+                {% if club in request.user.userprofile.following_clubs.all %}
+                    <li><a href="{% url 'base:club_unfollow' club_slug %}" class="button"
+                           style="text-decoration: none;box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important">
+                        Following
+                    </a></li>
+                {% else %}
+
+                    <li><a href="{% url 'base:club_follow' club_slug %}" class="button"
+                           style="text-decoration: none;">Follow</a></li>
+                {% endif %}
+                </ul>
+            </section>
         {% endif %}
         <div class="infinite-container" id="all_posts" style="margin-top: 5vh;">
             {% for post in posts %}
@@ -83,10 +121,10 @@
                                        class="button large">Continue Reading</a>
                                 </li>
                             </ul>
-                            <ul class="stats">
+                            {% comment %}<ul class="stats">
                                 <li><a href="#" class="icon fa-heart fa-2x">{{ post.votes }}</a></li>
                                 <li><a href="#" class="icon fa-comment fa-2x">128</a></li>
-                            </ul>
+                            </ul>{% endcomment %}
                         </footer>
                     </article>
                 </div>
@@ -100,13 +138,7 @@
         </div>
         {% if posts.has_next %}
             <a style="display:none;" class="infinite-more-link"
-               href="?page={{ posts.next_page_number }}&
-
-
-
-
-
-                       {% for field in filter_form %}{% if field.name != 'page' %}{{ field.name }}={{ field.value }}&{% endif %}{% endfor %}">More</a>
+               href="?page={{ posts.next_page_number }}&{% for field in filter_form %}{% if field.name != 'page' %}{{ field.name }}={{ field.value }}&{% endif %}{% endfor %}">More</a>
         {% endif %}
 
         <div style="width: 100%; text-align: center; display: none" class="loading">
@@ -131,16 +163,16 @@
         <section class="blurb" style="margin-top: 7vh;">
             <h2>About</h2>
             <p>
-                {{ club.about|safe|truncatechars_html:150 }}
+                {{ club.about }}
             </p>
-            <ul class="actions">
-                <li><a href="#" class="button">Learn More</a></li>
-            </ul>
+{#            <ul class="actions">#}
+{#                <li><a href="#" class="button">Learn More</a></li>#}
+{#            </ul>#}
         </section>
 
         {% if  request.user|is_user_member:club %}
 
-            <section class="blurb">
+            <section class="blurb .d-none .d-xl-block">
                 <h2 style="color: crimson;">Create</h2>
                 <div class="d-flex flex-row justify-content-between">
                     <div>
@@ -165,26 +197,42 @@
                 </div>
             </section>
         {% else %}
-            <section style="">
+            <section class="d-none d-xl-block">
                 <h2 style="color: crimson">Note</h2>
                 <p style="color: crimson">
                     You are only seeing the public posts of this club as you are not a member. To see all posts,
                     consider becoming a member.
                 </p>
+
                 {% if request.user|is_user_member_not_approved:club %}
+
                     <p style="color:blue">
-                    Your member request has been submitted and is pending approval from club moderators
+                        Your member request has been submitted and is pending approval from club moderators
                     </p>
                     <ul class="actions">
-                        <li><a href="javascript:void(0);" class="button"
-                               style="text-decoration: none;">Requested</a></li>
-                    </ul>
+
+                    <li><a href="javascript:void(0);" class="button"
+                           style="text-decoration: none;box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important">Requested</a></li>
+
                 {% else %}
                     <ul class="actions">
-                        <li><a href="{% url 'base:club_request_join' club_slug %}" class="button"
-                               style="text-decoration: none;">Become Member</a></li>
-                    </ul>
+                    <li><a href="{% url 'base:club_request_join' club_slug %}" class="button"
+                           style="text-decoration: none;">Become Member</a></li>
+
+
                 {% endif %}
+
+                {% if club in request.user.userprofile.following_clubs.all %}
+                    <li><a href="{% url 'base:club_unfollow' club_slug %}" class="button"
+                           style="text-decoration: none;box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important">
+                        Following
+                    </a></li>
+                {% else %}
+
+                    <li><a href="{% url 'base:club_follow' club_slug %}" class="button"
+                           style="text-decoration: none;">Follow</a></li>
+                {% endif %}
+                </ul>
             </section>
         {% endif %}
         <!-- Mini Posts -->

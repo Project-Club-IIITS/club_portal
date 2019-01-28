@@ -16,7 +16,7 @@
             {% for option in poll.option_set.all %}
                 <div class="poll-option option">
                     <input type="radio" id="option_{{ option.id }}"
-                    name="option" value="{{ option.id }}">
+                    name="option" value="{{ option.id }}" style="visibility: hidden;">
                     <label for="option_{{ option.id }}">{{ option.option_text }}</label>
                 </div>
             {% empty %}
@@ -74,14 +74,14 @@
     <script>
         
         const bars = document.querySelectorAll('.filled-bar');
-        const values = [...document.querySelectorAll('.answer-value')].map(answer => Number(answer.textContent.slice(0, -1)));
+        const values = [...document.querySelectorAll('.option-votes')].map(answer => Number(answer.textContent.slice(0, -1)));
         
-        
+        console.log(values);
+
         for (let i = 0; i < bars.length; i++) {
             let width = 1;
             
             const id = setInterval(frame, 10);
-            
             
             function frame() {
                 if (width >= values[i]) {

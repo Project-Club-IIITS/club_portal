@@ -1,15 +1,17 @@
 .checkbox {
-    margin-bottom: 80px;
+    height: 80px;
+    clear:both;
 }
 
 
 .checkbox * {
     width: 48%;
     float:left;
-
+    font-style: italic;
     
 }
 
 .helpText {
     clear:both;
+    font-style: italic;
 }

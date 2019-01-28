@@ -23,8 +23,9 @@ class Post(models.Model):
 
     title = models.CharField(max_length=150)
     body = RichTextUploadingField(blank=True)  # from ckeditor
-    is_public = models.BooleanField(default=False)
-    cover_image = models.ImageField(null=True, blank=True)
+    is_public = models.BooleanField(default=False, help_text="If unchecked, only the members of the club can see this post.")
+    cover_image = models.ImageField(null=True, blank=True,
+                                    help_text="Images larger than 2.2 MBs are not supported. \n You may get a 403 error if you try to upload images that exceed this size")
 
     created = models.DateTimeField(auto_now_add=True)
 
@@ -40,19 +41,31 @@ class Post(models.Model):
     is_published = models.BooleanField(default=True,
                                        help_text="Uncheck this if you just want to save as draft and edit later before publishing")
 
+    notify_followers = models.BooleanField(default=False, help_text="Check this if you would like to send email to all members/followers about this new post")
+
     liked_users = models.ManyToManyField(User, related_name='liked_users', blank=True)
 
+    no_likes = models.IntegerField(default=0)
+
     class Meta:
-        ordering = ['-last_updated']
+        ordering = ['-created']
 
     def __str__(self):
         return self.title[:20]
+
+    def reclac_likes(self):
+        self.no_likes = self.liked_users.count()
+        self.save()
 
 
 class PostApprover(models.Model):
     post = models.OneToOneField(to=Post, on_delete=models.CASCADE)
     user = models.ForeignKey(to=User, on_delete=models.PROTECT)
     approved_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ['post', 'user']
+
 
 class PostUpdate(models.Model):
     author = models.ForeignKey(to=User, on_delete=models.CASCADE)
@@ -107,6 +120,7 @@ class Option(models.Model):
     def __str__(self):
         return self.poll.post.title[:10] + "... : " + self.option_text + ":" + str(self.num_votes)
 
+
 class Vote(models.Model):
     poll = models.ForeignKey(to=Poll, on_delete=models.CASCADE)
     option = models.ForeignKey(Option, null=True, blank=True, on_delete=models.CASCADE)
@@ -118,6 +132,7 @@ class Vote(models.Model):
 
     def __str__(self):
         return self.user.username + "-" + self.poll.post.title[:10] + "..."
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -132,7 +147,6 @@ class Event(models.Model):
     end_date = models.DateTimeField()
     venue = models.CharField(max_length=200)
     interested_users = models.ManyToManyField(User, blank=True)
-
 
 
 @receiver(signals.post_save, sender=Post)

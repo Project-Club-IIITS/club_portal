@@ -2,9 +2,11 @@
 {% load static %}
 {% load blog_tags %}
 {% load club_user_filters %}
+{% load humanize %}
 
 
 {% block head %}
+    <title>IIITS - Club Portal</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
     <link rel="stylesheet" href="{% static "clubs/css/hero.css" %}"/>
     <link rel="stylesheet" href="{% static "css/club_portal_landing.css" %}"/>
@@ -19,8 +21,8 @@
          style="top:0;position: fixed;z-index:20;">
 
         <a class="navbar-brand nav-styles" href="{% url 'base:index' %}"
-           style="font-weight: bolder; font-size: 150%;padding-left: 5vh; font-family: 'Source Sans Pro', Helvetica, sans-serif;">IIITS
-            Clubs</a>
+           style="font-weight: bolder; font-size: 150%;padding-left: 5vh; font-family: 'Source Sans Pro', Helvetica, sans-serif;"><img
+                class="img-fluid" src="{% static "images/logo-iiit.png" %}" alt="" width="48" height="48"></a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
@@ -32,7 +34,7 @@
             <ul class="navbar-nav ml-auto px-3">
 
                 <li class="nav-item px-3 nav-item-scroll mt-2">
-                    <a class="nav-link" href="{% url 'base:index' %}">Home</a>
+                    <a class="nav-link" href="{% url 'base:all_clubs' %}">Clubs</a>
                 </li>
                 <li class="nav-item px-3 nav-item-scroll mt-2">
                     <a class="nav-link" href="{% url 'posts:posts' %}">All Posts</a>
@@ -57,14 +59,14 @@
                 {% if club_slug %}
 
                     {% if request.user|is_user_moderator:club %}
-                        <li class="nav-item px-3">
+                        <li class="nav-item px-3 mt-2">
                             <a class="nav-link" href="{% url 'base:all_clubs' %}">Club-Admin</a>
                         </li>
                     {% endif %}
                 {% endif %}
                 {% if request.user.is_authenticated %}
 
-                    <li class="nav-item px-3 nav-item-scroll">
+                    <li class="nav-item px-3 nav-item-scroll mt-2">
                         {#                    <a class="nav-link" href="#">Login</a>#}
                         {#                     <img src="{% static "images/download.jpg" %}" alt="image" height="50" width="50" style="border-radius:25px;">#}
                         {#                     <span>Vineet</span>#}
@@ -89,7 +91,7 @@
                             </div>
                         </a>
 
-                        <div class="dropdown-menu dropdown-menu-right mr-5" aria-labelledby="profileDropdown">
+                        <div class="dropdown-menu dropdown-menu-right mr-5 mt-2" aria-labelledby="profileDropdown">
 
                             <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
@@ -115,11 +117,11 @@
                         {#                    </div>#}
                     </li>
                 {% else %}
-                    <li class="nav-item px-3 nav-item-scroll">
+                    <li class="nav-item px-3 nav-item-scroll mt-2">
                         <a class="nav-link"
-                           href="{% url 'registration:signup' %}?next={{ request.path }}">Signup</a>
+                           href="{% url 'registration:login' %}?next={{ request.path }}">Signup</a>
                     </li>
-                    <li class="nav-item px-3 nav-item-scroll">
+                    <li class="nav-item px-3 nav-item-scroll mt-2">
 
                         <a class="nav-link" href="{% url 'registration:login' %}?next={{ request.path }}">Login</a>
                     </li>
@@ -137,9 +139,15 @@
                 <p class="font-weight-bold text-primary heading">IIITS - Clubs Portal</p>
                 <p class="font-weight-bold text-muted mb-4 sub-heading">Lorem ipsum dolor sit amet, consectetur<br>
                     adipisicing elit.</p>
-                <div class="buttons">
+                <div class="buttons" style="float: left; margin-top: 2vh;">
                     <a class="explore" href="#clubs-container">
                         <button class="btn-hover color-5"><span class="font-weight-bold">Explore</span></button>
+                    </a>
+                </div>
+                <div class="buttons" style="float: left; margin-top: 2vh; margin-left: 1vw;">
+                    <a class="explore" href="{% url 'base:all_clubs' %}">
+                        <button class="btn-hover color-5" onclick="window.location='{% url "base:all_clubs" %}'"><span
+                                class="font-weight-bold">Clubs</span></button>
                     </a>
                 </div>
             </div>
@@ -147,50 +155,94 @@
     </section>
 
 
-    <section class="container-fluid" id="clubs-container">
-        <canvas id="canvas" style="position:absolute!important;z-index:-1!important;"></canvas>
+    <section class="container-fluid news mt-5" id="clubs-container">
         <div class="container">
-            <h1 class="text-primary display-4 pt-5 mb-5 font-weight-bold" style="z-index:-1;">Clubs</h1>
-            <div class="row">
-                {% for club in clubs %}
-                    <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2" onclick="window.location='{% url "posts:club_posts" club.name|clubslug %}'">
-                        <div class="card">
-
-                            <div class="image">
-                                {% if club.logo %}
-                                    <img src="{{ club.logo.url }}"
-                                         width="100%">
-
-                                {% else %}
-                                    <img src="http://assets.materialup.com/uploads/fc97b003-ba72-4c6e-9dd3-19bf5002c244/preview.jpg"
-                                         width="100%">
-                                {% endif %}
+            <div class="row my-5">
+                <div class="col-lg-4 col-md-6 col-sm-12 h-50 w-100 p-2">
+                    <h1 class="text-primary sub-heading font-weight-bold" style="z-index:-1;">News</h1>
+                    <div class="news-corner">
+                        {% for n in news %}
+                            <div class="news-headline" onclick="">
+                                <pre class="small text-success">{{ n.created_time|naturaltime }}</pre>
+                                <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">{{ n.message }}</p>
                             </div>
-
-                            <div class="text">
-
-                                {% if request.user.is_authenticated %}
-                                    {% if club in request.user.following_clubs.all %}
-                                        <div class="tick">&#10003;</div>
-                                    {% else %}
-                                        <div class="fab">&#43;</div>
-                                    {% endif %}
-                                    {% else %}
-                                    <div class="fab">&#43;</div>
-
-                                {% endif %}
-                                <h3>{{ club.name }}</h3>
-                                <p>{{ club.about|safe }}</p>
-
-
+                            <hr/>
+                        {% empty %}
+                            <div class="news-headline" onclick="">
+                                <pre class="small text-success">-</pre>
+                                <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">
+                                    No Recent News</p>
                             </div>
+                            <hr/>
+                        {% endfor %}
 
-                        </div>
                     </div>
-                {% endfor %}
 
 
+                </div>
+                <div class="col-lg-8 col-md-6 col-sm-12 h-50 w-100 p-2">
+                    <h1 class="text-primary sub-heading font-weight-bold" style="z-index:-1;">Recent Posts</h1>
+                    <div class="news-corner">
+                        {% for p in posts %}
+                            <div class="news-headline" onclick="">
+                                <pre class="small text-success">{{ p.club.name }} | {{ p.created|naturaltime }}</pre>
+                                <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">
+                                    {{ p.title }}</p>
+                            </div>
+                            <hr/>
+                        {% empty %}
+                            <div class="news-headline" onclick="">
+                                <pre class="small text-success">-</pre>
+                                <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">
+                                    No Recent Posts</p>
+                            </div>
+                            <hr/>
+                        {% endfor %}
+
+                    </div>
+                </div>
             </div>
+            {#            <h1 class="text-primary heading pt-5 mb-5 font-weight-bold" style="z-index:-1;">Clubs</h1>#}
+            {#            <div class="row">#}
+            {#                {% for club in clubs %}#}
+            {#                    <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2" onclick="window.location='{% url "posts:club_posts" club.name|clubslug %}'">#}
+            {#                        <div class="card">#}
+            {##}
+            {#                            <div class="image">#}
+            {#                                {% if club.logo %}#}
+            {#                                    <img src="{{ club.logo.url }}"#}
+            {#                                         width="100%">#}
+            {##}
+            {#                                {% else %}#}
+            {#                                    <img src="http://assets.materialup.com/uploads/fc97b003-ba72-4c6e-9dd3-19bf5002c244/preview.jpg"#}
+            {#                                         width="100%">#}
+            {#                                {% endif %}#}
+            {#                            </div>#}
+            {##}
+            {#                            <div class="text">#}
+            {##}
+            {#                                {% if request.user.is_authenticated %}#}
+            {#                                    {% if club in request.user.following_clubs.all %}#}
+            {#                                        <div class="tick">&#10003;</div>#}
+            {#                                    {% else %}#}
+            {#                                        <div class="fab">&#43;</div>#}
+            {#                                    {% endif %}#}
+            {#                                    {% else %}#}
+            {#                                    <div class="fab">&#43;</div>#}
+            {##}
+            {#                                {% endif %}#}
+            {#                                <h3>{{ club.name }}</h3>#}
+            {#                                <p>{{ club.about|safe }}</p>#}
+            {##}
+            {##}
+            {#                            </div>#}
+            {##}
+            {#                        </div>#}
+            {#                    </div>#}
+            {#                {% endfor %}#}
+            {##}
+            {##}
+            {#            </div>#}
         </div>
 
     </section>
@@ -199,225 +251,5 @@
 
 
 {% block script %}
-    <script>
-        var _createClass = function () {
-            function defineProperties(target, props) {
-                for (var i = 0; i < props.length; i++) {
-                    var descriptor = props[i];
-                    descriptor.enumerable = descriptor.enumerable || false;
-                    descriptor.configurable = true;
-                    if ("value" in descriptor) descriptor.writable = true;
-                    Object.defineProperty(target, descriptor.key, descriptor);
-                }
-            }
-
-            return function (Constructor, protoProps, staticProps) {
-                if (protoProps) defineProperties(Constructor.prototype, protoProps);
-                if (staticProps) defineProperties(Constructor, staticProps);
-                return Constructor;
-            };
-        }();
-
-        function _classCallCheck(instance, Constructor) {
-            if (!(instance instanceof Constructor)) {
-                throw new TypeError("Cannot call a class as a function");
-            }
-        }
-
-        var Progress = function () {
-            function Progress() {
-                var param = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-                _classCallCheck(this, Progress);
-                this.timestamp = null;
-                this.duration = param.duration || Progress.CONST.DURATION;
-                this.progress = 0;
-                this.delta = 0;
-                this.progress = 0;
-                this.isLoop = !!param.isLoop;
-
-                this.reset();
-            }
-
-            _createClass(Progress, [{
-                key: "reset", value: function reset() {
-                    this.timestamp = null;
-                }
-            }, {
-                key: "start", value: function start(
-                    now) {
-                    this.timestamp = now;
-                }
-            }, {
-                key: "tick", value: function tick(
-                    now) {
-                    if (this.timestamp) {
-                        this.delta = now - this.timestamp;
-                        this.progress = Math.min(this.delta / this.duration, 1);
-
-                        if (this.progress >= 1 && this.isLoop) {
-                            this.start(now);
-                        }
-
-                        return this.progress;
-                    } else {
-                        return 0;
-                    }
-                }
-            }], [{
-                key: "CONST", get: function get() {
-                    return {DURATION: 1000};
-                }
-            }]);
-            return Progress;
-        }();
-        var
-
-
-            Confetti = function () {
-                function Confetti(param) {
-                    _classCallCheck(this, Confetti);
-                    this.parent = param.elm || document.body;
-                    this.canvas = document.createElement("canvas");
-                    this.ctx = this.canvas.getContext("2d");
-                    this.width = param.width || this.parent.offsetWidth;
-                    this.height = param.height || this.parent.offsetHeight;
-                    this.length = param.length || Confetti.CONST.PAPER_LENGTH;
-                    this.yRange = param.yRange || this.height * 2;
-                    this.progress = new Progress({
-                        duration: param.duration,
-                        isLoop: true
-                    });
-
-                    this.rotationRange = typeof param.rotationLength === "number" ? param.rotationRange :
-                        10;
-                    this.speedRange = typeof param.speedRange === "number" ? param.speedRange :
-                        10;
-                    this.sprites = [];
-
-                    this.canvas.style.cssText = [
-                        "display: block",
-                        "position: absolute",
-                        "top: 0",
-                        "left: 0",
-                        "pointer-events: none"].join(";");
-
-                    this.render = this.render.bind(this);
-
-                    this.build();
-
-                    this.parent.appendChild(this.canvas);
-                    this.progress.start(performance.now());
-
-                    requestAnimationFrame(this.render);
-                }
-
-                _createClass(Confetti, [{
-                    key: "build", value: function build() {
-                        for (var i = 0; i < this.length; ++i) {
-                            var canvas = document.createElement("canvas"),
-                                ctx = canvas.getContext("2d");
-
-                            canvas.width = Confetti.CONST.SPRITE_WIDTH;
-                            canvas.height = Confetti.CONST.SPRITE_HEIGHT;
-
-                            canvas.position = {
-                                initX: Math.random() * this.width,
-                                initY: -canvas.height - Math.random() * this.yRange
-                            };
-
-
-                            canvas.rotation = this.rotationRange / 2 - Math.random() * this.rotationRange;
-                            canvas.speed = this.speedRange / 2 + Math.random() * (this.speedRange / 2);
-
-                            ctx.save();
-                            ctx.fillStyle = Confetti.CONST.COLORS[Math.random() * Confetti.CONST.COLORS.length | 0];
-                            ctx.fillRect(0, 0, canvas.width, canvas.height);
-                            ctx.restore();
-
-                            this.sprites.push(canvas);
-                        }
-                    }
-                }, {
-                    key: "render", value: function render(
-                        now) {
-                        var progress = this.progress.tick(now);
-
-                        this.canvas.width = this.width;
-                        this.canvas.height = this.height;
-
-                        for (var i = 0; i < this.length; ++i) {
-                            this.ctx.save();
-                            this.ctx.translate(
-                                this.sprites[i].position.initX + this.sprites[i].rotation * Confetti.CONST.ROTATION_RATE * progress,
-                                this.sprites[i].position.initY + progress * (this.height + this.yRange));
-
-                            this.ctx.rotate(this.sprites[i].rotation);
-                            this.ctx.drawImage(
-                                this.sprites[i],
-                                -Confetti.CONST.SPRITE_WIDTH * Math.abs(Math.sin(progress * Math.PI * 2 * this.sprites[i].speed)) / 2,
-                                -Confetti.CONST.SPRITE_HEIGHT / 2,
-                                Confetti.CONST.SPRITE_WIDTH * Math.abs(Math.sin(progress * Math.PI * 2 * this.sprites[i].speed)),
-                                Confetti.CONST.SPRITE_HEIGHT);
-
-                            this.ctx.restore();
-                        }
-
-                        requestAnimationFrame(this.render);
-                    }
-                }], [{
-                    key: "CONST", get: function get() {
-                        return {
-                            SPRITE_WIDTH: 9,
-                            SPRITE_HEIGHT: 16,
-                            PAPER_LENGTH: 100,
-                            DURATION: 8000,
-                            ROTATION_RATE: 50,
-                            COLORS: ["#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0", "#42A5F5", "#29B6F6", "#26C6DA", "#26A69A", "#66BB6A", "#9CCC65", "#D4E157", "#FFEE58", "#FFCA28", "#FFA726", "#FF7043", "#8D6E63", "#BDBDBD", "#78909C"]
-                        };
-                    }
-                }]);
-                return Confetti;
-            }();
-
-
-        (function () {
-            var DURATION = 8000,
-                LENGTH = 120;
-
-            new Confetti({
-                width: window.innerWidth,
-                height: window.innerHeight,
-                length: LENGTH,
-                duration: DURATION
-            });
-
-
-            setTimeout(function () {
-                new Confetti({
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                    length: LENGTH,
-                    duration: DURATION
-                });
-
-            }, DURATION / 2);
-        })();
-    </script>
-
-    <script>
-        $(".explore").click(function (event) {
-            event.preventDefault();
-            //calculate destination place
-            var dest = 0;
-            if ($(this.hash).offset().top > $(document).height() - $(window).height()) {
-                dest = $(document).height() - $(window).height();
-            } else {
-                dest = $(this.hash).offset().top;
-            }
-            //go to destination
-            $('html,body').animate({scrollTop: dest}, 1000, 'swing');
-        });
-    </script>
-
-
+    <script src="{% static "clubs/js/landing_page.js" %}"></script>
 {% endblock %}

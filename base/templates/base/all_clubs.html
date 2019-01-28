@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+{% load blog_tags %}
+{% load static %}
+{% get_static_prefix as STATIC_URL %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+    <link rel="stylesheet" href="{% static "clubs/css/all_clubs.css" %}"/>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-primary heading pt-5 mt-5 mb-5 font-weight-bold" style="z-index:-1;font-size: 200%;">Clubs</h1>
+        <div class="row">
+
+            {% for club in clubs %}
+                <div class="col-md-6 col-sm-8 col-xs-12 col-md-offset-3 col-sm-offset-2"
+                     onclick="window.location='{% url "posts:club_posts" club.name|clubslug %}'">
+                    <div class="card">
+                        <div class="image">
+                            {% if club.back_img %}
+                                <img src="{{ club.back_img.url }}"
+                                     width="100%">
+                            {% else %}
+                                <img src="/static/clubs/images/back_img{{ 5|randomNumber }}.png"
+                                     width="100%">
+                            {% endif %}
+                        </div>
+                        <div class="text">
+                            {% comment %}{% if request.user.is_authenticated %}
+                                {% if club in request.user.following_clubs.all %}
+                                    <div class="tick">&#10003;</div>
+                                {% else %}
+                                    <div class="fab">&#43;</div>
+                                {% endif %}
+                            {% else %}
+                                <div class="fab">&#43;</div>
+                            {% endif %}{% endcomment %}
+                            <h3>{{ club.name }}</h3>
+                            {% if club.full_name %}
+                                <h3>({{ club.full_name }})</h3>
+                            {% endif %}
+                            <p>{{ club.about }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

@@ -4,8 +4,8 @@
     padding: 0;
     width: 30px;
     margin-right: 0.5rem;
-
-}
+    outline:none;
+    all: unset !important}
 
 .liked-icon {
     color: #f2849e;

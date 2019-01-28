@@ -31,7 +31,7 @@ SECRET_KEY = secret_settings.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = secret_settings.ALLOWED_HOSTS
+ALLOWED_HOSTS = ['*']
 
 if DEBUG is False and secret_settings.IS_PUBLIC is True:
     raise ImportError(
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'base',
     'accounts',
     'posts',
@@ -318,6 +319,7 @@ SIMPLE_JWT = {
 # Emails
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = secret_settings.EMAIL_HOST
 EMAIL_PORT = secret_settings.EMAIL_PORT
 EMAIL_USE_TLS = True

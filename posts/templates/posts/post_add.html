@@ -1,20 +1,61 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block head %}
     <title>Post_Add</title>
-     <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/css/post_edit.css' %}">
 {% endblock %}
 
 {% block content %}
-    <div id="main">
+    <div id="main" style="margin-top: 5vh;">
 
         <article class="post">
-            <form method="post" enctype="multipart/form-data">
+            <h2 style="margin-bottom: 0;">Create Post</h2>
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.media }}
-                {{ form.as_p }}
-                <input type="submit" value="create">
+
+                <p>
+                    <span style="font-weight: 600;">Title:</span>
+                    {{ form.title }}
+                    {{ form.title.help_text }}
+                </p>
+
+                <span style="font-weight: 600; vertical-align: top;margin-right:10px;">Body:</span>
+                {{ form.body }}
+
+                <div class="checkbox" style="margin-top:30px;">
+                    <label for="id_cover_image">Cover image:</label>
+                    <input type="file" name="cover_image" accept="image/*" id="id_cover_image">
+
+                    <p>{{ form.cover_image.help_text|linebreaksbr }}</p>
+                </div>
+
+
+                <div class="checkbox">
+                    {{ form.is_public.label_tag }}
+                    {{ form.is_public }}
+                    <span class="helpText">{{ form.is_public.help_text }}</span>
+                </div>
+
+                <div class="checkbox">
+                    {{ form.is_published.label_tag }}
+                    {{ form.is_published }}
+                    <span class="helpText">{{ form.is_published.help_text }}</span>
+                </div>
+
+                <div class="checkbox">
+                    {{ form.notify_followers.label_tag }}
+                    {{ form.notify_followers }}
+                    <span class="helpText">{{ form.notify_followers.help_text }}</span>
+                </div>
+
+
+
+                <br><br>
+                <input type="submit" value="Submit">
             </form>
         </article>
 

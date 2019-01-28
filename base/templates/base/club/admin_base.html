@@ -30,7 +30,7 @@
     {% block main_sidebar %}
         <!-- Sidebar -->
         <div id="sidebar">
-            <div class="inner">
+            <div class="inner" style="position:relative; height: 90vh;">
                 <nav id="menu">
                     <header class="major">
                         <h2>{{ club.name|title }} Admin</h2>
@@ -38,10 +38,18 @@
                     <ul>
                         <li><a href="{% url 'base:club_settings' club_name_slug %}">General</a></li>
                         <li><a href="{% url 'base:member_list' club_name_slug %}">Members</a></li>
+                        {% if request.user == club.clubpresident.user %}
                         <li><a href="{% url 'base:moderator_list' club_name_slug %}">Moderators</a></li>
+                        {% endif %}
                         <li><a href="{% url 'base:pending_posts_list' club_name_slug %}">Posts</a></li>
                         <li><a href="{% url 'base:club_groups' club_name_slug %}">Groups</a></li>
                     </ul>
+
+                    <ul style="position:absolute;bottom:8vh; font-weight: bolder;">
+                        <li style="color: blue"><a href="{% url 'posts:club_posts' club_name_slug %}">Back To Club Posts</a></li>
+                        <li style="color: red;"><a href="{% url 'registration:logout' %}">Logout</a></li>
+                    </ul>
+
                 </nav>
             </div>
         </div>

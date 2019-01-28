@@ -18,11 +18,22 @@ def club_logo_upload(instance, filename):
     return os.path.join('clubs', instance.name.replace(' ', '_'), filename)
 
 
+class News(models.Model):
+    message = models.CharField(max_length=200)
+    link = models.URLField(help_text="Give the full url", null=True, blank=True)
+
+    created_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_time']
+
+
 class Club(models.Model):
     name = models.CharField(max_length=100, validators=[club_name_validator], db_index=True)
+    full_name = models.CharField(max_length=100)
     date_formed = models.DateField(auto_now_add=True)
     email = models.EmailField(null=True, blank=True)
-    about = models.TextField(help_text="Say a few lines about your club", null=True, blank=True)
+    about = models.TextField(help_text="Say a few lines about your club", null=True, blank=True, max_length=500)
     is_active = models.BooleanField(default=True)
     is_supported = models.BooleanField(default=True)
     # num_users = models.IntegerField(default=0)
@@ -39,6 +50,9 @@ class Club(models.Model):
     def calc_users(self):
         self.num_users = self.clubmember_set.all().count()
         self.save()
+
+    class Meta:
+        ordering = ['name']
 
 
 class ClubSettings(models.Model):
@@ -98,6 +112,49 @@ class ClubMember(models.Model):
 
     class Meta:
         unique_together = ('user', 'club')
+
+
+class Notification(models.Model):
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="sentNotifications")
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True, blank=True)
+    # is_read = models.BooleanField(default=False, null=False)
+    receivers = models.ManyToManyField(
+        User, related_name="receivedNotifications", blank=True)
+
+    title = models.TextField()
+    message = models.TextField()
+
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+
+class EmailProvider(models.Model):
+    name = models.TextField()
+
+    current = models.IntegerField(default=0)
+    limit = models.IntegerField(null=False)
+
+    # in days, when to reset the current count
+    reset = models.IntegerField()
+
+    last_reset = models.DateTimeField(auto_now_add=True)
+
+
+# @receiver(signals.post_save, sender=Club)
+# def random_back_image(sender, instance, created, **kwargs):
+#     if created:
+#
+#         if not hasattr(instance.back_img,'url'):
+#             pass
+
+@receiver(signals.post_save, sender=ClubMember)
+def member_follow_club(sender, instance, created, **kwargs):
+    # If a user is made a moderator, also make him a member of the club
+    try:
+        instance.user.userprofile.following_clubs.add(instance.club)
+    except IntegrityError:
+        # User is already a member. Do Nothing
+        pass
 
 
 @receiver(signals.post_save, sender=ClubModerator)

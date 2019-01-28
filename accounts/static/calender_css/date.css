@@ -50,14 +50,13 @@ main {
 }
 
 body {
-  font-family: Montserrat;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 100;
   color: #000000;
 }
 
 
 main {
-  background-color: #FCFBFC;
   color:#000000;
 }
 
@@ -88,4 +87,36 @@ main {
 h3
 {
   color : #000000;
+}
+
+.side-cal-1 {
+  flex: 0 0 25%;
+  background: #FFFAFA;
+  padding: 20px;
+}
+
+.side-cal-2 {
+  flex: 1;
+}
+
+.event-input {
+  margin: 0 0 50px 0;
+}
+
+.btn-cal:hover {
+  background-color: #1E88E5;
+}
+
+@media screen and (max-width: 950px) {
+  .side-cal-1 {
+    flex:1;
+    margin-bottom: 30px;
+  }
+
+  .side-cal-1 * {
+    margin-bottom: 20px;
+    text-align: center;
+    color: black;
+  }
+
 }
