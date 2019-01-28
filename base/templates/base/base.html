@@ -1,0 +1,213 @@
+{% load static %}
+{% load blog_tags %}
+{% load club_user_filters %}
+<!doctype html>
+<html>
+<head>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    {% block head %}
+    {% endblock %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    {#    <link rel="stylesheet" href="{% static 'posts/css/fontawesome.min.css' %}">#}
+    <link rel="stylesheet" href="{% static "css/navbar-footer.css" %}">
+</head>
+<body class="is-preload">
+{% block nav %}
+    <section id="header" >
+
+        <nav class="navbar navbar-static-top navbar-expand-lg navbar-light bg-light w-100 pr-5 p-0 flex align-items-center"
+             style="top:0;position: fixed;">
+            <a class="navbar-brand" href="{% url 'base:index' %}" style="font-weight: bolder; font-size: 220%;padding-left: 5vh;">IIITS Clubs</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                    style="height:2.8125rem!important;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto px-3">
+
+
+                    <li class="nav-item px-3 nav-item-scroll">
+                        <a class="nav-link" href="{% url 'posts:posts' %}">All Posts</a>
+                    </li>
+                    <li class="nav-item px-3">
+                        <a class="nav-link" href="{% url 'base:all_clubs' %}">Clubs</a>
+                    </li>
+
+                    <li class="nav-item dropdown px-3 nav-item-scroll">
+
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Club Posts
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for club in clubs %}
+                                <a class="dropdown-item"
+                                   href="{% url 'posts:club_posts' club.name %}">{{ club.name|title }}</a>
+                            {% endfor %}
+                            {#                        <a class="dropdown-item" href="#">IOTA</a>#}
+                            {#                        <a class="dropdown-item" href="#">Gradient</a>#}
+                            {#                        <a class="dropdown-item" href="#">Photography Club</a>#}
+                        </div>
+                    </li>
+
+                    {% if club_slug %}
+
+                        {% if request.user|is_user_moderator:club %}
+                            <li class="nav-item px-3">
+                                <a class="nav-link" href="{% url 'base:member_list' club_slug %}">Club-Admin</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+
+                        <li class="nav-item px-3 nav-item-scroll">
+                            {#                    <a class="nav-link" href="#">Login</a>#}
+                            {#                     <img src="{% static "images/download.jpg" %}" alt="image" height="50" width="50" style="border-radius:25px;">#}
+                            {#                     <span>Vineet</span>#}
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="chip">
+                                    {% if request.user.userprofile.profile_pic %}
+                                        <img src="{{ request.user.userprofile.profile_pic.url }}" alt="Person"
+                                             width="96"
+                                             height="96"/>
+                                    {% elif request.user.googleauth.profile_pic_link %}
+                                        <img src="{{ request.user.googleauth.profile_pic_link }}" alt="Person"
+                                             width="96"
+                                             height="96"/>
+                                    {% else %}
+                                        <img src="{% static "posts/images/pic10.jpg" %}" alt="Person" width="96"
+                                             height="96"/>
+
+                                    {% endif %}
+                                    {#                                <img src="{% static "images/download.jpg" %}" alt="Person" width="96" height="96">#}
+                                    {{ request.user.get_full_name }}
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown" style="margin-right:6%!important;">
+                                <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                                <a class="dropdown-item" href="{% url 'accounts:index' select='1' show='1'%}">Calendar <sup style="color: red">Beta</sup></a>
+
+                            </div>
+
+
+                            {#                    <div class="dropdown">#}
+                            {#                        <button class="dropbtn">#}
+                            {#                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"#}
+                            {#                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+                            {#                                <div class="chip">#}
+                            {#                                    <img src="{% static "images/download.jpg" %}" alt="Person" width="96" height="96">#}
+                            {#                                    John Doe#}
+                            {#                                </div>#}
+                            {#                            </a>#}
+                            {#                        </button>#}
+                            {#                        <div class="dropdown-content">#}
+                            {#                            <a href="#">Link 1</a>#}
+                            {#                            <a href="#">Link 2</a>#}
+                            {#                            <a href="#">Link 3</a>#}
+                            {#                        </div>#}
+                            {#                    </div>#}
+                        </li>
+                    {% else %}
+                        <li class="nav-item px-3 nav-item-scroll">
+                            <a class="nav-link"
+                               href="{% url 'registration:login' %}?next={{ request.path }}">Signup</a>
+                        </li>
+                        <li class="nav-item px-3 nav-item-scroll">
+
+                            <a class="nav-link" href="{% url 'registration:login' %}?next={{ request.path }}">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </section>
+
+{% endblock nav %}
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Header -->
+    <!-- Header -->
+    {#    <header id="header">#}
+    {##}
+    {#        <a href="#" class="logo">#}
+    {#            <img src="{% static 'posts/images/logo-iota.jpg' %}" alt="" class="logo-club"/>#}
+    {#        </a>#}
+    {#        <nav class="main">#}
+    {#            <ul>#}
+    {#                <li class="search">#}
+    {#                    <a class="fa-search" href="#search">Search</a>#}
+    {#                    <form id="search" method="get" action="#">#}
+    {#                        <input type="text" name="query" placeholder="Search"/>#}
+    {#                    </form>#}
+    {#                </li>#}
+    {#                <li class="menu">#}
+    {#                    <a class="fa-bars" href="#menu">Menu</a>#}
+    {#                </li>#}
+    {#            </ul>#}
+    {#        </nav>#}
+    {#    </header>#}
+
+
+
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+<div id="wrapper" class="p-0">
+    <!-- Footer -->
+    <footer id="footer" class="w-100 text-center">
+        <div class="inner">
+            <ul class=".d-none .d-lg-block">
+                <li class="px-3"><i class="fab fa-twitter"></i></li>
+                <li class="px-3"><i class="fab fa-facebook-f"></i></li>
+                <li class="px-3"><i class="fab fa-instagram"></i></li>
+                <li class="px-3"><i class="fab fa-github"></i></li>
+                <li class="px-3"><i class="fab fa-linkedin-in"></i></li>
+            </ul>
+            <ul class="copyright">
+                <li class="text-dark">&copy; Copyright 2019</li>
+                <li class="text-dark">Made By <span class="author-name">IOTA</span></li>
+            </ul>
+        </div>
+    </footer>
+</div>
+
+<!-- Scripts -->
+
+<script src="{% static 'posts/js/jquery.min.js' %}"></script>
+{#<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"#}
+{#        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"#}
+{#        crossorigin="anonymous"></script>#}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+
+<script src="{% static 'posts/js/browser.min.js' %}"></script>
+<script src="{% static 'posts/js/breakpoints.min.js' %}"></script>
+<script src="{% static 'posts/js/util.js' %}"></script>
+<script src="{% static 'posts/js/main.js' %}"></script>
+
+
+{% block script %}
+
+{% endblock %}
+
+</body>
+</html>

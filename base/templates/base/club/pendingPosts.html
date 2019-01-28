@@ -1,0 +1,106 @@
+{% extends 'base/club/admin_base.html' %}
+{% load static %}
+{% block title %}
+    Club Posts
+{% endblock %}
+
+{% block main_content %}
+    <section>
+        <header class="major">
+            <h2>Posts Pending Approval</h2>
+        </header>
+        <div class="posts">
+            <div class="table-wrapper" style="margin:0 auto;width:100%;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Author</th>
+                        <th>Public?</th>
+                        <th>Notify?</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for post in pending_posts %}
+                        <tr>
+                            <td><a href="{% url 'posts:post_detail' club_name_slug post.encrypted_id %}"
+                                   class="">{{ post.title|truncatechars_html:30 }}</a></td>
+                            <td>
+                                {% if post.poll %}
+                                Poll
+                                {% elif post.event %}
+                                Event
+                                {% else %}
+                                Post
+                                {% endif %}
+                            </td>
+                            <td>{{ post.author.get_full_name }}</td>
+                            <td>
+                                {% if post.is_public %}
+                                Yes
+                                {% else %}
+                                No
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if post.notify_followers %}
+                                Yes
+                                {% else %}
+                                No
+                                {% endif %}
+                            </td>
+                            <td><a href="{% url 'base:approve_post' club_name_slug post.encrypted_id %}" class="button primary small">Accept</a></td>
+                            <td><a href="{% url 'base:reject_post' club_name_slug post.encrypted_id %}" class="button small">Reject</a></td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+        <header class="major">
+            <h2>All posts</h2>
+        </header>
+        <div class="posts">
+            <div class="table-wrapper" style="margin:0 auto;width:100%;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Author</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for post in club.post_set.all %}
+                        {% if post.is_approved %}
+                        <tr>
+                            <td><a href="{% url 'posts:post_detail' club_name_slug post.encrypted_id %}"
+                                   class="">{{ post.title|truncatechars_html:30 }}</a></td>
+                            <td>
+                                {% if post.poll %}
+                                Poll
+                                {% elif post.event %}
+                                Event
+                                {% else %}
+                                Post
+                                {% endif %}
+                            </td>
+                            <td>{{ post.author.get_full_name }} ({{ post.author.email }})</td>
+                            <td><a href="#" class="button primary small">Remove</a></td>
+
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}

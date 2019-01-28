@@ -1,0 +1,362 @@
+{% extends 'base/base.html' %}
+{% load blog_tags %}
+{% load club_user_filters %}
+{% load static %}
+
+
+{% block head %}
+    <title>Posts</title>
+    <link rel="stylesheet" href="{% static "posts/css/loader.css" %}"/>
+    <link rel="stylesheet" href="{% static 'posts/css/main.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+
+    <div id="main">
+
+        {% if  request.user|is_user_member:club %}
+
+            <section class="blurb d-xl-none" style="margin-top: 5vh;">
+                <h2 style="color: crimson;">Create</h2>
+                <div class="d-flex flex-row justify-content-between">
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:post-add' club_slug %}" class="button"
+                                   style="text-decoration: none;">Post</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:create_poll' club_slug %}" class="button"
+                                   style="text-decoration: none;">Poll</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:events_create' club_slug %}" class="button"
+                                   style="text-decoration: none;">Event</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        {% else %}
+            <section class="blurb d-xl-none">
+                <h2 style="color: crimson">Note</h2>
+                <p style="color: crimson">
+                    You are only seeing the public posts of this club as you are not a member. To see all posts,
+                    consider becoming a member.
+                </p>
+
+                {% if request.user|is_user_member_not_approved:club %}
+
+                    <p style="color:blue">
+                        Your member request has been submitted and is pending approval from club moderators
+                    </p>
+                    <ul class="actions">
+
+                    <li><a href="javascript:void(0);" class="button"
+                           style="text-decoration: none;box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important">Requested</a></li>
+
+                {% else %}
+                    <ul class="actions">
+                    <li><a href="{% url 'base:club_request_join' club_slug %}" class="button"
+                           style="text-decoration: none;">Become Member</a></li>
+
+
+                {% endif %}
+
+                {% if club in request.user.userprofile.following_clubs.all %}
+                    <li><a href="{% url 'base:club_unfollow' club_slug %}" class="button"
+                           style="text-decoration: none;box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important">
+                        Following
+                    </a></li>
+                {% else %}
+
+                    <li><a href="{% url 'base:club_follow' club_slug %}" class="button"
+                           style="text-decoration: none;">Follow</a></li>
+                {% endif %}
+                </ul>
+            </section>
+        {% endif %}
+        <div class="infinite-container" id="all_posts" style="margin-top: 5vh;">
+            {% for post in posts %}
+                <div class="infinite-item">
+                    <article class="post">
+                        <header>
+                            <div class="title">
+                                <h2>
+                                    <a href="{% url 'posts:post_detail'  post.club.name|clubslug post.encrypted_id %}">{{ post.title }}</a>
+                                </h2>
+                                <p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>
+                            </div>
+                            <div class="meta">
+                                <time class="published" datetime="2015-10-22">{{ post.created }}</time>
+                                <a href="#" class="author"><span class="name">{{ post.author.get_full_name }}</span>
+                                    {% if post.author.userprofile.profile_pic %}
+                                        <img src="{{ post.author.userprofile.profile_pic.url }}" alt=""/>
+                                    {% elif post.author.googleauth.profile_pic_link %}
+                                        <img src="{{ post.author.googleauth.profile_pic_link }}" alt=""/>
+                                    {% else %}
+                                        <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
+
+                                    {% endif %}
+                                </a>
+                            </div>
+                        </header>
+                        {% if post.cover_image %}
+                            <a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}"
+                               class="image featured">
+                                <img src="{{ post.cover_image.url }}" alt="Cover Image"/>
+                            </a>
+                        {% endif %}
+                        <p>
+                            {{ post.body|truncatechars_html:100|removeImg|safe }}
+                        </p>
+                        <footer>
+                            <ul class="actions">
+                                <li><a href="{% url 'posts:post_detail' post.club.name|clubslug post.encrypted_id %}"
+                                       class="button large">Continue Reading</a>
+                                </li>
+                            </ul>
+                            {% comment %}<ul class="stats">
+                                <li><a href="#" class="icon fa-heart fa-2x">{{ post.votes }}</a></li>
+                                <li><a href="#" class="icon fa-comment fa-2x">128</a></li>
+                            </ul>{% endcomment %}
+                        </footer>
+                    </article>
+                </div>
+            {% empty %}
+                <div style="text-align: center;">
+                    <h2>No posts found</h2>
+
+                </div>
+
+            {% endfor %}
+        </div>
+        {% if posts.has_next %}
+            <a style="display:none;" class="infinite-more-link"
+               href="?page={{ posts.next_page_number }}&{% for field in filter_form %}{% if field.name != 'page' %}{{ field.name }}={{ field.value }}&{% endif %}{% endfor %}">More</a>
+        {% endif %}
+
+        <div style="width: 100%; text-align: center; display: none" class="loading">
+            <div class="lds-ripple">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        {#        <ul class="actions pagination">#}
+        {#            <li><a href="" class="disabled button large previous">Previous Page</a></li>#}
+        {#            <li><a href="#" class="button large next">Next Page</a></li>#}
+        {#        </ul>#}
+
+    </div>
+
+    <section id="sidebar">
+
+        <!-- About -->
+        <section class="blurb" style="margin-top: 7vh;">
+            <h2>About</h2>
+            <p>
+                {{ club.about }}
+            </p>
+{#            <ul class="actions">#}
+{#                <li><a href="#" class="button">Learn More</a></li>#}
+{#            </ul>#}
+        </section>
+
+        {% if  request.user|is_user_member:club %}
+
+            <section class="blurb .d-none .d-xl-block">
+                <h2 style="color: crimson;">Create</h2>
+                <div class="d-flex flex-row justify-content-between">
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:post-add' club_slug %}" class="button"
+                                   style="text-decoration: none;">Post</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:create_poll' club_slug %}" class="button"
+                                   style="text-decoration: none;">Poll</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="actions">
+                            <li><a href="{% url 'posts:events_create' club_slug %}" class="button"
+                                   style="text-decoration: none;">Event</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        {% else %}
+            <section class="d-none d-xl-block">
+                <h2 style="color: crimson">Note</h2>
+                <p style="color: crimson">
+                    You are only seeing the public posts of this club as you are not a member. To see all posts,
+                    consider becoming a member.
+                </p>
+
+                {% if request.user|is_user_member_not_approved:club %}
+
+                    <p style="color:blue">
+                        Your member request has been submitted and is pending approval from club moderators
+                    </p>
+                    <ul class="actions">
+
+                    <li><a href="javascript:void(0);" class="button"
+                           style="text-decoration: none;box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important">Requested</a></li>
+
+                {% else %}
+                    <ul class="actions">
+                    <li><a href="{% url 'base:club_request_join' club_slug %}" class="button"
+                           style="text-decoration: none;">Become Member</a></li>
+
+
+                {% endif %}
+
+                {% if club in request.user.userprofile.following_clubs.all %}
+                    <li><a href="{% url 'base:club_unfollow' club_slug %}" class="button"
+                           style="text-decoration: none;box-shadow: inset 0 0 0 1px #2ebaae; color: #2ebaae !important">
+                        Following
+                    </a></li>
+                {% else %}
+
+                    <li><a href="{% url 'base:club_follow' club_slug %}" class="button"
+                           style="text-decoration: none;">Follow</a></li>
+                {% endif %}
+                </ul>
+            </section>
+        {% endif %}
+        <!-- Mini Posts -->
+        <section>
+            <div class="mini-posts">
+                <h3>Pinned Posts</h3>
+                <br>
+                {% for p_post in pinned_posts %}
+                    <!-- Mini Post -->
+                    <article class="mini-post">
+                        <header>
+
+                            <h3>
+                                <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}">{{ p_post.post.title|truncatechars_html:26 }}</a>
+                            </h3>
+                            <time class="published" datetime="2015-10-18">{{ p_post.post.created }}</time>
+
+                            <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}" class="author">
+                                {% if p_post.post.author.userprofile.profile_pic %}
+                                    <img src="{{ p_post.post.author.userprofile.profile_pic.url }}" alt=""/>
+                                {% elif p_post.post.author.googleauth.profile_pic_link %}
+                                    <img src="{{ p_post.post.author.googleauth.profile_pic_link }}" alt=""/>
+                                {% else %}
+                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
+                                    {#                                TODO Put author name and profile pic here#}
+                                {% endif %}
+                            </a>
+                            {#                            <p>{{ p_post.post.body|safe|truncatechars_html:28 }}</p>#}
+
+                        </header>
+                        {% if p_post.post.cover_image %}
+                            <a href="{% url 'posts:post_detail' club_slug p_post.post.encrypted_id %}" class="image">
+                                <img src="{{ p_post.post.cover_image.url }}" alt=""></a>
+                        {% endif %}
+
+                    </article>
+
+                {% empty %}
+                    <p>No Pinned Posts</p>
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <!-- Posts List -->
+        <section>
+            <h3>Top Posts</h3>
+            <ul class="posts">
+                {% for post in top_posts %}
+                    <li>
+                        <article>
+                            <header>
+                                <h3>
+                                    <a href="{% url 'posts:post_detail' club_slug post.encrypted_id %}">{{ post.title }}</a>
+                                </h3>
+                                <time class="published" datetime="2015-10-10">{{ post.created }}</time>
+                            </header>
+                            <a href="#" class="author">
+                                {% if post.author.userprofile.profile_pic %}
+                                    <img src="{{ post.author.userprofile.profile_pic.url }}" alt=""/>
+                                {% elif post.author.googleauth.profile_pic_link %}
+                                    <img src="{{ post.author.googleauth.profile_pic_link }}" alt=""/>
+                                {% else %}
+                                    <img src="{% static "posts/images/pic10.jpg" %}" alt=""/>
+                                    {#                                TODO Put author name and profile pic here#}
+                                {% endif %}
+                            </a>
+                            {#                        TODO Put user profile pic here#}
+                        </article>
+                    </li>
+
+                {% endfor %}
+            </ul>
+        </section>
+
+
+        <!-- Footer -->
+        <section id="footer">
+            {#            <ul class="icons">#}
+            {#                <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>#}
+            {#                <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>#}
+            {#                <li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>#}
+            {#                <li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>#}
+            {#            </ul>#}
+
+        </section>
+
+    </section>
+
+    <div style="display: none;" id="filter_form">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ filter_form }}
+        </form>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'common_assests/imakewebthings-waypoints-34d9f6d/lib/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'common_assests/imakewebthings-waypoints-34d9f6d/lib/shortcuts/infinite.min.js' %}"></script>
+    <script>
+        var infinite = new Waypoint.Infinite({
+            element: $('.infinite-container')[0],
+            onBeforePageLoad: function () {
+                $('.loading').show();
+            },
+            onAfterPageLoad: function ($items) {
+                $('.loading').hide();
+                {#$('.collapsible').collapsible();#}
+            }
+        });
+
+        {% comment %} {#document.getElementById('search-button').addEventListener('onclick', () => {#}
+         {#    window.location = window.location.href + "?query=" + document.getElementById('search-query').value;#}
+         {#});#}
+         {##}{% endcomment %}
+
+
+    </script>
+    <link rel="stylesheet"
+          href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/default.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+{% endblock %}
+
