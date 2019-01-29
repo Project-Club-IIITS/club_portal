@@ -156,7 +156,7 @@ class News(models.Model):
     post = models.OneToOneField(Post, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['-post']
+        ordering = ['post']
 
 
 @receiver(signals.post_save, sender=Post)

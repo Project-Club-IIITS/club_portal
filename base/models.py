@@ -63,6 +63,9 @@ class ClubMentor(models.Model):
     class Meta:
         unique_together = ('user', 'club')
 
+    def __str__(self):
+        return self.club.name + "-" + self.user.username    
+
 
 class ClubPresident(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
@@ -72,7 +75,7 @@ class ClubPresident(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user.username
+        return self.club.name + "-" + self.user.username
 
     class Meta:
         unique_together = ('user', 'club')
@@ -90,7 +93,9 @@ class ClubModerator(models.Model):
     class Meta:
         unique_together = ('user', 'club')
 
-
+    def __str__(self):
+        return self.club.name + "-" + self.user.username
+        
 class ClubMember(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)

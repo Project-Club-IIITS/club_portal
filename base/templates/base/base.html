@@ -118,13 +118,13 @@
                             {#                    </div>#}
                         </li>
                     {% else %}
-                        <li class="nav-item px-3 nav-item-scroll">
+                        {% comment %}<li class="nav-item px-3 nav-item-scroll">
                             <a class="nav-link"
                                href="{% url 'registration:login' %}?next={{ request.path }}">Signup</a>
-                        </li>
+                        </li>{% endcomment %}
                         <li class="nav-item px-3 nav-item-scroll">
 
-                            <a class="nav-link" href="{% url 'registration:login' %}?next={{ request.path }}">Login</a>
+                            <a class="nav-link" href="{% url 'registration:login' %}?next={{ request.path }}">Login/Signup</a>
                         </li>
                     {% endif %}
                 </ul>
