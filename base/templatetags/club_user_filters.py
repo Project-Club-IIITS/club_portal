@@ -39,6 +39,18 @@ def is_user_president(user, club):
 
     return club.clubpresident.user == user
 
+
+@register.filter
+def is_user_mentor(user, club):
+    """
+    Checks whether user is mentor for the club
+    """
+    if not (isinstance(user, User) and isinstance(club, Club)):
+        raise ValueError("User must be an instance of User model and club must be an instance of Club model")
+
+    return club.clubmentor_set.filter(user=user).exists()
+
+
 @register.filter
 def has_user_casted_vote(poll, user):
     """

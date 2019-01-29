@@ -95,6 +95,8 @@
 
                             <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                            <a class="dropdown-item" href="{% url 'accounts:index' select='1' show='1'%}">Calendar <sup style="color: red">Beta</sup></a>
+
 
                         </div>
 
@@ -162,8 +164,8 @@
                     <h1 class="text-primary sub-heading font-weight-bold" style="z-index:-1;">News</h1>
                     <div class="news-corner">
                         {% for n in news %}
-                            <div class="news-headline" onclick="">
-                                <pre class="small text-success">{{ n.created_time|naturaltime }}</pre>
+                            <div class="news-headline" onclick="window.location = '{% url "posts:post_detail" n.post.club.name|clubslug n.post.encrypted_id %}'">
+                                <pre class="small text-success">{{ n.post.created|naturaltime }}</pre>
                                 <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">{{ n.message }}</p>
                             </div>
                             <hr/>
@@ -184,7 +186,7 @@
                     <h1 class="text-primary sub-heading font-weight-bold" style="z-index:-1;">Recent Posts</h1>
                     <div class="news-corner">
                         {% for p in posts %}
-                            <div class="news-headline" onclick="">
+                            <div class="news-headline" onclick="window.location = '{% url "posts:post_detail" p.club.name|clubslug p.encrypted_id %}'">
                                 <pre class="small text-success">{{ p.club.name }} | {{ p.created|naturaltime }}</pre>
                                 <p class="news-headline-para border-left border-primary border-3 px-2 font-weight-bold">
                                     {{ p.title }}</p>

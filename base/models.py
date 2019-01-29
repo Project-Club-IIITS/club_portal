@@ -18,15 +18,6 @@ def club_logo_upload(instance, filename):
     return os.path.join('clubs', instance.name.replace(' ', '_'), filename)
 
 
-class News(models.Model):
-    message = models.CharField(max_length=200)
-    link = models.URLField(help_text="Give the full url", null=True, blank=True)
-
-    created_time = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-created_time']
-
 
 class Club(models.Model):
     name = models.CharField(max_length=100, validators=[club_name_validator], db_index=True)
