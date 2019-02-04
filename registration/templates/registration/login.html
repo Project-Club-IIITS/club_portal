@@ -12,12 +12,13 @@
 
 <div id="loader"></div>
 <body class="align" >
-<h1 style="text-align: center;color: white" id="heading">IIITS Clubs</h1>
+<h1 style="text-align: center;color: white" id="heading">Sign-In with Google</h1>
+
 <div class="grid" id="style-main">
 
     <form action="{% url 'registration:login' %}" method="POST" class="form login">
         {% csrf_token %}
-        {{ form.non_field_errors }}
+        {% comment %}{{ form.non_field_errors }}
         <div class="form__field">
             <label for="{{ form.username.id_for_label }}">
                 <svg class="icon">
@@ -39,20 +40,20 @@
 
         <div class="form__field">
             <input type="submit" value="Sign In">
-        </div>
+        </div>{% endcomment %}
         <div style="text-align: center;">
-        <img alt="Google SignIn" style="cursor:pointer;max-width:100px;" src="{% static 'registration/images/google.png' %}" onclick="initiate_google_signin()">
+        <img alt="Google SignIn" style="cursor:pointer;max-width:120px;" src="{% static 'registration/images/google.png' %}" onclick="initiate_google_signin()">
         </div>
 
     </form>
 
-    <p class="text--center">
+    {% comment %}<p class="text--center">
 {#        Not a member yet?<a href="{% url 'registration:signup' %}">Sign up now</a><br>#}
         Forgot Password?<a href="{% url 'password_reset' %}">Click Here</a>
         <svg class="icon">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/icons.svg#arrow-right"></use>
         </svg>
-    </p>
+    </p>{% endcomment %}
 
 </div>
 
