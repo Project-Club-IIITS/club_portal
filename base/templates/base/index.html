@@ -94,6 +94,9 @@
                         <div class="dropdown-menu dropdown-menu-right mr-5 mt-2" aria-labelledby="profileDropdown">
 
                             <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
+                            {% if request.user|is_user_clc_mod %}
+                                    <a class="dropdown-item" href="{% url 'posts:club_posts' 'Campus-Life-Committee' %}">CLC Portal</a>
+                            {% endif %}
                             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                             <a class="dropdown-item" href="{% url 'accounts:index' select='1' show='1'%}">Calendar <sup style="color: red">Beta</sup></a>
 
