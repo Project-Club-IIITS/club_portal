@@ -301,8 +301,8 @@ def create_post_generic(request, club, post_create_form):
         post.is_approved = True
         post.save()
 
-    if post.club.name == "clubs_portal":
-        News.objects.create(message=post.title, post=post)    
+    if post.club.name in ["clubs_portal", "Campus Life Committee"]:
+        News.objects.create(message=post.title, post=post)
 
     post.subscribed_users.add(request.user)
     return post
