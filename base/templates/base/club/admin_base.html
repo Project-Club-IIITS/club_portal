@@ -1,4 +1,5 @@
 {% load static %}
+{% load club_user_filters %}
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -38,7 +39,7 @@
                     <ul>
                         <li><a href="{% url 'base:club_settings' club_name_slug %}">General</a></li>
                         <li><a href="{% url 'base:member_list' club_name_slug %}">Members</a></li>
-                        {% if request.user == club.clubpresident.user %}
+                        {% if request.user == club.clubpresident.user or request.user|is_user_mentor:club %}
                         <li><a href="{% url 'base:moderator_list' club_name_slug %}">Moderators</a></li>
                         {% endif %}
                         <li><a href="{% url 'base:pending_posts_list' club_name_slug %}">Posts</a></li>

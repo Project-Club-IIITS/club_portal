@@ -10,8 +10,8 @@ from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 
-from posts.models import Post, PostApprover, PostUpdate
-from .models import Notification, News
+from posts.models import Post, PostApprover, PostUpdate, News
+from .models import Notification
 
 from .notifications import *
 
@@ -83,7 +83,7 @@ def moderator_list(request, club_name_slug):
     club_name = club_name_slug.replace('-', ' ')
     club = get_object_or_404(Club, name=club_name)
 
-    if club.clubpresident.user != request.user:
+    if club.clubpresident.user != request.user and (not club.clubmentor_set.filter(user=request.user).exists()):
         raise PermissionDenied("You are not allowed to access this page")
 
     moderators = ClubModerator.objects.filter(club=club)
@@ -373,6 +373,10 @@ def post_email_temp(request):
 def index(request):
     news = News.objects.all()
 
-    top_posts = Post.objects.filter(is_approved=True, is_public=True, is_published=True)[10:]
+
+    top_posts = Post.objects.filter(is_approved=True, is_public=True, is_published=True).exclude(
+        club__name='clubs_portal')[:10]
+
+    print(top_posts)
 
     return render(request, 'base/index.html', {"news": news, "posts": top_posts})

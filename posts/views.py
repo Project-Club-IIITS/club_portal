@@ -14,7 +14,7 @@ from accounts.models import Calendar
 from base.models import Club, ClubModerator, ClubMember
 from base.utils import run_in_background
 from base.views import send_new_post_notification, send_post_update_notification
-from posts.models import PinnedPost, Post, Vote, Option, Poll, Event, PostApprover
+from posts.models import PinnedPost, Post, Vote, Option, Poll, Event, PostApprover, News
 from posts.forms import PostFilterForm, PostCreationForm, PostUpdateForm, EventForm, PollCreateForm
 
 
@@ -300,6 +300,9 @@ def create_post_generic(request, club, post_create_form):
         PostApprover.objects.create(post=post, user=request.user)
         post.is_approved = True
         post.save()
+
+    if post.club.name in ["clubs_portal", "Campus Life Committee"]:
+        News.objects.create(message=post.title, post=post)
 
     post.subscribed_users.add(request.user)
     return post

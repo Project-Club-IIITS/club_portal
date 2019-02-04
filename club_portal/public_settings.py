@@ -8,6 +8,8 @@ SECRET_KEY = 'bm+!!um=2p&r^!4(l5bpic2f&a7h0!vk^zl$53@drcuvaps08+'
 
 ALLOWED_HOSTS = []
 
+SECURE_SSL_REDIRECT = False
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
