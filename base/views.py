@@ -363,7 +363,7 @@ def unfollow_club(request, club_name_slug):
 
 
 def post_email_temp(request):
-    post_update = PostUpdate.objects.all()[0]
+    # post_update = PostUpdate.objects.all()[0]
     admin = User.objects.get(username='admin')
     current_site = get_current_site(request)
     return render(request, 'base/emails/welcome.html', {"domain": current_site.domain, "admin": admin})

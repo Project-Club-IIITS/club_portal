@@ -114,7 +114,7 @@ def sendWelcomeEmail(request, user):
     receiver_emails = [user.email]
 
     subject = f'Welcome to IIITS Clubs Portal'
-    from_email = f'support@no_reply.clubs.iiits.in'
+    from_email = f'Clubs Portal Support <support@no_reply.clubs.iiits.in>'
 
     current_site = get_current_site(request)
     admin = User.objects.get(username='admin')

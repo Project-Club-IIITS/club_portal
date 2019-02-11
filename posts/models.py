@@ -23,7 +23,7 @@ class Post(models.Model):
 
     title = models.CharField(max_length=150)
     body = RichTextUploadingField(blank=True)  # from ckeditor
-    is_public = models.BooleanField(default=False,
+    is_public = models.BooleanField(default=True,
                                     help_text="If unchecked, only the members of the club can see this post.")
     cover_image = models.ImageField(null=True, blank=True,
                                     help_text="Images larger than 2.2 MBs are not supported. \n You may get a 403 error if you try to upload images that exceed this size")
