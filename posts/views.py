@@ -511,7 +511,7 @@ def interested_event(request):
         event.save()
         ret_data['add_success'] = True
 
-    Calendar.objects.create(date=event.start_date.date(), work_title=event.post.title, user=user)
+    #Calendar.objects.create(date=event.start_date.date(), work_title=event.post.title, user=user)
 
     return JsonResponse(ret_data)
 
