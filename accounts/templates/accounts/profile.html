@@ -61,21 +61,23 @@
                         </li>
                     </ul>
 
-                    <h3>Following:
+		    <h3>Following:<br>
                         {% for club in request.user.userprofile.following_clubs.all %}
                             <span style="margin-left:1rem;cursor: none;"
                                   class="btn btn-success">{{ club.name }}</span>
                         {% endfor %}
                     </h3>
 
-                    <h3>Member:
+		    <h3>Member:<br>
                         {% for cm in request.user.clubmember_set.all %}
-                            <span style="margin-left:1rem;cursor: none;"
-                                  class="btn btn-success">{{ cm.club.name }}</span>
-                        {% endfor %}
+				{% if cm.is_approved %}
+					<span style="margin-left:1rem;cursor: none;"
+                                  	class="btn btn-success">{{ cm.club.name }}</span>
+				{% endif %}
+			{% endfor %}
                     </h3>
 
-                    <h3>Moderator:
+		    <h3>Moderator:<br>
                         {% for cm in request.user.clubmoderator_set.all %}
                             <span style="margin-left:1rem;cursor: none;"
                                   class="btn btn-success">{{ cm.club.name }}</span>
