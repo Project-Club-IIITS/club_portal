@@ -509,7 +509,11 @@ TMUS http://litmus.com -->
                 <td style="padding: 0px 40px 40px 40px; font-style: italic; font-weight: bold; color:gray; line-height: 140%;">
                     <span>This is a system generated email. Please do not reply.</span>
                     <br>
-                    <span>In case of any club related queries/issues, send an email to {{ post.club.email }}</span>
+                    {% if post.club.email %}
+                        <span>In case of any club related queries/issues, send an email to {{ post.club.email }}</span>
+                    {% else %}
+                        <span> This club has not set any contact details. For any club related queries, contact club moderators </span>
+                    {% endif %}
                     <br>
                     <span>In case of any platform related queries/issues, send an email to adwaitvinay.t17@iiits.in</span>
                 </td>
