@@ -104,6 +104,9 @@ def google_signin(request):
 
             if len(users) == 0:
                 # Signup
+                if google_form.cleaned_data['email'].split('@')[1] != "iiits.in":
+                    return HttpResponse(
+                        "Currenty we are allowing only iiits users to sign in. Please sign in with a iiits account ")
                 new_user = User.objects.create(email=google_form.cleaned_data['email'],
                                                username=google_form.cleaned_data['email'].split('@')[0],
                                                )

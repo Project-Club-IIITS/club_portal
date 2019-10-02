@@ -38,6 +38,8 @@ if DEBUG is False and secret_settings.IS_PUBLIC is True:
         "Public settings contain fake values for sensitive data like secret key, database credentials etc. DO NOT USE PUBLIC SETTINGS IN PRODUCTION! Get the secret settings from leads or maintainers of website team")
 # Application definition
 
+SECURE_SSL_REDIRECT = secret_settings.SECURE_SSL_REDIRECT
+
 INSTALLED_APPS = [
     'registration',
     'django.contrib.admin',
