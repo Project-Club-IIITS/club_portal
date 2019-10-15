@@ -23,7 +23,8 @@ class PostFilterForm(forms.Form):
 
         return posts
 
-
+print('abc')
+    
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
