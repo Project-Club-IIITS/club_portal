@@ -25,6 +25,8 @@ BASE_DIR = secret_settings.BASE_DIR
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
+print('one must learn git actually')
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = secret_settings.SECRET_KEY
 
