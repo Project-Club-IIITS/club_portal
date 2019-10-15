@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from base.models import Club
 import os
 
+print('one must learn git actually')
 
 def phone_number_validator(phone_number):
     try:
