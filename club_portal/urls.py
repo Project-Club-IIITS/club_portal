@@ -29,6 +29,8 @@ urlpatterns = [
     path('', include("base.urls")),
     path('ckeditor/', include("ckeditor_uploader.urls")),
     path('', include('django.contrib.auth.urls')),
+    path('random-useless-path/', include("posts.urls")),
+
 
 ]
 
